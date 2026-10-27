@@ -365,11 +365,34 @@ p, li { text-wrap: pretty; }
 .foot-col a:hover { color: rgb(var(--ink)); }
 .foot-legal { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgb(var(--line)); font-size: 13.5px; }
 
-/* sticky mobile bar */
-.sticky-bar { position: fixed; inset: auto 12px 12px; z-index: 55; display: flex; gap: 8px; padding: 8px; border-radius: 999px; background: #ffffffd9; backdrop-filter: blur(14px); box-shadow: 0 16px 40px -14px #11141288; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+/* sticky mobile & tablet bar */
+.sticky-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  width: min(560px, calc(100% - 24px));
+  z-index: 55;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 999px;
+  background: #ffffffd9;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px -14px #11141288;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(135%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+.sticky-bar.is-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
 .sticky-bar .btn-studio { flex: 1; }
 .sticky-wa { display: grid; place-items: center; width: 56px; flex: none; border-radius: 50%; background: rgb(var(--surface-2)); }
-@media (min-width: 900px) { .sticky-bar { display: none; } }
+@media (min-width: 1024px) { .sticky-bar { display: none; } }
 
 /* modal + lightbox */
 .overlay { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; justify-content: center; background: #111412b8; backdrop-filter: blur(6px); }
@@ -609,6 +632,42 @@ p, li { text-wrap: pretty; }
 
 .toast-slide-exit {
   animation: toastSlideOutFade 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Live popup container: Guaranteed sticky to viewport screen at all times */
+.live-popup-aside {
+  position: fixed !important;
+  left: 12px;
+  bottom: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 99999 !important;
+  pointer-events: auto;
+  max-width: min(400px, calc(100vw - 24px));
+  width: calc(100vw - 24px);
+  transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, transform 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .live-popup-aside {
+    left: 20px;
+    width: auto;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* When scrolled past hero on mobile/tablet, float cleanly above sticky bar */
+  .live-popup-aside.is-elevated {
+    bottom: 88px;
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (min-width: 1024px) {
+  .live-popup-aside {
+    left: 24px;
+    bottom: 24px;
+  }
 }
 
 

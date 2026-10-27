@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Sparkles, Eye, PhoneCall, GraduationCap, Flame, ShoppingBag, Film, CheckCircle2 } from 'lucide-react';
+import { X, Sparkles, Eye, PhoneCall, GraduationCap, Flame, ShoppingBag, Film, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { playNotificationChime } from '@/lib/sound';
 
 const OFF_KEY = 'advibe.popups.off';
 
@@ -26,6 +27,21 @@ export default function LivePopups({ paused }: { paused: boolean }) {
   const shownCount = useRef(0);
   const itemIndex = useRef(0);
   const [isTabVisible, setIsTabVisible] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const [muted, setMuted] = useState(() => {
+    try {
+      return localStorage.getItem('advibe.popups.muted') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  // Trigger subtle notification sound whenever a new live popup appears
+  useEffect(() => {
+    if (current && !muted) {
+      playNotificationChime();
+    }
+  }, [current?.id, muted]);
 
   // Clear any past dismissal blocks from localStorage/sessionStorage
   useEffect(() => {
@@ -42,6 +58,16 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     const onVisibility = () => setIsTabVisible(!document.hidden);
     document.addEventListener('visibilitychange', onVisibility);
     return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  // Track mobile/tablet scroll to lift popup safely above the sticky bar as soon as it appears
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 80);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Construct dynamic real-life activity queue
@@ -233,6 +259,19 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     }, 350);
   };
 
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMuted((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('advibe.popups.muted', String(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  };
+
   // Badge icon and styling based on category
   const renderBadge = () => {
     switch (current.category) {
@@ -299,7 +338,9 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
   return (
     <aside
-      className={`fixed left-3 sm:left-5 bottom-[calc(92px+env(safe-area-inset-bottom,0px))] sm:bottom-6 z-[9999] max-w-[400px] w-[calc(100vw-24px)] sm:w-auto rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl overflow-hidden pointer-events-auto ${
+      className={`live-popup-aside ${
+        hasScrolled ? 'is-elevated' : ''
+      } rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl overflow-hidden pointer-events-auto ${
         isExiting ? 'toast-slide-exit' : 'toast-slide-enter'
       }`}
       role="status"
@@ -310,8 +351,20 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         <div className="flex items-center gap-2">
           {renderBadge()}
         </div>
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] text-zinc-300 font-semibold">{current.timeAgo}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="font-mono text-[10px] text-zinc-300 font-semibold mr-0.5">{current.timeAgo}</span>
+          <button
+            onClick={toggleMute}
+            className="grid h-6 w-6 place-items-center rounded-full text-zinc-400 hover:text-white hover:bg-white/15 transition active:scale-95"
+            aria-label={muted ? 'Unmute notification sound' : 'Mute notification sound'}
+            title={muted ? 'Unmute sound' : 'Mute sound'}
+          >
+            {muted ? (
+              <VolumeX className="h-3.5 w-3.5 text-zinc-400" />
+            ) : (
+              <Volume2 className="h-3.5 w-3.5 text-[#f5a524]" />
+            )}
+          </button>
           <button
             onClick={handleDismiss}
             className="grid h-6 w-6 place-items-center rounded-full text-zinc-400 hover:text-white hover:bg-white/15 transition active:scale-95"

@@ -320,8 +320,20 @@ export function Showcase({ onPlay }: { onPlay: (i: PortfolioItem) => void }) {
 export function StickyBar({ onStrategy }: { onStrategy: () => void }) {
   const { content } = useStore();
   const { country } = useCountry();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Come up as soon as they scroll past the initial hero view
+      setScrolled(window.scrollY > 80);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="sticky-bar">
+    <div className={`sticky-bar ${scrolled ? 'is-visible' : ''}`} aria-hidden={!scrolled}>
       <button onClick={onStrategy} className="btn-studio"><span>Free strategy session</span><ArrowBtn /></button>
       <a className="sticky-wa" href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want to ask about a video ad.`)}
         target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" onClick={() => track('Contact')}>
