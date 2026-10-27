@@ -24,6 +24,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
   const cfg = content.popups;
 
   const [current, setCurrent] = useState<LiveActivityItem | null>(null);
+  const [isExiting, setIsExiting] = useState(false);
   const [off, setOff] = useState(() => {
     try {
       return sessionStorage.getItem(OFF_KEY) === '1';
@@ -186,16 +187,27 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     return list;
   }, [students, leads, content.countries]);
 
-  // Show one, auto-hide strictly after 5 seconds, wait gap, show the next
+  // Show one, auto-hide strictly after 5 seconds with graceful slide-out-and-fade, wait gap, show the next
   useEffect(() => {
     if (off || !activityQueue.length || shownCount.current >= cfg.maxPerVisit || !isTabVisible) return;
 
     if (current) {
-      // Auto-hide strictly after 5 seconds
-      const timer = setTimeout(() => {
+      setIsExiting(false);
+      // Start exit fade-and-slide at 4.6 seconds
+      const exitTimer = setTimeout(() => {
+        setIsExiting(true);
+      }, 4600);
+
+      // Unmount completely at 5 seconds after smooth slide-and-fade exit completes
+      const unmountTimer = setTimeout(() => {
         setCurrent(null);
+        setIsExiting(false);
       }, 5000);
-      return () => clearTimeout(timer);
+
+      return () => {
+        clearTimeout(exitTimer);
+        clearTimeout(unmountTimer);
+      };
     }
 
     if (paused) return;
@@ -206,6 +218,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
       shownCount.current += 1;
       const nextItem = activityQueue[itemIndex.current % activityQueue.length];
       itemIndex.current += 1;
+      setIsExiting(false);
       setCurrent(nextItem);
     }, delay);
 
@@ -215,13 +228,17 @@ export default function LivePopups({ paused }: { paused: boolean }) {
   if (!current || off || paused || !isTabVisible) return null;
 
   const handleDismiss = () => {
-    setCurrent(null);
-    setOff(true);
-    try {
-      sessionStorage.setItem(OFF_KEY, '1');
-    } catch {
-      /* ignore */
-    }
+    setIsExiting(true);
+    setTimeout(() => {
+      setCurrent(null);
+      setIsExiting(false);
+      setOff(true);
+      try {
+        sessionStorage.setItem(OFF_KEY, '1');
+      } catch {
+        /* ignore */
+      }
+    }, 380);
   };
 
   // Badge icon and styling based on category
@@ -290,7 +307,9 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
   return (
     <aside
-      className="fixed left-3 sm:left-5 bottom-20 sm:bottom-6 z-50 max-w-[400px] w-[calc(100vw-24px)] sm:w-auto rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl transition-all duration-300 overflow-hidden"
+      className={`fixed left-3 sm:left-5 bottom-20 sm:bottom-6 z-50 max-w-[400px] w-[calc(100vw-24px)] sm:w-auto rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl overflow-hidden pointer-events-auto ${
+        isExiting ? 'toast-slide-exit' : 'toast-slide-enter'
+      }`}
       role="status"
       aria-live="polite"
     >
@@ -339,12 +358,12 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         </div>
       </div>
 
-      {/* 5-Second Animated Progress Bar Countdown */}
+      {/* 4.6-Second Animated Progress Bar Countdown */}
       <div className="absolute bottom-0 left-0 h-[2.5px] w-full bg-white/10 overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-[#f5a524] via-amber-300 to-[#f5a524]"
           style={{
-            animation: 'shrinkWidth 5s linear forwards',
+            animation: 'shrinkWidth 4.6s linear forwards',
           }}
         />
       </div>

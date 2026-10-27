@@ -4,7 +4,7 @@ import {
   Clock, TrendingUp, Wallet, Lock, Download, Sparkles, GraduationCap,
   Flame, Menu, X, ChevronRight, Settings, Sliders, DollarSign,
   CheckCircle2, ArrowRight, BarChart3, AlertCircle, FileEdit, Check,
-  Search, SlidersHorizontal, Layers, ShieldCheck, Zap, ArrowUpRight
+  Search, SlidersHorizontal, Layers, ShieldCheck, Zap, ArrowUpRight, Rocket
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { fmtMoney } from '@/lib/money';
@@ -811,6 +811,37 @@ export default function Admin() {
                   </div>
                 </div>
                 <MarketsView />
+              </div>
+
+              {/* GitHub Pages Automated Deployment Card */}
+              <div className="rounded-2xl border border-white/10 bg-[#121518] p-5 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <Rocket className="h-5 w-5 text-[#f5a524]" />
+                    <div>
+                      <h3 className="font-display text-sm font-bold uppercase tracking-wider text-white">
+                        GitHub Pages Deployment
+                      </h3>
+                      <p className="text-xs text-white/50 font-mono">
+                        Workflow: .github/workflows/deploy.yml
+                      </p>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono font-semibold text-emerald-400 w-fit">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Automated CI/CD Ready
+                  </span>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2 text-xs font-mono text-white/80">
+                  <p className="text-white/60"># Deploy script configured in package.json:</p>
+                  <p className="text-[#f5a524] font-bold">npm run deploy</p>
+                  <p className="text-white/60 pt-1"># Triggers on git push to main / master or manual workflow dispatch.</p>
+                </div>
+
+                <p className="text-xs text-white/60">
+                  Every commit pushed to your GitHub repository automatically builds and publishes the latest live website via GitHub Actions.
+                </p>
               </div>
 
               {/* System & Downloads Card */}

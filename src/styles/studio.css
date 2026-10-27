@@ -577,7 +577,38 @@ p, li { text-wrap: pretty; }
 .cost-note { margin-top: 8px; color: rgb(var(--muted)); font-size: 13px; opacity: .85; }
 .cost-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 14px; font-weight: 700; font-size: 16px; }
 .cost-link svg { transition: transform .35s var(--ease-out); }
-.cost-link:hover svg { transform: translateX(4px); }
 @media (prefers-reduced-motion: reduce) { .cost-bar.is-ours > i { animation: none; } }
 @keyframes shrinkWidth { from { width: 100%; } to { width: 0%; } }
+
+/* Subtle slide-in-and-fade & exit animations for live activity popups */
+@keyframes toastSlideInFade {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastSlideOutFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+
+.toast-slide-enter {
+  animation: toastSlideInFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-slide-exit {
+  animation: toastSlideOutFade 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 
