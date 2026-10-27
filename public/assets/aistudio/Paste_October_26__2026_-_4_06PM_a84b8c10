@@ -1,0 +1,892 @@
+# ADVIBE STUDIOS — MASTER WEBSITE REDESIGN, CONVERSION AND ADMIN IMPLEMENTATION BRIEF
+
+## 1. Your mission
+
+You are acting as a world-class creative director, premium digital product designer, mobile-first UX specialist, conversion-focused copywriter, brand strategist, motion designer, and senior full-stack engineer.
+
+Your task is to transform the existing Advibe Studios website and AI video training sales page into a visually outstanding, easy-to-understand, fast-loading, high-converting experience.
+
+This must be a real implementation in the existing project, not a design proposal or a collection of mock-ups.
+
+The website should immediately communicate that Advibe Studios is a serious creative agency that uses AI to help businesses produce compelling visual content—and that our training is built around practical experience, not just watching lessons.
+
+Visitors should feel three things:
+
+1. **Wow:** This looks beautiful, modern, carefully designed, and different from ordinary online course websites.
+2. **Trust:** These people are actually doing creative work for businesses. They are not simply teaching theories they have never applied.
+3. **Confidence:** I can learn a practical skill, create videos myself, receive guidance, and understand exactly what I am paying for.
+
+Do not achieve visual appeal at the expense of readability, performance, accessibility, clarity, or conversion.
+
+The final experience must feel like Advibe Studios, not a generic AI startup template.
+
+---
+
+# 2. First inspect the existing project
+
+Before making changes, thoroughly inspect the current website, source code, assets, brand identity, sales page, course content, pricing, checkout process, founder biographies, backend, and administration interface.
+
+Understand what is already functional and what needs improvement.
+
+Identify:
+
+- Existing brand colours, fonts, logo, visual assets, and design conventions.
+- Current website layout and page hierarchy.
+- Existing sales copy and course details.
+- The instructor and founder information already available.
+- The current company showcase and case study implementation.
+- Existing bonuses and course curriculum.
+- Pricing, payment, enrolment, and checkout functionality.
+- Existing admin authentication and content-management capabilities.
+- The technology stack and performance constraints.
+
+Preserve working functionality and existing integrations unless a change is necessary and justified.
+
+Do not invent missing company details, founder credentials, prices, testimonials, results, or programme terms. Where information is missing, use the existing verified information or flag the precise detail that requires confirmation.
+
+Then proceed to redesign and implementation.
+
+---
+
+# 3. VISUAL DIRECTION — MAKE ADVIBE STUDIOS LOOK EXCEPTIONAL
+
+## 3.1 Follow our actual brand identity
+
+The existing Advibe Studios brand is the foundation of every design decision.
+
+Study the current logo, colours, fonts, visual assets, and existing brand materials before deciding on the final aesthetic.
+
+Do not arbitrarily replace our identity with a fashionable design trend.
+
+Build a cohesive visual system that expresses a creative-led, professional, technically capable, modern agency.
+
+The website should feel:
+
+- Creative without being chaotic.
+- Premium without being pretentious.
+- Modern without feeling like a generic AI product.
+- Energetic without being visually exhausting.
+- Professional without looking corporate and lifeless.
+- Beautiful without sacrificing clarity.
+- Distinctive without sacrificing usability.
+
+Avoid the standard AI landing-page formula of a generic gradient background, oversized headline, three identical feature cards, and repeated rounded rectangles.
+
+Create a recognisable visual language that could belong specifically to Advibe Studios.
+
+## 3.2 Typography is a major design priority
+
+Typography must be one of the strongest parts of the visual experience.
+
+Choose beautiful, highly legible typefaces that work together intentionally. Use the existing brand fonts if they are appropriate. Otherwise, select a complementary display typeface and a highly readable body typeface.
+
+Establish a complete typographic system for:
+
+- Hero headlines.
+- Section headlines.
+- Subheadings.
+- Body copy.
+- Captions.
+- Statistics.
+- Buttons.
+- Navigation.
+- Pricing.
+- Course details.
+- Case studies.
+- Founder biographies.
+- Frequently asked questions.
+
+Large headings should have personality and presence. Body copy should be effortless to read, especially on mobile.
+
+Use intentional font sizes, line heights, letter spacing, text widths, and font weights.
+
+Avoid overly thin text, tiny labels, long lines, cramped paragraphs, and excessively wide headings.
+
+Do not make the design beautiful by making the content difficult to read.
+
+Use responsive typography that adjusts naturally to different screens without creating awkward line breaks or excessively large headings.
+
+Load fonts efficiently. Prefer properly licensed, performant font files, and avoid downloading unnecessary weights or families.
+
+## 3.3 Make backgrounds visually rich
+
+Do not rely exclusively on flat, plain colour fills.
+
+Use subtle, sophisticated surface treatments to create depth and visual interest while respecting the existing brand palette.
+
+Depending on what suits the brand, explore:
+
+- Very subtle grain or paper-like texture.
+- Soft tonal transitions within the same brand colour.
+- Restrained radial lighting.
+- Layered background shapes.
+- Fine-line patterns.
+- Gentle vignettes.
+- Carefully composed light and shadow.
+- Low-contrast decorative geometry.
+- Editorial-style image and typography compositions.
+- Subtle textured surfaces behind important content.
+
+These effects must be restrained and intentional. They should make the page feel richer, not noisier.
+
+Avoid excessive gradients, high-contrast decorative patterns behind paragraphs, heavy glassmorphism, glowing neon borders, and unnecessary visual effects.
+
+Textures must not interfere with text contrast or increase loading time unnecessarily. Prefer lightweight CSS or optimised assets over large decorative images.
+
+## 3.4 Create a distinctive visual composition
+
+Do not force every section into the same layout.
+
+Use varied but coherent compositions, including appropriate combinations of:
+
+- Large editorial typography.
+- Asymmetric layouts.
+- Strong image-led sections.
+- Full-width visual moments.
+- Carefully arranged video examples.
+- Contrasting light and dark surfaces.
+- Generous whitespace.
+- Clear visual transitions.
+- Beautifully designed comparison sections.
+- Distinctive founder profiles.
+- An immersive, readable case study presentation.
+
+Every section should have a clear purpose and visual identity, while still belonging to the same design system.
+
+Avoid making every section a centred heading followed by a row of cards.
+
+Use real creative assets from the existing project wherever possible. The work we showcase should reinforce our credibility as a creative agency.
+
+---
+
+# 4. MOBILE-LED DESIGN — NOT DESKTOP DESIGN SHRUNK DOWN
+
+Mobile is the primary design environment for this project.
+
+Do not simply build a desktop page and make it responsive afterward.
+
+Design the experience from the perspective of someone discovering Advibe Studios through Instagram, TikTok, WhatsApp, or another mobile channel.
+
+The mobile experience should be so good that it feels like the natural home of the website, while the desktop version expands into a more spacious, editorial experience.
+
+## Mobile design requirements
+
+- Design the first viewport deliberately.
+- Make the main headline immediately understandable.
+- Keep the primary call to action easy to find.
+- Use readable font sizes and comfortable line heights.
+- Use generous spacing between paragraphs and interactive elements.
+- Avoid cramped multi-column layouts.
+- Ensure buttons are easy to tap.
+- Make images and videos fit naturally within the screen.
+- Prevent horizontal overflow.
+- Avoid long, uninterrupted walls of text.
+- Use accordions, progressive disclosure, and clear section breaks where they improve comprehension.
+- Make pricing, bonuses, guarantees, and course details easy to understand.
+- Ensure important information is not hidden behind hover-only interactions.
+- Keep sticky actions subtle and useful rather than intrusive.
+- Ensure animations remain smooth on ordinary mobile devices.
+- Test touch interactions rather than assuming desktop interactions will translate.
+
+Use a mobile-first information hierarchy. The order in which information appears on mobile should reflect the way a prospective student makes a buying decision.
+
+Do not simply stack desktop cards vertically and call the result mobile-first.
+
+On desktop, take advantage of additional space through more expressive typography, layered imagery, wider compositions, and well-proportioned content areas.
+
+The result must feel intentionally designed at both sizes.
+
+---
+
+# 5. MOTION DESIGN — MAKE THE EXPERIENCE FEEL ALIVE
+
+Use motion to make the website engaging, polished, and memorable.
+
+Animation should create a sense of progression and quality. It should never make the page feel slow, distracting, or difficult to use.
+
+Explore a consistent motion system that may include:
+
+- Elegant hero text reveals.
+- Subtle movement in decorative background elements.
+- Smooth section entrances as users scroll.
+- Gentle image reveals.
+- Beautiful hover and press feedback on buttons.
+- Smooth accordion expansion.
+- Polished transitions between interface states.
+- Subtle emphasis on important course outcomes.
+- Carefully timed transitions in the founder and case study sections.
+- A well-designed mobile menu.
+- Tasteful visual transitions between contrasting sections.
+
+Use animation to guide attention, establish hierarchy, reveal information, and communicate interaction.
+
+Avoid animating every element. Too much motion makes a page look cheap and distracts from the offer.
+
+### Motion requirements
+
+- Prefer transform and opacity animations where practical.
+- Avoid expensive effects that cause layout thrashing.
+- Do not make the visitor wait for essential information to appear.
+- Ensure primary calls to action are immediately accessible.
+- Support `prefers-reduced-motion`.
+- Avoid scroll hijacking.
+- Avoid animation that prevents users from navigating naturally.
+- Ensure text remains readable during transitions.
+- Avoid continuous animations that unnecessarily consume battery or CPU resources.
+
+The page should feel delightful, not exhausting.
+
+---
+
+# 6. SPEED AND PERFORMANCE — BEAUTIFUL BUT FAST
+
+The website must load quickly, particularly on mobile networks and ordinary smartphones.
+
+Do not sacrifice performance for visual effects.
+
+Audit the existing implementation and optimise where needed.
+
+Requirements:
+
+- Minimise unnecessary JavaScript.
+- Avoid loading large animation libraries for simple effects.
+- Optimise images and use appropriately sized formats.
+- Lazy-load below-the-fold imagery where appropriate.
+- Do not lazy-load the primary above-the-fold image if doing so would delay the main visual content.
+- Use appropriate image dimensions and responsive sources.
+- Prevent layout shifts caused by images, fonts, or animations.
+- Load fonts efficiently.
+- Remove unused assets and unnecessary dependencies where safe.
+- Avoid blocking the initial render with non-essential scripts.
+- Keep third-party scripts under control.
+- Avoid autoplaying heavy videos with sound.
+- Use lightweight placeholders for media where appropriate.
+- Keep the first viewport responsive and interactive.
+- Preserve functionality when network conditions are poor.
+
+Measure actual performance where tooling permits. Use Lighthouse or equivalent tools to investigate Core Web Vitals and aim for strong real-world performance.
+
+Do not invent performance scores or claim that the website is fast without testing.
+
+Prioritise a fast first impression and a smooth experience throughout the page.
+
+---
+
+# 7. REPOSITION THE OFFER — WHY ADVIBE STUDIOS IS DIFFERENT
+
+The page must clearly explain why our programme is different from ordinary AI video courses.
+
+Do not rely on vague claims such as “the best AI course,” “revolutionary training,” or “unlimited success.”
+
+Our differentiation should be based on the actual structure of the programme, the experience of the instructors, the work of our agency, and the learning environment.
+
+The most important differentiators are:
+
+## A. We are an agency that teaches
+
+Advibe Studios is a creative agency that applies AI tools to real business content needs.
+
+We are not positioning ourselves as people who only watch tutorials and then teach other people to do the same.
+
+Our agency work gives us practical context for understanding what businesses need, what makes content effective, how creative work is delivered, and where AI tools fit into real production workflows.
+
+Explain this distinction in simple language.
+
+Make it clear that the course is informed by real agency practice, without implying that every lesson or tool has been independently proven to guarantee commercial results.
+
+## B. An instructor combination
+
+Present the instructor combination as an important reason to choose the programme.
+
+Inspect the existing founder and instructor biographies. Use verified information to explain what each instructor brings to the training and why their combined experience is valuable.
+
+Do not invent credentials, years of experience, qualifications, or achievements.
+
+Make the presentation visual, personal, and easy to understand. Prospective students should understand who will teach them, what they bring, and how the instructors complement each other.
+
+## C. Two weeks of intensive, hands-on training
+
+This is not positioned as a course where students simply receive prerecorded lessons and are left alone.
+
+The programme is a two-week hands-on intensive.
+
+Emphasise that students are expected to practise, create, experiment, and learn by doing.
+
+Explain the practical difference:
+
+- Watching a video demonstrates what someone else can do.
+- Guided practice helps a student learn how to do it themselves.
+- Feedback and iteration help them identify what needs improvement.
+- Repeated practice helps them build a more reliable creative workflow.
+
+Use only the teaching formats and support actually included in the programme. Do not promise individual coaching, live sessions, or specific feedback frequency unless confirmed.
+
+## D. A learning community
+
+Explain the value of learning alongside other people.
+
+The community should be presented as a place to exchange ideas, ask questions where supported, share progress, learn from different approaches, and remain engaged while practising.
+
+Do not promise a particular response time or permanent access unless the actual programme provides it.
+
+## E. Real business context and credibility
+
+We are an agency with active business work.
+
+For now, **CirclesFundMe should be the only company presented as an active client or company partner in this section**.
+
+We have worked with CirclesFundMe and generated thousands of messaging conversations around its business.
+
+Use the verified facts available in the project to explain the nature of the work and its relevance to AI-powered creative production and business communication.
+
+Do not imply that CirclesFundMe endorses the course, guarantees student outcomes, or formally endorses Advibe Studios unless that relationship is explicitly authorised and verified.
+
+Do not add other companies to the active-partner showcase merely to make the page look more impressive.
+
+## F. Practical outcomes, not just access to information
+
+The programme should be presented around what students learn to do.
+
+Focus on practical capabilities such as creating video content, developing creative concepts, producing visuals, refining content, and building a repeatable process.
+
+Use the existing curriculum to determine the exact deliverables and skills taught.
+
+Make the outcome tangible without guaranteeing income, employment, viral videos, clients, or business growth.
+
+---
+
+# 8. EXPLAIN WHY BUSINESSES NEED CONSISTENT CONTENT
+
+The sales page must make the problem understandable to an ordinary business owner, aspiring creator, marketer, or entrepreneur.
+
+Use simple, direct language.
+
+Explain that businesses increasingly use short-form video and visual content to attract attention, demonstrate products, educate potential customers, answer questions, and remain visible on platforms such as Instagram and TikTok.
+
+A business can have a good product and still struggle to reach people if potential customers rarely see it.
+
+Consistent, useful content gives a business more opportunities to communicate what it offers and reach audiences beyond the people who already know it.
+
+Explain that social platforms can help businesses reach people in new locations, but do not imply that every video will go viral or that online reach automatically produces sales.
+
+Explain the practical problem with relying entirely on traditional content production: creating fresh visuals and videos can take time, money, planning, and specialised skills.
+
+AI-assisted production can help people explore ideas and create content more efficiently when they learn to use the tools properly.
+
+The message should be clear:
+
+**Content is no longer something many businesses can afford to treat as an occasional afterthought. It is an important part of how they communicate, stay visible, and build recognition.**
+
+Help visitors understand why learning these skills now could be valuable.
+
+Avoid fearmongering, exaggerated predictions, fabricated statistics, or claims that every business must use AI to survive.
+
+Make the copy compelling through clarity, relatable business problems, useful examples, and a clear explanation of the programme.
+
+---
+
+# 9. SHOW WHY THIS IS BETTER THAN ANOTHER AI VIDEO COURSE
+
+Create a strong, visually distinctive comparison section.
+
+The purpose is not to insult competitors. It is to help visitors understand the practical difference between this programme and other learning options.
+
+Use a comparison table or an attractive mobile-friendly alternative.
+
+Consider these dimensions, verifying every claim against our actual offer:
+
+| Learning factor      | Typical self-paced course                      | Advibe Studios                                              |
+| -------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
+| Learning format      | Often centred on prerecorded lessons           | Two-week hands-on intensive                                 |
+| Practice             | Depends on how the student applies the lessons | Practical creation is central to the training               |
+| Guidance             | Varies by provider                             | Explain the actual support included                         |
+| Learning community   | Depends on the course                          | Explain the community included in our programme             |
+| Business context     | Depends on the instructor                      | Agency experience informs the training                      |
+| Creative development | Often depends on independent practice          | Students practise developing and refining creative work     |
+| Image creation       | Depends on the curriculum                      | AI image creation is included as a bonus skill              |
+| Storytelling         | Depends on the curriculum                      | Learn to develop compelling stories and refine them with AI |
+
+Do not present unverified claims about every competitor as facts.
+
+Make clear that some other courses may offer excellent instruction. Our case should be that **the structure and practical focus of our programme make it a different learning experience**.
+
+## Address people who have already paid for an AI video course
+
+Create a dedicated section speaking directly to people who have already bought another course and perhaps completed several lessons without becoming confident creators.
+
+Do not shame them or claim that the other course was worthless.
+
+Acknowledge that learning the tools is only one part of the process.
+
+A person may know which buttons to press but still struggle to choose a good idea, develop a story, generate consistent visuals, direct a scene, refine an output, or turn separate clips into a coherent video.
+
+Explain that a practical, guided, intensive environment is designed to help bridge the gap between knowing about the tools and actually creating with them.
+
+Make the distinction respectful, specific, and credible.
+
+Do not claim that every student who takes another course will fail or that our programme guarantees superior results for everyone.
+
+---
+
+# 10. REDESIGN THE FOUNDER AND INSTRUCTOR PRESENTATION
+
+The founder section must look much better than a conventional biography section.
+
+Do not simply put two portraits inside generic cards with a paragraph underneath.
+
+Inspect the available photographs and biographies before designing this section.
+
+Develop a creative editorial composition that presents the founders as real people with a clear reason for teaching this programme.
+
+The design may use:
+
+- Strong, well-cropped portraits.
+- Large typographic names.
+- Short, compelling introductions.
+- Clearly differentiated areas of expertise.
+- A concise explanation of the instructor combination.
+- A clear link between agency work and the course.
+- Subtle background textures.
+- Beautiful spacing and carefully composed image-to-text relationships.
+
+Make the section feel personal, confident, and professional.
+
+On mobile, each founder's identity, role, and relevance should be immediately understandable.
+
+Keep the biographies concise enough to read comfortably, but detailed enough to establish credibility.
+
+Do not fabricate achievements or credentials.
+
+If existing founder photographs are poor quality, use the best verified assets available and identify any replacement assets that would materially improve the result.
+
+---
+
+# 11. COMPANY SHOWCASE AND EDITABLE CASE STUDY
+
+I want the company showcase to be managed from the admin backend.
+
+For the current version, focus only on CirclesFundMe as the company with which we are actively working.
+
+Do not hard-code the company showcase directly into the frontend.
+
+## Admin functionality
+
+Inspect the current backend and add or improve an administrative content-management interface that allows an authorised administrator to:
+
+- Add or edit a featured company.
+- Change the company name and logo.
+- Update the company description.
+- Edit the relationship or project description.
+- Add, replace, or remove relevant project images or approved creative examples.
+- Edit the case study title.
+- Edit the case study body and supporting content.
+- Manage headings and structured sections within the case study.
+- Add approved metrics where they are verified.
+- Change the call-to-action text.
+- Set whether the company appears on the public course page.
+- Save changes and see them reflected on the public page.
+- Preview the content before publishing, if the existing architecture supports it.
+
+The implementation must use the existing authentication and permission system.
+
+Do not expose administrative editing controls to ordinary visitors.
+
+Validate uploaded assets, sanitise content appropriately, and protect the administrative actions.
+
+Use the current data storage and backend where possible. Do not build a fake admin interface that saves nothing.
+
+If the project already has a content-management structure, extend it instead of creating an unrelated system.
+
+## Public company showcase
+
+Create an attractive section introducing CirclesFundMe.
+
+It should look like a genuine project feature, not a random logo placed between sales sections.
+
+Use a well-composed layout that communicates:
+
+- Who the company is, based on verified information.
+- The type of work Advibe Studios has undertaken.
+- Why the work is relevant to our practical training.
+- What visitors can learn from seeing the work in a real business context.
+
+Do not disclose confidential project information or use unapproved client assets.
+
+## Clickable case study
+
+Visitors must be able to click a clear call to action such as “Explore the case study” to open a dedicated case study page or a polished, accessible case study view.
+
+The case study must be editable from the admin backend.
+
+It should support a meaningful narrative structure, such as:
+
+1. Project overview.
+2. The business or communication challenge.
+3. The approach taken.
+4. The creative or production process.
+5. The work delivered.
+6. Verified outcomes or metrics, where available.
+7. What the project demonstrates about practical AI-assisted creative work.
+
+Only include sections supported by the real project information. Do not invent a challenge, workflow, deliverable, or result to fill a template.
+
+The case study should feel like a thoughtful piece of agency work, with strong typography, images, a clear narrative, and an easy return path to the course page.
+
+---
+
+# 12. UPDATE THE BONUS SECTION
+
+Inspect the existing bonus list and make the following exact changes.
+
+Remove:
+
+- Bonus 3.
+- Bonus 4.
+- Bonus 5.
+
+Remove them from the visible sales page and from any associated bonus counts, summary labels, or navigation so that the page does not imply that those bonuses are still included.
+
+Check whether the current course curriculum or admin system stores the bonus list separately. If it does, keep the frontend and backend consistent.
+
+Do not delete unrelated curriculum content or permanently destroy useful records unnecessarily.
+
+## Add a storytelling and AI refinement bonus
+
+Add a bonus that teaches students how to develop compelling stories and refine those stories using AI.
+
+The content should explain how a strong idea can be shaped into a story with a clear opening, development, and payoff, and how AI can help with brainstorming, structuring, rewriting, and improving the idea.
+
+Connect storytelling to practical video creation: a video is not compelling simply because it was generated by an AI tool. The idea, structure, pacing, and message matter.
+
+Use a clear bonus title, a concise description, and a visually attractive presentation.
+
+Do not promise a specific deliverable or tool unless it is genuinely included in the programme.
+
+## Add an AI image creation bonus
+
+Add a bonus teaching students how to use AI to generate high-quality images for marketing and business communication.
+
+Explain how these images can be used to create fresh visuals for product promotion, social content, campaign concepts, advertisements, and other marketing needs.
+
+Position this as a practical way to reduce creative bottlenecks and help businesses produce more varied visual content.
+
+Do not promise perfect product accuracy, unlimited generation, commercial rights, or professional results without the relevant tool capabilities and terms being verified.
+
+The message should be that students can learn to create useful visual assets on demand instead of always waiting for a new photograph or a conventional design process.
+
+Make this bonus visually distinct from the storytelling bonus.
+
+---
+
+# 13. ADD THE FIRST-WEEK MONEY-BACK GUARANTEE
+
+The current proposed offer includes a guarantee:
+
+**If a student cannot make a video after the first week of the course, they can receive their money back.**
+
+Present this clearly and prominently enough for visitors to understand the risk-reduction benefit.
+
+Do not bury it in tiny text.
+
+Create a beautifully designed guarantee section with simple language and a confident, reassuring visual treatment.
+
+However, before publishing, inspect the existing programme terms and confirm the precise meaning of the guarantee.
+
+Clarify the following if the information is not already documented:
+
+- What qualifies as being able to make a video.
+- Whether the student must complete specified exercises.
+- How the student requests a refund.
+- The exact deadline for submitting the request.
+- Whether any exclusions apply.
+- How refunds are processed.
+
+Do not invent these terms.
+
+If the policy has not been finalised, clearly flag the missing details for administrator approval and avoid silently inventing restrictions or making promises the business cannot honour.
+
+Once approved, keep the wording consistent across the sales page, checkout, FAQs, and any related admin-managed offer content.
+
+The guarantee should communicate confidence in the hands-on learning process, not imply that every student will produce identical results.
+
+---
+
+# 14. BUILD A STRONGER SALES-PAGE NARRATIVE
+
+Reorganise the sales page around the questions prospective students naturally ask.
+
+Do not simply place attractive sections in a random order.
+
+The visitor should understand the problem, the opportunity, the offer, the teaching approach, the credibility, the practical benefits, the price, and the next step.
+
+Use this as the starting point, adapting it to the existing page and available content.
+
+### Section 1: The opening hook
+
+Immediately communicate what the visitor can learn to create and why it matters.
+
+The hero should make it obvious that this is practical AI-powered video and creative training.
+
+Use a strong headline, a concise supporting statement, a visually compelling representation of the work students will learn to produce, and a clear primary call to action.
+
+Avoid generic headlines such as “Unlock Your Potential With AI.”
+
+The headline should communicate a meaningful outcome, not just mention a technology.
+
+### Section 2: Why these skills matter now
+
+Explain how businesses use video and visual content to stay visible, communicate value, demonstrate products, and reach audiences online.
+
+Use simple examples that an ordinary Nigerian entrepreneur, marketer, business owner, or aspiring creator can understand.
+
+### Section 3: The problem with knowing the tools but not creating
+
+Address the gap between watching tutorials and being able to create something independently.
+
+Explain why practical application, creative thinking, storytelling, iteration, and guidance matter.
+
+### Section 4: What makes Advibe Studios different
+
+Present the key differentiators:
+
+- The instructor combination.
+- A two-week hands-on intensive.
+- A learning community.
+- Agency experience.
+- Practical creation.
+- Storytelling and AI-assisted refinement.
+- AI image creation as an additional skill.
+
+Make this a visually distinctive section.
+
+### Section 5: Real agency work
+
+Introduce CirclesFundMe and link to the editable case study.
+
+Use verified work and project information to demonstrate practical context.
+
+### Section 6: What students will learn
+
+Use the existing curriculum to describe the practical skills and activities.
+
+Present the curriculum in a clear, scannable format. Avoid making unsupported promises about tools, deliverables, or outcomes.
+
+### Section 7: The learning experience
+
+Show how the two-week intensive works, using the actual timetable and teaching format available.
+
+Make the experience feel tangible and understandable.
+
+### Section 8: The bonuses
+
+Present the remaining valid bonuses, including:
+
+- Crafting compelling stories and refining them with AI.
+- Generating high-quality AI images for business marketing.
+
+Ensure that the other retained bonuses match the existing verified offer.
+
+### Section 9: The instructors
+
+Introduce the founders with the improved visual treatment and verified biographies.
+
+### Section 10: The guarantee
+
+Explain the first-week video-making money-back guarantee and link to the approved terms.
+
+### Section 11: Objections and FAQs
+
+Address genuine questions about the required experience, tools, training format, course access, support, equipment, and refund terms where the information is available.
+
+Do not invent answers to unknown policy questions.
+
+### Section 12: The offer and final call to action
+
+Present the actual price, what is included, the relevant guarantee, and a clear next step.
+
+Do not invent a discount, deadline, remaining-seat count, or crossed-out price.
+
+The call to action must connect to the existing working enrolment or checkout flow.
+
+---
+
+# 15. COPYWRITING RULES
+
+Write for real people, not marketing jargon.
+
+Use clear, conversational English that a Nigerian audience can easily understand.
+
+Prefer short sentences, concrete examples, meaningful headlines, and simple explanations.
+
+Avoid excessive buzzwords such as “revolutionary,” “game-changing,” “cutting-edge,” “unleash,” and “transform your future” unless a specific use is genuinely justified.
+
+Do not make every heading a slogan. Some headings should simply explain what the section is about.
+
+Use different copywriting approaches where appropriate:
+
+- Problem and solution.
+- Curiosity.
+- Specific outcomes.
+- Relatable scenarios.
+- Practical demonstrations.
+- Contrast between learning formats.
+- Objection handling.
+- Risk reduction through the guarantee.
+- Credibility through actual agency work.
+
+Do not force every hook into an aggressive sales formula.
+
+The copy should persuade through a clear explanation of the problem, the learning experience, the practical value, and the reasons to trust Advibe Studios.
+
+---
+
+# 16. CONVERSION DESIGN
+
+The website must make it easy for an interested visitor to decide whether the course is right for them and take the next step.
+
+Design the conversion experience around clarity and confidence.
+
+Ensure that:
+
+- The primary call to action is obvious.
+- The offer is explained before asking for a purchase.
+- The course format is easy to understand.
+- The benefits are specific and credible.
+- The differentiators are supported by real programme details.
+- The guarantee is understandable.
+- The price and inclusions are transparent.
+- The FAQs resolve meaningful objections.
+- The case study reinforces credibility.
+- Buttons use descriptive, action-oriented wording.
+- The checkout flow remains functional.
+- The page does not bombard visitors with competing actions.
+
+---
+
+# 17. BACKEND AND CONTENT MANAGEMENT
+
+Treat the public page and the admin backend as one complete product.
+
+Inspect the existing architecture and make the relevant page content manageable from the backend where appropriate.
+
+At minimum, ensure the administrator can manage:
+
+- Featured companies, currently limited to CirclesFundMe for the active showcase.
+- Company descriptions and approved logos.
+- Case study content and imagery.
+- Founder biographies and portraits, if the existing data model supports them.
+- Bonus titles and descriptions.
+- Relevant course content.
+- Guarantee wording and approved policy details.
+- Featured images and creative assets.
+
+Reuse existing data models and admin components where possible.
+
+Do not create unnecessary complexity by turning every decorative sentence into a database field.
+
+Use content management where the business genuinely needs to update information without editing code.
+
+Make sure changes saved in the admin interface actually appear on the public page.
+
+Protect admin access, validate inputs, handle missing images gracefully, and ensure that unpublished or disabled content is not accidentally exposed.
+
+Do not weaken security or remove existing authentication to simplify implementation.
+
+---
+
+# 18. ACCESSIBILITY AND READABILITY
+
+A beautiful website is unsuccessful if visitors cannot comfortably read or navigate it.
+
+Implement:
+
+- Sufficient text contrast.
+- Accessible button and link labels.
+- Visible keyboard focus.
+- Logical heading hierarchy.
+- Proper semantic HTML.
+- Keyboard-accessible menus, accordions, and interactive components.
+- Appropriate alternative text for meaningful images.
+- Accessible form labels and error messages.
+- Reduced-motion support.
+- Readable body text on mobile.
+- Clear link styling.
+- Adequate spacing between touch targets.
+
+Do not communicate important information through colour alone.
+
+Avoid text over visually busy backgrounds.
+
+Check the page at realistic mobile widths and browser zoom levels.
+
+---
+
+# 19. IMPLEMENTATION AND QUALITY ASSURANCE
+
+Work directly in the existing project.
+
+Do not stop after giving me a plan.
+
+Do not deliver a beautiful static mock-up with non-functional buttons.
+
+Do not rebuild the application from scratch unless the current architecture genuinely requires it.
+
+Implement the changes in a way that preserves the existing business logic and makes the code maintainable.
+
+After implementation:
+
+1. Run the application.
+2. Inspect the actual rendered page.
+3. Test the mobile-first layout.
+4. Test desktop presentation.
+5. Test the primary call to action and checkout flow.
+6. Test navigation and interactive elements.
+7. Verify that the CirclesFundMe showcase loads from the intended data source.
+8. Verify that the case study opens and displays the saved content.
+9. Test the admin editing workflow.
+10. Verify that saved content appears on the public page.
+11. Verify that Bonus 3, Bonus 4, and Bonus 5 have been removed from the relevant public offer.
+12. Verify that the storytelling and AI image bonuses appear correctly.
+13. Check the guarantee wording across relevant pages.
+14. Check for mobile overflow and awkward typography.
+15. Check animation behaviour and reduced-motion support.
+16. Measure loading performance where possible.
+17. Fix issues discovered during testing.
+
+Test at representative mobile widths such as 320, 360, 375, 390, and 430 CSS pixels, plus tablet and desktop sizes.
+
+Do not claim a test passed unless it was actually performed.
+
+If any feature cannot be completed because of a genuine technical limitation, explain what is blocked, why it is blocked, and what remains to be done.
+
+---
+
+# 20. FINAL STANDARD
+
+The final Advibe Studios website must achieve all of the following:
+
+- It looks unmistakably connected to our brand.
+- It uses beautiful, highly readable typography.
+- Its backgrounds have depth and texture without becoming distracting.
+- It feels exceptionally good on mobile.
+- It looks equally intentional on desktop.
+- It uses animation to create a polished, engaging journey.
+- It loads quickly.
+- It explains the value of learning AI video and creative production in simple terms.
+- It differentiates the programme from ordinary prerecorded courses.
+- It communicates the instructor combination, hands-on intensive, community, and agency experience.
+- It showcases CirclesFundMe using verified information.
+- It includes an editable case study.
+- It includes the revised bonus list.
+- It presents the first-week guarantee accurately.
+- It improves the founder section.
+- It preserves the working checkout and other essential functionality.
+- It includes a functioning admin content-management experience for the requested content.
+- It uses ethical, evidence-based conversion principles.
+- It is thoroughly checked after implementation.
+
+**Do not prioritise visual novelty over clarity. Do not prioritise conversion over trust. Do not prioritise animation over speed. Do not prioritise desktop aesthetics over the mobile experience.**
+
+The final result should feel like a premium creative agency built an exceptional digital experience specifically for Advibe Studios and its audience.
+
+Begin by auditing the existing project and its brand assets. Then make the design decisions, implement the redesign, verify the backend functionality, inspect the actual page on mobile and desktop, and fix the problems you discover.

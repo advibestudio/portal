@@ -1,0 +1,922 @@
+AdVibe Studios AI Video Training — Pre-Build Questionnaire
+Prepared for AdVibe Studios · 24 October 2026 · Phase 1 of the training-pages workflow (interview first, nothing built yet)
+Where we are
+Your two briefs describe two separate sales pages for the 2-week intensive AI video program: Page 1 for business owners and Page 2 for creators. Following your workflow, nothing has been built yet. This document is the single questionnaire that gathers everything needed before research, strategy, copy and build.
+What I took from your references
+These need no answer from you.
+Nexturge is a Nigerian, business-owner offer. It is recorded and self-paced, with 7 modules. It uses a founding price (₦19,997 rising to ₦40,000) with a countdown, Paystack checkout, a 7-day "make one ad" guarantee and 3 bonuses. It also makes income claims, and its "value" prices and "just bought" popups look manufactured.
+AI Video Bootcamp is a $9/month community with 9 phases, "Learn. Practice. Earn." and two founders with complementary roles. It claims 25,000+ members.
+Your two screenshots show 2-column expandable cards with an orange pill label, and a 3×3 grid of phases with orange "PHASE 0X" labels.
+What we will not copy: invented "value" prices, income claims, and fake purchase popups. The "just started" popups on your site show real orders only, and they will stay that way.
+Three things to settle first
+Look. Your brief says dark with an orange accent, but your live site is currently light cream with gold, built to match AI Strike Force. What should the training pages look like?
+A. The same light look as the site.
+B. A dark version of the same system: same fonts, gold, cards and video wall, on dark surfaces. This is my recommendation, because it matches your references and still feels like one brand.
+C. A dark hero with a light body.
+For this your Question 1 I choose option A
+One class or two? Are both pages selling the same cohort (same instructors, same 6 sessions, same seats) with different pitches, or two separate classes? Is the seat limit one shared pool or one per page?
+For this your Question 2 they are selling the same cohort but with different messaging
+Selfany. I could not find public documentation for it, so I will not assume it has an API. Question 24 asks what it can do.
+How to answer
+Q means a question; a star (⭐) means I really need it. For anything you do not know yet, write TBD. I will leave a clearly marked, admin-editable placeholder and never invent it. You can answer by number, for example "Q3: …".
+The questionnaire
+A. The program
+Q1 ⭐ Exact program name. One name for both pages, or one per page? Or should I propose names after research?
+Propose names after your research, but do note that it is for a 2-week intensive training recordings would be provided, they should also note that No one in their country is currently doing this.
+Q2 ⭐ Format: fully live, live plus replays, or hybrid? On which platform (Zoom, Meet, in person)?
+The class would be fully live with recordings provided for each class.
+Q3 ⭐ Cohort 1: the 6 session dates, day of week, start time, length, and time zone. When does registration open and close?
+Now we need 100 people in the class although truly we may not get that total number yet due to its our first cohort so you can ask me via giving me options for a reasonable time or you give me ideas as to how it we can make it work.
+Q4 Replays: yes or no, and for how long?
+I don't really know what you mean by replays but recordings to the live classes would be provided after the class, which they can access as much as they want at any time.
+Q5 What happens between sessions: assignments, feedback on student work, office hours, a WhatsApp group? For how long after the course ends?
+Now definitely assignments would be given and also would be reviewed weekly. then there is a WhatsApp community where students can help each other and also we at advibe studios we can answer their questions even after they have finished the course at any time. it lasts forever our support community.
+Q6 ⭐ Certificate: who issues it, what must a student do to earn it (attendance, final project), and in what format?
+Now to get our final certificate, we issue it, and to earn it finally they need to create an AI Short film which after grading if it meets our standards they get their certificate.
+Q7 ⭐ The exact tools you will teach. Do students need paid subscriptions, and roughly what do they cost per month? Do you give credits?
+We would introduce them to free tools available for them to use and get credits they can use for experimentation and learning that would renew their credits daily.
+Q8 ⭐ What students need: phone or laptop, internet, any prior skill, and language of instruction.
+The course is built for them to be able to use either their phone or laptop. The just need a device at their disposal.
+Q9 Maximum class size. Is it 100, and is that workable for live teaching?
+Yes 100 is the maximum class size
+B. Curriculum
+Q10 ⭐ For each of the 6 sessions: a working title, what is taught, and what the student creates. A rough draft is fine and I will tighten it.
+Here is everything with regards it with recommendation "2-Week AI Cinematography & AI Video Creation Bootcamp
+Overall Course Outcome
+By the end of the 2-week training, students should be able to:
+Understand the AI content-production workflow.
+Generate professional AI images using structured prompting.
+Transform AI images into cinematic video.
+Control camera movement, composition and visual storytelling.
+Create and maintain consistent AI characters.
+Add voice, sound effects and music.
+Edit complete AI videos.
+Create UGC, influencer and product advertisements.
+Create social-media-ready AI content.
+Plan and produce a short cinematic AI film.
+Understand AI cloning and content automation.
+Build a portfolio of AI-generated work.
+
+WEEK 1 — BUILDING THE AI CREATOR
+DAY 1 — AI Creator Foundations + Prompt Engineering
+Learning Objective
+Students understand how AI content production works from idea → prompt → image → video → edit → final production.
+Module 1 — Introduction to AI Cinematography
+Students will learn:
+What AI cinematography is
+What AI can currently produce
+AI image vs AI video generation
+The AI production pipeline
+Different types of AI content creators
+Where AI fits into advertising, filmmaking and social media
+Understanding the difference between generating content and directing content
+Module 2 — AI Creator Workspace
+Students will learn how to:
+Set up their AI workspace
+Access the required tools
+Organize prompts and assets
+Organize project folders
+Manage generated images/videos
+Create a repeatable production workflow
+Module 3 — Prompt Engineering
+Students will learn:
+How AI prompts work
+Subject
+Environment
+Composition
+Lighting
+Camera
+Lens
+Mood
+Style
+Action
+Quality/detail
+Introduce a simple framework:
+SUBJECT + ACTION + ENVIRONMENT + CAMERA + LIGHTING + STYLE + MOOD
+Module 4 — Hooks & Creative Direction
+Students learn:
+What makes people stop scrolling
+Hook structures
+Curiosity
+Pattern interruption
+Emotional hooks
+Product hooks
+Story hooks
+Assignment 1 — "My First AI Scene"
+Each student must create:
+1 AI-generated image + 1 short AI video concept
+They submit:
+Prompt
+Generated image
+Intended story
+Camera angle
+Lighting choice
+3–5 second video concept
+Student Outcome
+By the end of Day 1, students understand:
+Idea → Prompt → Image → Shot → Video
+
+DAY 2 — AI IMAGES + CINEMATIC VIDEO
+This day combines your AI Images + AI Videos phases.
+Module 1 — AI Image Creation
+Students learn:
+Composition
+Framing
+Perspective
+Lighting
+Depth
+Realism
+Skin/detail
+Product photography
+Character photography
+Environment generation
+Practical Exercise
+Students create:
+Portrait
+Product image
+Lifestyle scene
+Cinematic scene
+
+Module 2 — Image-to-Video
+Students learn:
+Turning static images into moving scenes
+Motion prompting
+Camera movement
+Subject movement
+Environmental movement
+Cinematic transitions
+Students practice:
+Push-in
+Pull-out
+Pan
+Tilt
+Tracking
+Orbit
+Handheld
+Slow motion
+
+Module 3 — Cinematic Camera Language
+Teach basic filmmaking concepts:
+Wide shot
+Medium shot
+Close-up
+Extreme close-up
+Over-the-shoulder
+POV
+Low angle
+High angle
+Tracking shot
+Establishing shot
+Assignment 2 — "Create a Cinematic Sequence"
+Students create a 15–30 second sequence containing at least:
+3 shots
+2 camera movements
+2 different camera angles
+Consistent environment
+Appropriate lighting
+Beginning, middle and end
+Student Outcome
+Students can now create:
+AI Image → Cinematic Motion → Multi-Shot Sequence
+
+DAY 3 — SOUND DESIGN + EDITING + FIRST COMPLETE VIDEO
+This is where students learn to turn AI-generated pieces into an actual production.
+Module 1 — AI Voice & Sound
+Students learn:
+AI voice generation
+Voice selection
+Voiceover
+Background music
+Sound effects
+Ambient sound
+Audio layering
+Teach the concept:
+Picture tells the story. Sound makes people feel it.
+
+Module 2 — Editing
+Students learn:
+Importing footage
+Timeline
+Cutting
+Trimming
+Transitions
+Text
+Captions
+Music
+Sound effects
+Voiceover
+Basic color correction
+Export settings
+
+Module 3 — Complete AI Video
+Students take everything from Days 1–3 and create a complete video.
+Assignment 3 — "My First AI Commercial"
+Students create a:
+30–45 second AI advertisement
+It must contain:
+Hook
+3–6 scenes
+AI-generated visuals
+Voiceover
+Music
+Sound effects
+Text/captions
+CTA
+Week 1 Challenge
+Students submit their commercial.
+You can then review the work publicly and give:
+Creative feedback
+Prompt feedback
+Editing feedback
+Storytelling feedback
+This creates a very strong cohort experience.
+
+WEEK 2 — FROM AI CREATOR TO AI DIRECTOR
+Now we move from basic production into commercial applications, storytelling and scale.
+
+DAY 4 — CHARACTER CONSISTENCY + AI UGC + AI INFLUENCERS
+This day combines:
+Character Consistency
+AI Models
+Realistic Images
+UGC
+AI Influencers
+Module 1 — Character Creation
+Students learn how to create a character bible:
+Character Identity
+Face
+Age
+Hair
+Skin
+Body
+Clothing
+Personality
+Visual Identity
+Color palette
+Environment
+Lighting
+Camera style
+Visual style
+
+Module 2 — Character Consistency
+Students learn how to maintain:
+Face consistency
+Clothing consistency
+Environment consistency
+Product consistency
+Visual style consistency
+Across multiple scenes.
+
+Module 3 — AI UGC
+Students learn:
+What UGC is
+UGC hooks
+Testimonial structure
+Problem → Solution
+Product demonstration
+Talking-head videos
+AI avatars
+AI influencers
+Assignment 4 — "Create an AI Influencer"
+Students create:
+One fictional AI creator/influencer
+They must produce:
+Character profile
+3 consistent images
+1 talking-head video
+1 UGC script
+1 UGC video
+Student Outcome
+Students can now create a repeatable AI character instead of generating random people.
+
+DAY 5 — AI VIDEO ADVERTISING + SOCIAL MEDIA CONTENT
+This is the commercialization day.
+Students learn how AI video can actually become a service.
+Module 1 — Advertising Psychology
+Teach:
+Attention
+Interest
+Desire
+Action
+Problem/solution
+Before/after
+Demonstration
+Testimonial
+Storytelling
+CTA
+Hook Examples
+Students learn different hook categories:
+Curiosity
+"Nobody told me this about..."
+Problem
+"If you're struggling with..."
+Transformation
+"From this... to this..."
+Demonstration
+"Watch what happens when..."
+
+Module 2 — AI Product Ads
+Students learn to create:
+Product commercials
+Product motion ads
+Product showcases
+Lifestyle advertisements
+UGC advertisements
+AI influencer advertisements
+
+Module 3 — Social Media Content
+Students learn how to adapt one production into:
+TikTok
+Instagram Reels
+YouTube Shorts
+YouTube
+Facebook
+Teach:
+9:16
+1:1
+16:9
+Captions
+First 3 seconds
+Retention
+Looping
+CTA
+Assignment 5 — "Create a Brand Campaign"
+Students select a real or fictional Nigerian brand/product.
+They create:
+Asset 1
+15–30 sec product advertisement
+Asset 2
+UGC advertisement
+Asset 3
+Social media short
+Asset 4
+Product showcase
+Then they package them as one campaign.
+
+DAY 6 — AI FILMMAKING + CLONING + AUTOMATION + FINAL PROJECT
+This should be the graduation day.
+Instead of teaching cloning as a completely isolated technical subject, show students how it fits into the bigger production system.
+
+Module 1 — AI Filmmaking
+Students learn:
+Story
+Character
+Conflict
+Goal
+Stakes
+Resolution
+Screenwriting
+Scene
+Dialogue
+Action
+Setting
+Cinematography
+Shot list
+Camera
+Lighting
+Composition
+Movement
+Production
+Generate
+Animate
+Edit
+Sound design
+Final export
+
+Module 2 — World Building
+Students learn how to maintain consistency across:
+Locations
+Characters
+Props
+Lighting
+Costumes
+Visual style
+
+Module 3 — AI Cloning
+Introduce:
+Face/avatar cloning
+Voice cloning
+Digital presenters
+AI spokespersons
+Personalized content
+And importantly:
+Ethics & Consent
+Students should understand:
+Permission
+Identity rights
+Voice rights
+Deepfake concerns
+Disclosure
+Responsible use
+
+Module 4 — AI Content Automation
+Students learn how to turn:
+One idea → Multiple pieces of content
+For example:
+One Product
+↓
+1 Commercial
+↓
+1 UGC video
+↓
+3 Reels
+↓
+5 social posts
+↓
+1 YouTube video
+↓
+1 AI influencer video
+↓
+Email/WhatsApp promotional content
+The concept is:
+Create once. Repurpose everywhere.
+
+FINAL PROJECT — AI CREATOR CAPSTONE
+Each student chooses ONE of three tracks.
+Track A — Advertising
+Create a complete AI campaign for a product.
+Track B — Creator
+Create an AI influencer and produce a mini content series.
+Track C — Filmmaking
+Create a 60–90 second AI short film.
+
+FINAL PROJECT REQUIREMENTS
+Every student must submit:
+1. Creative Brief
+What are you creating?
+Who is it for?
+What is the objective?
+2. Concept
+Big idea
+Story
+Message
+3. Script
+Complete script.
+4. Storyboard
+Scene-by-scene breakdown.
+5. Shot List
+Every shot with:
+Camera
+Subject
+Action
+Environment
+Lighting
+6. AI Assets
+Images
+Characters
+Environments
+Products
+7. AI Video
+Final generated footage.
+8. Sound Design
+Voice
+Music
+SFX
+9. Final Edit
+Completed video.
+10. Presentation
+Student explains:
+What they created
+Why they created it
+Tools used
+Creative decisions
+What they learned
+
+THE COMPLETE 2-WEEK STRUCTURE
+Day
+Core Training
+Practical Assignment
+Day 1
+AI Foundations + Prompt Engineering + Hooks
+First AI Scene
+Day 2
+AI Images + Cinematic Video
+15–30 sec Cinematic Sequence
+Day 3
+Sound + Editing + Production
+30–45 sec AI Commercial
+Day 4
+Character Consistency + AI UGC + Influencers
+AI Influencer + UGC Video
+Day 5
+AI Ads + Social Media Content
+Multi-Asset Brand Campaign
+Day 6
+AI Filmmaking + Cloning + Automation
+Final Capstone Project
+
+
+What I Would Change From Your Original 9 Phases
+Your original framework is strong, but for a 2-week beginner/intermediate training, I would turn the 9 phases into 5 competency pillars:
+PILLAR 1 — AI CREATION
+AI tools
+Prompt engineering
+AI images
+AI video
+PILLAR 2 — AI CINEMATOGRAPHY
+Camera
+Composition
+Lighting
+Motion
+Storytelling
+Character consistency
+PILLAR 3 — AI PRODUCTION
+Voice
+Sound
+Editing
+Music
+Effects
+PILLAR 4 — AI COMMERCIAL CONTENT
+UGC
+Influencers
+Product ads
+Social media
+Brand campaigns
+PILLAR 5 — AI FILMMAKING & SCALE
+Short films
+World building
+Cloning
+Automation
+Content systems
+That makes the course feel much more like a professional AI Cinematography program, rather than a collection of AI tools.
+And I would make the promise outcome-based
+Instead of:
+"Students will learn AI images, AI video, prompting..."
+I'd position the training around:
+"In 2 weeks, students will learn how to go from an idea to a professionally produced AI image, cinematic video, advertisement, social-media campaign and short film."
+"
+Q11 Is there a final project or showcase, and a portfolio piece every student leaves with?
+“Yes, at the end they must have made a short film which would be featured on our platform with all credits belonging to them and it must hit our metrics before we then deliver to them their certificates.”
+Q12 Anything you want left out? Should the emphasis differ between the two pages? For example, business owners get product and UGC ads, and creators get character consistency, filmmaking and portfolio. “No both the business owner and creators get the same thing, it is essentially the same course but with different messaging”
+Q13 Which extras exist today (prompt library, templates, workflows) and which still need to be made? “...”
+C. The two instructors
+Q14 ⭐ Names, roles, and which sessions each one leads. “Now I want this part to be editable from the admin block, but just introduce the 2 instructors, Enoch Shittu-Abraham and Esther Ayankoya Mofiyinfoluwa. Meet Your Instructors
+This isn't a course taught by people who simply know how to generate AI images.
+You're learning from a digital marketer who has generated real customer demand through advertising and a professional storyteller whose work has reached thousands of readers—both now applying those skills to AI cinematography and AI-powered advertising.
+
+Enoch Shittu-Abraham
+Digital Marketer • Advertising Strategist • AI Creative
+Enoch Shittu-Abraham is an experienced digital marketer with a strong focus on creating profitable advertising campaigns that generate measurable results.
+He has generated 1,000+ orders for ecommerce businesses through digital advertising campaigns and has also worked with fintech businesses to increase user registrations and onboarding through compelling advertising campaigns.
+His experience goes beyond simply making an advertisement look good.
+He understands the complete journey:
+Attention → Interest → Desire → Action → Conversion
+That marketing experience now feeds directly into his work with AI cinematography and AI advertising, where he combines creative production with direct-response marketing principles to create videos designed not only to look impressive, but to get people to take action.
+During this training, Enoch will help you understand:
+How to create advertisements that capture attention
+How to develop powerful advertising concepts
+How to write hooks that stop the scroll
+How to use AI to produce compelling visual advertisements
+How to structure product and service videos
+How to create UGC-style and AI-powered advertisements
+How to combine cinematography with conversion psychology
+How businesses can use AI video to generate customers
+His philosophy:
+A beautiful video is good. A beautiful video that gets results is better.
+
+Esther Ayankoya Mofiyinfoluwa Ngozi
+Ghostwriter • Storyteller • Creative Writer • AI Storytelling Specialist
+Esther Ayankoya Mofiyinfoluwa Ngozi is an experienced ghostwriter and storyteller with a strong background in fiction, character development and emotionally compelling storytelling.
+She has signed multiple writing contracts with novel distributors, while her books have generated thousands of reads across the platforms where they are published.
+Her strength lies in understanding what makes people continue reading:
+Curiosity → Emotion → Conflict → Connection → Resolution
+That same storytelling ability translates naturally into AI cinematography.
+Because great filmmaking isn't simply about generating beautiful scenes.
+It's about knowing:
+What should happen next?
+Why should the audience care?
+What should the character feel?
+What should the viewer feel?
+When should information be revealed?
+How do you build tension?
+How do you make a scene memorable?
+Esther brings this storytelling perspective into AI video production, helping students understand how to turn AI-generated visuals into stories that people actually want to watch.
+During this training, Esther will help you understand:
+Story development
+Character creation
+Scriptwriting
+Scene development
+Dialogue
+Emotional storytelling
+Cinematic storytelling
+AI character development
+Storyboarding
+Building longer-form AI productions
+Her philosophy:
+Technology can generate the scene. The storyteller gives it meaning.
+
+Two Different Strengths. One Production System.
+What makes this training different is the combination of two disciplines that are often taught separately.
+Enoch brings:
+Marketing + Advertising + Conversion + Commercial Strategy
+Esther brings:
+Storytelling + Writing + Characters + Emotional Connection
+And together, we apply both to:
+AI Cinematography + AI Video Production
+So you're not simply learning how to make AI videos.
+You're learning how to create videos that can:
+Capture attention.
+Tell stories.
+Build brands.
+Sell products.
+And engage audiences.
+
+Our Industry Experience
+Our work with AI-powered creative production is also being applied in an active fintech growth environment.
+We are currently working in partnership with Circlesfundme Digital Savings and Loans Cooperative Society Limited, a fintech startup, with the objective of helping grow its current user base toward 10,000+ registered members.
+As part of this work, our advertising campaigns have already generated 1,000+ messaging conversations for the company's customer-care team.
+This means the work you will study isn't based purely on theory.
+You're learning from a team actively applying:
+AI Creative Production + Advertising + Storytelling + Marketing
+to real businesses and real growth objectives.
+
+Real Campaign. Real Data. Real Creative.
+Where appropriate, campaign evidence from our advertising work can be displayed below.
+[ADMIN-EDITABLE PROOF IMAGE]
+Facebook Ads Manager campaign results / messaging conversations
+[ADMIN-EDITABLE PROOF IMAGE]
+Additional campaign performance evidence
+The training platform can allow these proof images to be updated directly from the admin panel, meaning new campaign results can be added as our work progresses.
+”
+Q15 ⭐ Real, checkable credentials for each: years, clients, notable work, audience size. Only things you can back up.
+Q16 Headshots, intro videos and social links. “Create spaces to include that in the admin block that would make it well accessible across all pages”
+Q17 How do the two complement each other? For example, creative versus business and ads.
+D. Offer, price and seats
+Q18 ⭐ Price per country and currency (₦, GH₵, KSh, $, £) or one price? Founding price versus normal price, and until when? “All pages must be adaptable to the countries we are serving so the prices are editable in admin page but you can include a founding price we can still change if we are not satisfied there”
+Q19 Payment plans, discount codes or group pricing? “For the payment plans, in the admin block for this include a part called payments where we can provide payment links to process payments for  our courses, and also our services. But note these are links that lead to external places although trusted destinations where their payment can be processed.until we integrate with a payment provider api”
+Q20 ⭐ Bonuses you can truly deliver. If you quote a "value" for a bonus, it must be one you can defend. “The greatest value we are giving them is that we are still teaching them video editing for completely free where we would teach them how todo so completely from their mobile.”
+Q21 ⭐ Refund or guarantee: the exact terms, or none.
+Q22 ⭐ Seat capacity. When full, should the page show a waitlist, a "notify me for the next cohort" form, or just close? At what point does it say "almost full"? “It should always state that its almost full, for urgency tactics. Then if it is finally full Urgency system I recommend
+1. Founding Cohort / Early-Bird Pricing
+At the top of the page:
+FOUNDING COHORT — LIMITED-TIME ENROLLMENT
+Join the first cohort of students learning AI Cinematography, AI Advertising & AI Video Production.
+Early-bird price: ₦XX,XXX
+Next cohort price: ₦XX,XXX
+This is stronger than simply saying "50% OFF."
+You can make the price increase explicit:
+₦19,997 → ₦29,997 → ₦49,997
+Only use those numbers if they're genuinely your intended pricing schedule.
+
+2. Countdown Timer
+Put a countdown directly beneath the hero CTA.
+Example:
+Enrollment closes in:
+02 DAYS : 14 HRS : 37 MIN : 21 SEC
+Then:
+Cohort begins [DATE]
+The timer should correspond to an actual deadline. Don't reset it every time someone visits.
+
+3. Limited Seats
+This is particularly powerful because your training involves hands-on assignments and instructor feedback.
+Use:
+Only 30 Students Per Cohort
+We deliberately keep the cohort small so students can receive practical guidance, assignment reviews and feedback during the training.
+Then dynamically show:
+18 / 30 seats currently filled
+Again, only display this if those numbers are real.
+The justification makes the scarcity believable.
+
+4. Enrollment Deadline
+Don't just say "enroll now."
+Create a hard deadline:
+Enrollment closes Sunday, October XX at 11:59 PM.
+Once enrollment closes, applications for this cohort will no longer be accepted.
+Then CTA:
+SECURE MY SEAT
+
+5. Price Increase Warning
+This can appear repeatedly throughout the page.
+For example:
+⚠️ Current Cohort Price
+₦XX,XXX
+Next cohort: ₦XX,XXX
+Enrollment closes in [COUNTDOWN]
+You can have a small version of this near the bottom CTA as well.
+
+6. Bonus Stack With Deadline
+This is one of the strongest tactics I'd use.
+Instead of merely saying:
+Bonuses included.
+Create a deadline-sensitive bonus stack.
+Join Before Enrollment Closes & Get:
+BONUS #1 — AI Prompt Library
+50+ production-ready prompts for images, video, advertising and cinematography.
+BONUS #2 — AI Ad Script Templates
+Ready-to-adapt frameworks for product ads, UGC and social media.
+BONUS #3 — Cinematic Shot List Template
+Plan your AI films scene-by-scene.
+BONUS #4 — AI Creator Tool Directory
+The tools and platforms students can use to continue creating after the training.
+BONUS #5 — Commercial AI Video Brief Template
+Learn how to turn a client's request into a professional AI production brief.
+Then:
+These bonuses are available to students who enroll in the current cohort.
+
+7. "Next Cohort" Scarcity
+This is excellent if you genuinely intend to run cohorts.
+Near the CTA:
+Miss this cohort?
+The next training cohort will open at the regular price and may have a different schedule.
+Join the current cohort while enrollment is open.
+This creates a legitimate consequence to waiting.
+
+8. Live Feedback Scarcity
+This is probably more powerful for your course than generic scarcity.
+Don't sell:
+"6 days of training."
+Sell:
+6 days of guided production + feedback.
+For example:
+Every student gets:
+Assignment reviews
+Instructor feedback
+Creative direction
+Prompt corrections
+Video critiques
+Final project review
+Then:
+Because assignments are reviewed manually, only 30 students can be accepted into each cohort.
+That's scarcity tied directly to the product mechanism.
+Very believable.
+
+9. "Students Are Building" Social Proof
+As people enroll, your page can show:
+🔥 23 students already enrolled
+The current cohort is filling up.
+Or:
+The next generation of AI creators is already building.
+Then show student work.
+This becomes much more powerful once you have actual students.
+
+10. Real-Time Activity Notifications
+You could eventually have small notifications appear in the corner:
+🔥 Someone from Lagos just enrolled
+🎓 A new student joined the AI Cinematography Cohort
+🔥 24/30 seats claimed
+But only use real enrollment data.
+Don't fabricate "someone just purchased" notifications.
+
+11. Sticky Mobile CTA
+This is one of the highest-value changes I'd make.
+On mobile, keep a fixed bottom bar:
+₦XX,XXX | 30 Seats Only
+[JOIN THE COHORT]
+As users scroll through the long sales page, the CTA never disappears.
+This is especially important because your page will have a lot of:
+Curriculum
+Instructor information
+Portfolio
+Testimonials
+Proof
+FAQ
+Bonuses
+The user should never have to scroll all the way back to find the purchase button.
+
+12. CTA Microcopy
+Don't use:
+Submit
+or
+Buy Now
+Use action + outcome.
+Better:
+🚀 SECURE MY SEAT
+I WANT TO LEARN AI CINEMATOGRAPHY
+JOIN THE AI CREATOR COHORT
+START CREATING WITH AI
+My favorite for your page:
+🚀 SECURE MY SEAT
+Underneath:
+Instant access after enrollment.
+
+13. Urgency Bar at the Top
+I'd put a thin announcement bar at the very top:
+🔥 FOUNDING COHORT ENROLLMENT IS OPEN — LIMITED TO 30 STUDENTS | ENROLLMENT CLOSES [DATE]
+Clicking it takes them to the pricing section.
+
+14. Repeat the Deadline at Strategic Points
+Don't put urgency only at the top.
+I'd have it at:
+Hero → Curriculum → Bonuses → Pricing → FAQ → Final CTA
+But don't make every section scream "URGENT!!!"
+Instead, strategically reinforce:
+Enrollment closes [DATE]
+30 students maximum
+Current price ends when enrollment closes
+
+15. Final "Decision" Section
+Your final CTA should feel like a decision rather than another random button.
+Something like:
+You Can Keep Watching AI Videos...
+Or you can learn how to create them.
+In the next 2 weeks, you'll learn how to go from an idea to AI-generated images, cinematic videos, advertisements, social content and a complete final project.
+The current cohort is limited to 30 students.
+Enrollment closes:
+[DATE]
+[COUNTDOWN]
+Current Cohort
+₦XX,XXX
+Next cohort: ₦XX,XXX
+[🚀 SECURE MY SEAT]
+Recommended popup system
+Small notification cards can appear in the bottom-left/bottom-right:
+🎓 New student enrolled
+A student from Lagos just joined the AI Cinematography Cohort.
+🔥 Cohort update
+24 of 30 seats have been reserved.
+🚀 New enrollment
+Someone just secured their place in the current cohort.
+👥 Students are joining
+The current cohort is filling up.
+🎬 New project unlocked
+A student just started their first AI video project.
+Even better: make the admin control it
+I'd build a "Social Proof Notifications" section into your admin:
+Setting
+Example
+Enable notifications
+ON
+Notification type
+Enrollment
+Display name
+Optional
+Location
+Lagos
+Message
+Just joined the cohort
+Delay
+15–45 sec
+Display duration
+5 sec
+Frequency
+Every 60–120 sec
+Data source
+Real / Demo
+Maximum notifications
+10
+
+And have a very important "DEMO MODE" switch while you're building the page.
+That lets you test the entire psychology and UI now without accidentally presenting fabricated enrollments as genuine ones.
+The strongest combination
+I'd combine these notifications with:
+🔥 24/30 seats reserved
+⏰ Enrollment closes in 2 days
+💰 Current price: ₦XX,XXX → Next cohort: ₦XX,XXX
+🎁 5 bonuses included until enrollment closes
+👨‍🏫 Limited seats because every student's project receives feedback
+”
+Q23 Founding-cohort benefits beyond price, such as recognition, community access or a discount on the next cohort. Tell me anything you will not actually deliver.
+E. Payment and registration (Selfany)
+Q24 ⭐ What is Selfany (website link)? Does it give you a checkout link per product, multiple currencies, webhooks or an API, a buyer export (CSV), a redirect to a thank-you page after payment, and automatic receipts?
+Q25 For confirming payments, I would start with an admin "Mark as paid" button plus CSV import, and add automatic sync later only if Selfany supports it. Is that OK
+ “Yes this is very okay”
+Q26 Registration form fields: name, WhatsApp, email, country, business or type, experience level, anything else? I recommend they fill the form before paying, so you capture people who do not pay. Do you agree? 
+“Yes”
+Q27 Seat counting: only confirmed payments count, as in your brief. If a refund happens, should the seat be released? Is a slight overshoot acceptable, or a hard stop at capacity?
+“A slight overshoot is acceptable because we have to manually verify, just incase of anything.”
+Q28 After payment, what happens: a confirmation page, an email, a WhatsApp group link, a calendar invite?
+“You would build a Thank-you page that would be leading them to whatsapp where they would have our business contact to message us that hey I just paid  for the course. Now this would be a separate page too as I would have to use it as a link I would add that the can be redirected to after payment. Also let the thank you oage explain to them that they should message the person on the whatsapp with the name and email they used for payment so they can be verified and then added to the group”
+F. Proof and assets
+Q29 ⭐ Do you have real testimonials or results? From whom: AdVibe clients, a pilot class, past students? Do you have permission? If none yet, say so and I will design honest proof instead: work samples, process, and clients with permission. “We have no current students currently as they ar ethe founding cohort, yes we have client work we can display”
+Q30 Which AdVibe videos (YouTube links) should appear in the hero and on the video wall? Any made specifically for the training? “None yet, but the vdeos that would appear in the marquee carousel that displays our work I would provide the youtube links to them in the admin just like we have with the first page we built”
+Q31 May the training pages mention CirclesFundMe or other clients, and with what wording? “Yes, but I can’t really say with what wording”
+Q32 Numbers you can truthfully state. The "120+ videos / 48 businesses" on your site were sample figures. Are any of them real? “Still use the sample figures which must be editable from my admin block”
+Q33 Any press, certifications or partnerships? “None for now”
+G. Page 1: business owners
+Q34 ⭐ Which 3 or 4 business types do you most want to attract, and in which countries? “I don’t specifically have teh business types, but all our previous countries let it be the same countries which are nigeria, ghana, kenya, uk and us”
+Q35 ⭐ Real pain points you hear from clients (quotes or stories), and what they currently pay for video. I will use real numbers so the cost comparisons are honest.
+Q36 Which video types will a business owner make by the end of the course? For example, a product ad, a UGC ad, 3 variations, or a WhatsApp Status video. “This I can’t say explicitly any type of video they want to use and promote themselves”
+Q37 Do you teach running ads, or only creating the videos? Should the page offer "or let AdVibe do it for you" as an alternative? 
+“Yes you can add the let advibe do it for you in the course page, and also in our service offerings page which is the first page we did, there can be 2 buttons, are you a business owner that wants to lern or are you an individual that wants to lern so tehy can be led to the right pages. We don’t run ads for people yet we just craf their promotional videos”
+H. Page 2: creators
+Q38 ⭐ Which segments go first: beginners, freelancers, students, marketers, creators?
+Q39 ⭐ What do you genuinely teach or provide for earning: pricing services, finding clients, portfolio review, agency work, or opportunities from AdVibe? I will frame all of it as "possible", never "promised". “We dont promise them any opportunities, but these are things theu can end up doing after learning the course”
+Q40 Do top students get any real opportunity with AdVibe (freelance work, internships)? If yes, on what conditions? “Yes they can get hired into our agency but only the best performing and they would be informed when space is opened in the company as we don’t hire randomly from outside, we would prepare to hire internally from people we have trained”
+I. Look, links and tone
+Q41 ⭐ Your choice on the look: A, B or C above.
+Q42 Page addresses: for example #/training/business and #/training/creators. Do you want a small "I'm a business owner / I want the skill" chooser, and a "Training" link in the main menu? “You should have the experience now of a seasoned copywriter andfunnel hacker like russell brunson, What works best”
+Q43 The moving carousel in your brief: do you mean the 3D spinning video wall, or the scrolling word strip? I assume the wall. What should it show: your ads, student work, or both? “The 3D Spinnig video wall, and it can show a mixture of everything but with specifcation like ‘student work', ‘UGC Cintent’”
+Q44 Tone of voice: calm and premium, or punchy? Are Pidgin or local phrases welcome? Any words to avoid? “No LOcal phrases at all, no pidgin english”
+Q45 Should training prices use the same per-country system as your packages, with session times shown in your time zone plus a local-time converter? “If needed yes”
+J. Contact, tracking, admin and launch
+Q46 ⭐ WhatsApp number (the same one, or one for training), email, and social links. “Yes and we should be able to change it in the admin page”
+Q47 Meta Pixel: the same pixel or a separate one? Which events count: registration, payment click, confirmed payment? “The same meta pixel, and from the admin page I should be able to place a meta pixel and it would be working to track across all pages, and I should be able to place different meta pixels, and even specify for different parts of the funnel as the case may be.”
+Q48 Separate SendFox list, Google Sheet and Make scenario for each page's leads? “Yes depending on where they are registering from and same with the admin page”
+Q49 Who may change seat counts and mark payments: owner only, or the team too? “Owner only”Do you want a WhatsApp or email alert when someone registers? “Yes”
+Q50 Do you already have refund, terms and privacy text, or should I draft it for your review? “Draft them and include them, I can edit if I want to”
+Q51 When do you want registration to open and ads to start, and in which countries? “Infact it has already started, the ending date is what I’m yet to decide but i know wewant 100 people for the first cohort”Is there any marketing you have already published that the pages must match? “None for now”
+What happens next
+Research. I will study the live competitor pages and Nigerian and international AI video programs, focusing on their strategic patterns rather than their wording.
+Strategy. For each page I will give positioning, headline direction, core promise, audience, differentiator, offer, curriculum, funnel, objection handling and founding-cohort approach, for your approval.
+Copy. I will write the full copy for each page.
+Build. After your approval of the copy, I will build both pages with their admin control.
+Planned build
+I plan an admin Training area covering the course, cohort, curriculum, instructors, offer, testimonials, FAQ and calls to action. Seats would come from a paid-students count, with each person moving through these stages:
+Lead
+Registered
+Payment started
+Confirmed paid
+Cohort member
+The page would show Upcoming, Open, Almost full, Full, Paused or Ended automatically from capacity and paid students. Capacity is set in the admin, not hard-coded to 100.
+Send your answers, even partial ones, and I will start the research.
+

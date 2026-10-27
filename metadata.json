@@ -1,0 +1,6 @@
+{
+  "name": "AdVibe Studio",
+  "description": "AI Video Ads That Turn Attention Into Orders — High-converting video ads agency platform with country-specific pricing, strategy session booking, portfolio showcase, and admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

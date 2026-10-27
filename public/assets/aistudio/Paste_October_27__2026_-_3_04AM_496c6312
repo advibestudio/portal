@@ -1,0 +1,1195 @@
+ADVIBE STUDIOS --- SALES PAGES, COPY & WEBSITE IMPLEMENTATION MASTER BRIEF
+How to use this brief
+Give this entire document to the vibe-coding tool working on the
+existing AdVibe Studios project. This is an implementation task, not a
+request for a design concept or static mockup. Inspect the current code
+first, then implement, test, and report what was actually completed.
+PART A --- THE COMMERCIAL STRATEGY AND COPY
+A1. The two offers
+Build two distinct sales pages under one AdVibe Studios brand:
+1. Monthly AI Video Content Retainer --- for businesses that need
+   consistent, varied video content and want a dependable creative
+   partner rather than another production responsibility.
+2. AI Promotional Mini Series --- for brands that want original,
+   story-driven branded entertainment and a more distinctive creative
+   identity.
+Both packages default to ₦200,000 per month and include 15 videos
+per month. The team must be able to edit prices, offer details, copy,
+and visibility from the existing admin dashboard without code changes.
+
+The difference is the creative emphasis, not the number of videos: -
+Retainer: consistent, varied marketing content. - Mini-series: connected
+storytelling, recurring characters where appropriate, and a coherent
+episodic concept.
+
+Do not imply that all businesses can hire an employee for exactly
+₦200,000. Position the value comparison as: for a cost comparable to
+one hire, your brand can work with a broader creative studio rather than
+depending on one individual to do every part of production.
+A2. The production promise and boundaries
+Both offer pages must communicate these facts clearly:
+- 15 videos per month.
+- ₦200,000 per month by default.
+- Creative ideation and planning within the agreed scope.
+- Scriptwriting / creative development.
+- AI-assisted video production and editing.
+- A script and a concise one-page creative brief are sent to the
+  client for review before production begins.
+- The client gets a chance to understand the concept, message, visual
+  direction, and intended execution before production starts.
+- Each video includes one revision round within the agreed scope.
+- The revision policy is intentional: substantial changes after
+  approval can require rescripting, new scene creation, character
+  regeneration, voice/audio regeneration, and further production work.
+  This can be significantly different from correcting a small edit.
+  Explain the policy politely and transparently, without sounding
+  defensive.
+- Make clear what counts as the one revision round during
+  onboarding/service agreement. Consolidate feedback into one clear
+  set of notes per video.
+- Do not promise unlimited revisions.
+- Confirm formats, duration, turnaround, production complexity,
+  delivery schedule, and any exclusions in the agreement rather than
+  inventing guarantees.
+A3. Ownership
+The public copy should state that the client owns the commissioned video
+deliverables and project-specific assets covered by the signed
+agreement. As applicable under that agreement, this may include finished
+videos, client-specific scripts, approved story concepts, generated
+visuals, generated voice/audio files, and other agreed project files.
+
+Do not claim the client owns third-party AI models, software, stock
+assets, fonts, libraries, or other underlying materials subject to
+separate licence terms. Clarify the scope of ownership and any
+third-party restrictions before production begins. Make the public
+ownership wording editable in the admin dashboard so it remains aligned
+with the actual contract.
+A4. No fabricated promises
+Do not promise guaranteed sales, guaranteed virality, or guaranteed
+marketing outcomes. Do not invent testimonials, client results, views,
+engagement metrics, customer logos, or case studies. Use actual work and
+real evidence already in the project.
+PART B --- THE TWO SALES PAGE COPIES
+Use the following copy as the default copy source. It may be formatted
+and broken into scannable components for the actual UI, but do not
+silently change the price, video quantity, revision policy, ownership
+boundaries, or offer promise. Every public-facing text field must be
+editable from the existing admin dashboard.
+PAGE ONE --- MONTHLY AI VIDEO CONTENT RETAINER
+1. Hero
+Eyebrow: YOUR BRAND'S ON-DEMAND CREATIVE STUDIO
+What If You Had an Entire Creative Team Working on Your Brand for the Cost of One Hire?
+You already know your business needs great video content. The challenge
+is finding the time, fresh ideas, and reliable creative capacity to keep
+producing it.
+
+With AdVibe Studios, you get a managed creative partner that develops
+ideas, writes scripts, and produces engaging videos to help your brand
+show up consistently---without the burden of building and managing your
+own production team.
+
+15 videos every month. One creative studio behind your brand. ₦200,000
+per month.
+
+Primary CTA: Book a Free Strategy Call
+Secondary CTA: Chat With Us on WhatsApp
+
+Tell us a little about your business first. We'll use that context to
+make your strategy conversation more useful.
+
+The hero must preserve the existing AdVibe 3D cylinder video wall / 3D
+video carousel where it currently appears on the homepage. Do not remove
+or replace it with a static template hero. On the new retainer page,
+reuse the same visual system or an appropriate version of the existing
+wall if it enhances the story and performance. Avoid duplicating an
+expensive animated wall multiple times on the same page.
+2. Problem --- the content consistency trap
+Your Business Is Growing. Why Does Creating Content Still Feel Like Another Full-Time Job?
+You know you should be posting more videos. You see other brands showing
+up with product videos, creative campaigns, educational content, and
+engaging social posts. You want your business to have that same
+presence.
+
+But then reality sets in.
+
+You have a business to run. Customers to serve. Staff to manage.
+Operations to oversee. Sales to close.
+
+Some weeks, you have great content ideas. Other weeks, you have no idea
+what to post. You might hire someone to help, only to find yourself
+spending time supervising, correcting, explaining, and chasing
+deliverables.
+
+And when content production depends on one person's time, skill, or
+availability, your brand's visibility can depend on that one person,
+too.
+
+Your business shouldn't have to choose between running the company and
+showing up consistently online.
+3. Amplify --- the cost of inconsistency
+Every Month You Go Quiet Is Another Month Your Competitors Get to Be Remembered.
+Your potential customers are constantly seeing other businesses. Other
+brands are introducing products, explaining their value, demonstrating
+their expertise, and giving people reasons to pay attention.
+
+Meanwhile, your business may have something genuinely valuable to
+offer---but if your content is inconsistent, that value can be harder
+for potential customers to discover and remember.
+
+The answer isn't posting for the sake of posting. It's having a reliable
+creative process that turns your products, services, ideas, and
+expertise into content worth watching.
+
+You don't need another responsibility on your plate.
+
+You need a team that helps take this responsibility off it.
+4. Solution --- a whole studio, not one overloaded hire
+Not Just One Person With a Camera. An Entire Creative Studio Behind Your Brand.
+Imagine having a team that can help develop ideas, shape your message,
+write scripts, plan creative concepts, produce videos, and refine the
+finished work---working together to help your brand communicate more
+effectively.
+
+That's the advantage of working with AdVibe Studios.
+
+Instead of depending on one employee to handle every part of video
+production, you work with a creative studio built around producing
+engaging AI-assisted video content.
+
+We bring creative thinking, scripting, visual direction, AI-assisted
+production, and editing into one managed monthly service.
+
+You tell us about your business, your customers, your goals, and what
+you want to promote. We help turn that information into a planned stream
+of video content.
+
+You stay focused on running your business while your creative partner
+helps your brand keep showing up.
+5. Value comparison
+Why Build a One-Person Content Department When You Can Work With a Whole Studio?
+Hiring one person can be useful. But that person may be expected to
+develop ideas, write scripts, produce videos, edit footage, and manage
+the entire content process.
+
+That's a lot of responsibility for one role---and a lot of dependence on
+one person's capacity.
+
+For a monthly cost comparable to one hire in some businesses, AdVibe
+gives you access to a broader creative production capability instead of
+asking one individual to do everything.
+
+Your monthly package includes:
+- 15 videos every month to support your agreed content plan.
+- Creative ideation to develop fresh angles for your business.
+- Scriptwriting and messaging tailored to your brand and audience.
+- AI-assisted video production shaped around the agreed creative
+  direction.
+- Editing and finishing to prepare videos for their intended use.
+- A managed creative workflow so you don't have to coordinate
+  every production task yourself.
+You're not simply paying for a folder of videos. You're paying for
+creative capacity, a production process, and a team you can work with.
+6. What we can create
+More Than Product Videos. More Ways to Tell Your Brand's Story.
+Depending on your goals and agreed monthly plan, your content can
+include:
+
+Product and service promotions
+Show people what you offer, how it works, and why it matters.
+
+Educational and explainer videos
+Break down complex ideas, answer common customer questions, and
+demonstrate your expertise.
+
+Lifestyle and scenario-based content
+Present your products or services in relatable situations your audience
+can recognise.
+
+Campaign and offer videos
+Give launches, seasonal promotions, and special offers a more engaging
+visual presentation.
+
+Brand storytelling and creative concepts
+Move beyond repetitive sales messages with videos that communicate your
+brand's personality and values.
+
+Every video should have a purpose. We work with you to align your
+content with your brand, audience, and business objectives.
+7. The process --- show the client what happens before production
+No Guesswork. You'll Know What We're Making Before We Make It.
+Step 1 --- Tell Us About Your Business
+Complete the short lead form and book a strategy call. Tell us what you
+sell, who you serve, and what you want your content to accomplish.
+
+Step 2 --- Develop Your Content Direction
+We discuss your brand, audience, goals, preferred formats, and content
+priorities to determine the most appropriate creative approach.
+
+Step 3 --- Review the Script and One-Page Creative Brief
+Before production begins, we send you the script and a concise one-page
+creative brief. The brief is designed to be quick to consume and helps
+you understand the idea, message, intended scenes or visual direction,
+and how the video fits your brand. This gives you a clear opportunity to
+review what we're proposing before production starts.
+
+Step 4 --- Produce the Approved Direction
+Once the script and brief are approved, we create the video through the
+agreed production workflow.
+
+Step 5 --- One Revision Round Per Video
+Each video includes one consolidated revision round within the agreed
+scope. Please send clear, combined feedback for that round. Substantial
+changes after approval can require new scripts, scenes, character
+creation, or voice generation, so they may fall outside the included
+revision and require a separate agreement.
+
+Step 6 --- Receive Your Videos and Covered Assets
+We deliver the completed videos and agreed assets in the formats and
+timeline set out in your service agreement.
+8. Ownership --- your content, your brand
+The Videos We Create for You Are Built to Become Your Brand's Assets.
+We want you to build a valuable content library for your business---not
+become dependent on us just to keep using the work we've produced.
+
+Under the signed agreement, your brand owns the commissioned video
+deliverables and project-specific assets covered by that agreement.
+Depending on the agreed scope, these may include finished videos,
+client-specific scripts, generated visuals, generated voice/audio files,
+and other agreed production materials.
+
+Before production, we'll clarify which source and project files are
+delivered and any restrictions that apply to third-party tools or
+assets.
+
+Your content should be an asset your business can continue using under
+the agreed rights---not just a post that disappears into last month's
+feed.
+9. CircleFundMe partnership / proof of work
+Real Work. Real Creative Collaboration.
+AdVibe Studios has worked with CirclesFundMe, a brand in the digital
+savings and loans space. Explore selected videos we've produced for the
+company and see our creative work in action.
+
+CTA: Watch Our Work for CirclesFundMe
+
+This CTA must open a one-click preview/lightbox or modal with the real,
+existing CirclesFundMe portfolio videos. Reuse the existing portfolio
+items, client association, video modal/lightbox, and media data. Do not
+invent or hardcode fake video URLs. Make the selected CirclesFundMe
+videos editable/assignable through the existing admin content system.
+The partnership should appear on both sales pages.
+
+Only display partnership claims and logo usage that are already approved
+for public use in the existing project. Preserve the existing client
+record and wording where appropriate; do not inflate the relationship or
+imply results not supported by evidence.
+10. The offer
+Give Your Brand the Creative Support It Deserves.
+ADVIBE MONTHLY VIDEO CONTENT RETAINER
+
+₦200,000 / month
+15 videos per month
+
+Included:
+- 15 videos every month.
+- Creative ideation and agreed content planning.
+- Scriptwriting and creative development.
+- A script and one-page creative brief for review before production.
+- AI-assisted video production and editing.
+- One consolidated revision round per video within the agreed scope.
+- Delivery of commissioned video assets and covered project-specific
+  assets under the signed agreement.
+- A defined monthly production workflow.
+Video formats, durations, timelines, revision boundaries, source-file
+delivery, and any exclusions will be agreed before production begins.
+
+Primary CTA: Book My Free Strategy Call
+Secondary CTA: Discuss My Content on WhatsApp
+11. FAQs
+Do I need to know anything about AI video production?
+No. Tell us about your business and your goals. We manage the agreed
+creative production process for you.
+
+Is AdVibe the same as hiring a video editor?
+No. The service combines creative development, scripting, visual
+direction, and AI-assisted video production in a managed monthly
+service. Rather than depending entirely on one person to perform every
+task, you work with a creative studio.
+
+How many videos do I receive?
+Your package includes 15 videos per month. The formats and durations are
+agreed according to your needs and the package scope.
+
+Will I see the script before you start making the video?
+Yes. We send the script and a concise one-page creative brief for your
+review before production begins. This helps you understand the direction
+before production resources are committed.
+
+How many revisions are included?
+Each video includes one consolidated revision round within the agreed
+scope. Extensive changes can require rescripting, new scenes, new
+characters, or regenerated voice/audio, so major changes after approval
+may require a separate agreement.
+
+Can I use the videos on my social media pages and in my marketing?
+Your ownership and usage rights are set out in the agreement. We will
+clarify applicable third-party restrictions before production.
+
+Do you guarantee sales or viral videos?
+No responsible creative partner can guarantee that every video will go
+viral or produce a specific amount of sales. Our focus is on creating
+content with a clear creative purpose, aligned with your business goals.
+
+What happens after I submit my details?
+We'll use your information to understand your business, then help you
+arrange a strategy call or continue the conversation on WhatsApp.
+12. Final CTA
+Your Business Has Enough to Manage. Let Your Creative Production Become One Less Thing to Worry About.
+You don't have to build an entire content team before your brand can
+show up consistently.
+
+Let's talk about your business, your audience, and what 15 strategically
+planned videos each month could look like for you.
+
+CTA: Book My Free Strategy Call
+Secondary CTA: Start a WhatsApp Conversation
+
+First, tell us a little about your business. We'll take it from there.
+PAGE TWO --- AI PROMOTIONAL MINI SERIES
+1. Hero
+Eyebrow: BRANDED ENTERTAINMENT BY ADVIBE STUDIOS
+Stop Making Every Post an Advertisement. Start Creating Stories People Want to Watch.
+Your brand has more to offer than another discount, product
+announcement, or "Buy Now" post.
+
+What if your audience could meet memorable characters, follow an
+intriguing story, laugh at familiar situations, or look forward to the
+next episode---while your brand becomes part of the experience?
+
+AdVibe Studios helps brands turn their products, services, and brand
+identity into original AI-assisted promotional mini-series and cinematic
+short films.
+
+15 videos every month. A story built around your brand. ₦200,000 per
+month.
+
+Primary CTA: Book a Mini-Series Strategy Call
+Secondary CTA: Chat With Us on WhatsApp
+
+Tell us about your brand and the kind of story you want people to
+remember.
+
+The mini-series page should feel more cinematic, editorial, and
+story-led than the retainer page. Preserve the site's distinctive 3D
+cylinder video wall / carousel and use it intelligently rather than
+replacing it with a generic template. Do not place multiple heavy 3D
+walls on one page unless performance and the design clearly justify it.
+2. Problem --- the promotional content loop
+Your Audience Doesn't Need Another Brand Asking Them to Buy Something.
+Think about the content people scroll past every day.
+
+Buy this. Try that. Limited offer. New arrival. Don't miss out.
+
+Your business may have an excellent product or service. You may be
+better than your competitors in important ways. But when every post is
+another direct sales pitch, it can be difficult to create a distinctive
+identity or give people a reason to return for more.
+
+You can keep increasing the volume of promotional posts. You can keep
+changing the graphics and trying new captions.
+
+Or you can explore a different creative approach.
+
+What if your brand didn't just interrupt what people were watching?
+What if it gave them something worth watching?
+3. Amplify --- the cost of being forgettable
+People Can See Your Advertisement Without Remembering Your Brand.
+A view doesn't automatically create a connection. An impression doesn't
+automatically make someone remember you. And a promotional post isn't
+necessarily something an audience wants to revisit.
+
+If your content is interchangeable with what every competitor publishes,
+you have fewer opportunities to build a recognisable creative identity.
+
+Your brand deserves more than a collection of disconnected sales
+messages.
+
+It deserves a way to express its personality, values, and promise
+through content that feels distinctive.
+
+This doesn't mean abandoning direct promotions. It means adding another
+creative asset to your marketing: stories that give people a reason to
+spend time with your brand.
+4. Solution --- your brand as a story world
+Imagine Your Brand as the World Behind a Story People Look Forward to.
+A fashion brand could build a comedy around friendship, confidence, and
+the situations people get into when choosing what to wear.
+
+A food business could develop a relatable drama around family, ambition,
+relationships, and the role food plays in everyday life.
+
+A real estate company could tell stories about the meaning of home,
+family decisions, aspirations, and the journey toward owning a property.
+
+A financial services brand could create character-driven stories about
+everyday money decisions and the consequences of financial choices.
+
+The possibilities depend on your audience, your brand, your offer, and
+the stories worth telling.
+
+At AdVibe Studios, we develop original concepts, scripts, characters,
+and episode ideas designed around your business. We then use AI-assisted
+production to bring those ideas to life as branded video content.
+
+Your product doesn't have to be forced into every line of dialogue. Your
+brand can be integrated into the setting, characters, situations,
+central conflict, or resolution in ways that make sense for the story.
+
+The aim is to create entertainment that can carry your brand
+message---not disguise an ordinary sales pitch as a film.
+5. The offer --- what we create
+Your Own Branded Mini-Series, Produced Every Month.
+The AdVibe Promotional Mini Series service combines creative
+storytelling with managed video production.
+
+Original story development
+We develop a concept based on your business, audience, positioning, and
+creative goals.
+
+Scriptwriting
+We shape the ideas into stories with relatable situations, dialogue,
+tension, humour, emotion, or intrigue where appropriate.
+
+Characters and continuity
+We plan recurring characters and a coherent creative direction so
+episodes can feel connected rather than like unrelated videos.
+
+A script and one-page creative brief before production
+Before production starts, we send the script and a concise one-page
+brief so you can quickly understand the story, intended message, visual
+direction, and planned execution. You review the direction before we
+begin producing the video.
+
+AI-assisted production
+We turn approved concepts and scripts into finished video content using
+the agreed visual and production approach.
+
+15 videos every month
+Your monthly output is planned around the agreed mini-series concept and
+episode structure. Fifteen videos do not automatically mean fifteen
+long-form episodes; the exact structure, durations, and supporting
+content are agreed based on the concept and production scope.
+
+Editing and delivery
+We prepare the videos in the agreed formats and deliver the commissioned
+assets under your service agreement.
+6. Why this approach is different
+Don't Just Rent Attention. Build a Creative Identity Your Brand Can Develop Over Time.
+Traditional promotional content often asks the audience to focus on the
+product immediately.
+
+Story-driven branded content gives people another reason to engage:
+curiosity about what happens next, interest in a character, recognition
+of a familiar situation, or enjoyment of the story itself.
+
+Over time, a coherent series can give your brand a distinctive creative
+identity. It can create opportunities for recurring audience engagement
+and make your brand's values and products easier to place within a
+memorable context.
+
+This is not a promise that every episode will go viral or outperform
+every conventional advertisement.
+
+It is a way to expand your creative strategy beyond repetitive
+promotional posts and build a recognisable body of content around your
+brand.
+
+Your brand can still sell. It simply doesn't have to make every video
+feel like a sales pitch.
+7. Your brand, your creative assets
+Build Something Your Brand Can Own.
+The mini-series is created around your brand, with a clear agreement on
+deliverables and ownership rights.
+
+Under the signed contract, your brand owns the commissioned deliverables
+and project-specific assets covered by the agreement. Depending on the
+agreed scope, these may include finished episodes, client-specific
+scripts, approved story concepts, created visuals, generated voice/audio
+files, and other agreed production materials.
+
+We will also define the delivery of available source files, character
+materials, and other production assets, subject to applicable
+third-party tool terms.
+
+The goal is to give your brand a valuable library of commissioned
+creative work it can continue using under its agreed rights---not leave
+ownership unclear.
+8. Production process and revision policy
+From Brand Brief to Your First Episode---and Beyond.
+Step 1 --- Tell Us About Your Brand
+Share your business, audience, products, brand values, and the audience
+response you hope to encourage.
+
+Step 2 --- Develop the Concept
+We explore possible story worlds, themes, characters, and creative
+directions that fit your brand.
+
+Step 3 --- Review the Script and One-Page Creative Brief
+Before production begins, we send the script and a concise one-page
+brief. It is designed to be quick to consume and makes the intended
+story, message, visual direction, and planned execution clear. You have
+the opportunity to review and approve the direction before production
+begins.
+
+Step 4 --- Produce the Approved Direction
+We bring the approved ideas to life using the agreed AI-assisted
+production workflow.
+
+Step 5 --- One Revision Round Per Video
+Each video includes one consolidated revision round within the agreed
+scope. Major changes after approval can require rescripting, new scene
+creation, character regeneration, and voice/audio regeneration. Those
+changes can go beyond the included revision and may require a separate
+agreement.
+
+Step 6 --- Review and Delivery
+You review the videos within the agreed revision process, and we deliver
+the completed work and covered assets.
+9. CircleFundMe partnership / proof of work
+Storytelling and Video Production for Real Brands.
+AdVibe Studios has worked with CirclesFundMe, a brand in the digital
+savings and loans space. Explore selected videos we've produced for the
+company and see our creative work in action.
+
+CTA: Watch Our Work for CirclesFundMe
+
+The CTA must open a one-click preview/lightbox or modal with actual
+CirclesFundMe videos from the existing portfolio. Reuse the current
+portfolio items, client association, existing video preview/lightbox,
+and media data. Do not invent or hardcode fake video URLs. Let the team
+select which CirclesFundMe videos appear through the existing admin
+content system. This partnership section must appear on both sales
+pages.
+
+Only display partnership claims and logo usage that are approved for
+public use in the existing project. Do not inflate the relationship or
+imply unsupported results.
+10. The offer
+Give People More Reasons to Remember Your Brand.
+ADVIBE AI PROMOTIONAL MINI SERIES
+
+₦200,000 / month
+15 videos per month
+
+Included:
+- 15 videos per month.
+- Original story and creative concept development.
+- Scriptwriting and episode planning.
+- Character and continuity planning.
+- A script and one-page creative brief for review before production.
+- AI-assisted video production and editing.
+- One consolidated revision round per video within the agreed scope.
+- Delivery of commissioned videos and covered project-specific assets
+  under the signed agreement.
+The final episode structure, duration, production complexity, delivery
+schedule, revision boundaries, and source-file delivery will be
+confirmed during your strategy call and service agreement.
+
+Primary CTA: Book My Mini-Series Strategy Call
+Secondary CTA: Discuss My Brand on WhatsApp
+11. FAQs
+Will every video be a direct advertisement for my product?
+Not necessarily. The creative direction may integrate your product,
+service, values, or brand identity naturally into the story. The
+approach depends on your goals and the agreed concept.
+
+What kinds of businesses can use a promotional mini-series?
+Fashion, beauty, food, lifestyle, consumer products, real estate,
+education, financial services, and other businesses can explore this
+approach when a suitable story can be built around their brand. We
+assess suitability during the strategy call.
+
+Do I get 15 episodes every month?
+Your package includes 15 videos per month. Whether those videos form 15
+short episodes, fewer longer episodes plus supporting content, or
+another agreed structure depends on the creative concept and production
+scope.
+
+Will I see the script before production?
+Yes. We send the script and a concise one-page creative brief for review
+before production begins.
+
+How many revisions are included?
+Each video includes one consolidated revision round within the agreed
+scope. Extensive changes can require rescripting, new scenes, new
+characters, or regenerated voice/audio, and may require a separate
+agreement.
+
+Do I own the characters, scripts, voice files, and videos?
+Your ownership rights for commissioned work and covered project-specific
+assets are defined in your agreement. We will explain any limitations
+that apply to third-party tools or assets before production.
+
+Can the series help my business sell more?
+It can support brand awareness, audience engagement, and product
+communication, but sales depend on many factors, including your offer,
+audience, distribution, and conversion process. We do not guarantee a
+particular sales outcome.
+
+What happens when I contact AdVibe?
+You'll share a few details about your brand, then arrange a strategy
+call or continue the conversation on WhatsApp so we can understand your
+goals and assess the best approach.
+12. Final CTA
+Your Brand Has a Story to Tell. Let's Build One Worth Watching.
+Your audience doesn't have to encounter your brand only when you ask
+them to buy.
+
+Let's explore what an original mini-series could look like for your
+business---from the first concept to the characters, episodes, and brand
+integration.
+
+CTA: Book My Mini-Series Strategy Call
+Secondary CTA: Chat With AdVibe on WhatsApp
+
+Share your details so we can understand your brand before we talk.
+PART C --- MASTER IMPLEMENTATION PROMPT FOR THE VIBE-CODING TOOL
+PROJECT OBJECTIVE
+Upgrade the existing AdVibe Studios website by implementing two
+complete, visually distinctive, conversion-focused sales pages:
+1. #/monthly-content --- Monthly AI Video Content Retainer.
+2. #/promotional-mini-series --- AI Promotional Mini Series.
+The pages must use the copy in Part B, communicate the correct offer
+terms, and connect to the existing admin, portfolio, lead-management,
+booking, and WhatsApp infrastructure.
+
+This is an extension of an existing production-oriented project. Do
+not rebuild it from scratch. Do not replace working infrastructure with
+mockups or placeholder interactions.
+Phase 1 --- inspect the project before coding
+The supplied project ZIP contains a React + TypeScript + Vite
+application, Tailwind CSS and custom CSS, Supabase, a typed content
+model, an existing store, a public site, an admin dashboard,
+portfolio/video components, lead capture, WhatsApp handoff, tracking,
+and an existing live-popup component.
+
+Important files identified in the project include:
+- src/App.tsx
+- src/pages/PublicSite.tsx
+- src/pages/AiVideoPage.tsx
+- src/content/defaultContent.ts
+- src/content/aiPage.ts
+- src/content/types.ts
+- src/lib/store.tsx
+- src/lib/publicApi.ts
+- src/lib/money.ts
+- src/lib/country.tsx
+- src/lib/events.ts
+- src/lib/integrations.ts
+- src/lib/tracking.ts
+- src/components/StrategyModal.tsx
+- src/components/OrderModal.tsx
+- src/components/LivePopups.tsx
+- src/components/Wall.tsx
+- src/components/shared.tsx
+- src/pages/admin/Admin.tsx
+- src/pages/admin/Content.tsx
+- src/pages/admin/Markets.tsx
+- src/pages/admin/LeadsProjects.tsx
+- src/sections/sections.tsx
+- src/sections/chrome.tsx
+- src/styles/studio.css
+- src/styles/casestudy.css
+- src/index.css
+- supabase/schema.sql
+- existing Supabase migrations.
+These are starting points, not a complete file list. Inspect the current
+code, route handling, schema, and integration settings before
+implementation. Check the actual project rather than assuming every
+detail in this brief perfectly matches the latest code.
+
+Before coding, write a short internal implementation plan identifying
+the routes, components, data structures, admin controls, and integration
+points you will reuse. Then implement the work. Do not stop after
+presenting the plan.
+Non-negotiable rules
+- Preserve existing pages, routes, case studies, homepage, admin
+  dashboard, authentication, and integrations.
+- Preserve the existing public/admin separation and lazy-loaded admin
+  code.
+- Reuse the current store, Supabase client, public API, content model,
+  tracking, country-aware pricing, portfolio, video preview, modal,
+  and WhatsApp utilities where appropriate.
+- Do not create a second disconnected CMS or duplicate Supabase
+  clients.
+- Do not hardcode public-facing offer copy, prices, or quantities in
+  page components.
+- Do not expose private credentials, service-role keys, admin data, or
+  lead data to public visitors.
+- Keep existing country/currency behaviour intact.
+- Avoid unrelated redesigns or destructive refactors.
+- Keep a single source of truth for offer data.
+- Do not declare completion until the production build and type checks
+  have actually been run.
+Phase 2 --- preserve the AdVibe identity and existing 3D cylinder carousel
+The current brand is a premium creative studio, not a generic SaaS
+landing page.
+
+The existing visual language includes:
+- Warm off-white and cream backgrounds.
+- Near-black text and buttons.
+- AdVibe gold as the primary brand accent.
+- Supporting peach, butter-yellow, mint, sky-blue, and lilac.
+- Large expressive typography.
+- Generous spacing and editorial compositions.
+- Rounded pill-shaped buttons used intentionally.
+- Soft shadows, fine borders, floating visual elements, and restrained
+  texture.
+- Serif italic accents and occasional handwritten details.
+- Video-led portfolio presentation.
+- Existing fonts: Bricolage Grotesque Variable, Figtree Variable,
+  Instrument Serif, and Caveat.
+Reuse design tokens and existing styles from src/styles/studio.css,
+src/styles/casestudy.css, and src/index.css where suitable. Do not
+introduce a new visual identity.
+The 3D cylinder / video wall is a signature asset
+src/components/Wall.tsx contains the current interactive 3D video wall
+used in the hero. It places video cards around an invisible cylinder,
+with drag/swipe interaction, slow drift, keyboard navigation, and a
+video preview action.
+
+Preserve this feature and its visual impact. Do not replace it with
+a static grid, generic hero illustration, or standard image carousel. Do
+not delete the existing component or simplify away the 3D behaviour.
+
+Use the current wall on the homepage exactly as appropriate to the
+existing design. On the new sales pages, reuse it only where it enhances
+the page and uses relevant existing portfolio videos. Avoid mounting
+several resource-intensive walls on the same page. If a lighter
+presentation is needed below the hero, use the existing VideoCard,
+video lightbox, or portfolio components.
+
+Keep it smooth on mobile, respect prefers-reduced-motion, preserve
+touch and keyboard behaviour, and avoid horizontal overflow. If the
+existing wall needs performance improvements, optimise it without
+removing the effect.
+Add other intentional "wow" moments
+Use a small number of memorable interactions that reinforce the message
+rather than distract:
+- A cinematic opening transition or carefully staged reveal.
+- Strong typographic contrast and subtle motion as key sections enter
+  view.
+- A visual comparison that shows "one hire" versus "a full creative
+  studio" without unsupported salary or savings claims.
+- A polished 15-video monthly package presentation.
+- A beautiful step-by-step creative approval flow showing script →
+  one-page brief → approval → production → one revision → delivery.
+- A premium CirclesFundMe work preview with a one-click video
+  lightbox.
+- Distinct art direction between the two sales pages while preserving
+  shared brand identity.
+Motion should be restrained, fast, purposeful, and accessible. Respect
+reduced-motion preferences. Avoid excessive parallax, huge video
+downloads, constant movement behind text, neon, excessive glassmorphism,
+or animations that impair reading.
+Phase 3 --- mobile-led, not merely responsive
+Design mobile first as the primary experience. Start at approximately
+390px wide and establish the complete hierarchy, copy flow, spacing, CTA
+placement, media, forms, navigation, and visual pacing before expanding
+to larger screens.
+
+Do not build a desktop page and squeeze it onto mobile.
+Mobile requirements
+- Comfortable readable body text and deliberate headline line breaks.
+- Clear hierarchy and scannable paragraphs.
+- Prominent CTAs with approximately 48--56px comfortable touch height.
+- No horizontal overflow.
+- Mobile navigation that is not a compressed desktop menu.
+- Mobile-friendly video previews and lightboxes.
+- Short forms with correct input types and keyboard behaviour.
+- Sticky CTA only if it does not obscure content, cookie/consent
+  controls, or form fields.
+- FAQs that collapse accessibly where appropriate.
+- Touch-safe controls and useful focus states.
+- Respect reduced motion and data-conscious media loading.
+- The opening viewport should communicate the audience problem, offer,
+  15 videos, price, and CTA without forcing excessive scrolling.
+Test at 320--360px, 390px, 430px, tablet, and desktop. Desktop should be
+a considered expansion of the mobile composition, not merely enlarged
+mobile cards.
+Phase 4 --- implement two routes and distinguish their art direction
+Create routes compatible with the existing routing convention:
+- #/monthly-content
+- #/promotional-mini-series
+If the existing router has a more appropriate convention, use it
+consistently.
+
+Both pages share AdVibe identity, navigation, CTA logic, lead flow,
+ownership policy, and offer structure. They must not look like
+duplicates with only the headline changed.
+Retainer page
+Visually emphasise: - Reliable monthly production. - Creative capacity
+beyond one hire. - Content variety. - A clear workflow. - A confident
+but calm and organised tone.
+Mini-series page
+Visually emphasise: - Storytelling. - Character and episode
+continuity. - Cinematic scenes and branded entertainment. - Curiosity
+and emotional connection. - A more immersive, editorial, film-inspired
+feel.
+
+Use real work where available. If media is missing, use an
+admin-editable placeholder with a clear "add portfolio media" state, not
+fabricated work.
+Phase 5 --- PASTOR and copy implementation
+Use the exact default copy in Part B. Map it to the PASTOR structure:
+- P --- Problem: specific customer pain.
+- A --- Amplify: reasonable consequences, without fearmongering.
+- S --- Story/Solution: introduce AdVibe's managed creative
+  process.
+- T --- Transformation/Testimony: show realistic desired
+  transformation and genuine work. Do not invent testimonials or
+  results.
+- O --- Offer: price, 15 videos, deliverables, approval process,
+  one revision per video, ownership boundaries.
+- R --- Response: lead form, strategy call booking, WhatsApp
+  handoff.
+The existing CircleFundMe work is genuine proof of production
+experience. Use the existing client record and actual videos; do not
+imply the client endorses the new offers or that their videos produced
+specific results unless the project has approved evidence.
+Phase 6 --- make the script and one-page brief process a persuasive feature
+The script and one-page brief are not minor operational details. Present
+them as a trust-building reason to work with AdVibe:
+
+"You see the direction before production begins."
+
+Create a visually attractive section or process animation with these
+steps:
+1. Business brief and goals.
+2. Script and one-page creative brief sent to client.
+3. Client reviews and approves the direction.
+4. Production begins.
+5. Client receives video and has one revision round within scope.
+6. Final asset delivery.
+Make it clear that approval of the script/brief is a meaningful
+checkpoint. Do not imply clients can repeatedly change the entire
+concept without consequences after approval.
+
+The one-page brief is intended to be quick to read, not a long proposal.
+Show a tasteful visual mockup of a one-page brief as a design element
+only if it is clearly labelled as an illustrative sample. Do not pretend
+the sample is a real client document.
+Phase 7 --- one revision round per video
+This term must be visible in the offer details and FAQ, not hidden
+exclusively in legal fine print.
+
+Use tactful copy such as:
+
+One focused revision round per video
+"Every video includes one consolidated revision round within the agreed
+scope. We send the script and one-page brief for review before
+production so the direction is clear from the start. Major changes after
+approval can require rescripting, new scenes, new characters, or
+regenerated voice/audio, and may need a separate agreement."
+
+The admin must be able to edit this wording. Do not promise unlimited
+revisions. The UI should explain that the client should submit one
+consolidated set of feedback for each video's included revision round.
+Phase 8 --- CirclesFundMe work preview on both pages
+Add a distinctive proof-of-work section to both sales pages, using the
+current client and portfolio infrastructure.
+
+Suggested heading: "Real Work. Real Creative Collaboration."
+
+Suggested copy: "AdVibe Studios has worked with CirclesFundMe, a brand
+in the digital savings and loans space. Explore selected videos we've
+produced for the company and see our creative work in action."
+
+CTA: "Watch Our Work for CirclesFundMe"
+
+Behaviour: - One click opens an accessible modal/lightbox or a curated
+preview panel containing actual videos already associated with
+CirclesFundMe in the portfolio. - Reuse existing portfolio metadata,
+client matching, thumbnail generation, and video preview utilities. -
+Make the selected videos configurable from the existing admin. - If
+there are no suitable visible videos, do not show a broken or fake
+preview. Use an admin-editable fallback state or hide the CTA until real
+media is selected. - Do not hardcode made-up video IDs or URLs. - Do not
+claim performance results or endorsement. - Preserve any existing
+requirement to obtain client permission for public logo/name usage.
+Phase 9 --- admin-editable sales pages and offers
+This is mandatory. Ordinary changes must not require a code deployment.
+
+Inspect src/pages/admin/Content.tsx, src/content/types.ts,
+src/content/defaultContent.ts, src/lib/store.tsx, public API, and
+current Supabase schema/migrations. Extend the existing content model
+and persistence layer compatibly.
+
+Add an admin section such as Sales Pages & Offers. It should let a
+nontechnical team member choose an offer, edit fields, save, and see the
+public page reflect the saved changes.
+Per-offer editable fields
+- Active/inactive status.
+- Homepage visibility.
+- Offer name and short label.
+- Price.
+- Currency/billing period where supported by existing country-aware
+  pricing.
+- Monthly video quantity.
+- Hero eyebrow, headline, supporting copy.
+- CTA labels.
+- Problem, amplification, solution, transformation, offer, and closing
+  sections.
+- Benefits and deliverables.
+- Process steps.
+- Script/brief review wording.
+- Revision policy.
+- Ownership wording and disclaimers.
+- FAQs.
+- Portfolio associations.
+- SEO title and meta description.
+- Optional booking URL override if supported by the existing settings
+  architecture.
+- Any relevant package disclaimer.
+Global editable settings
+- Default strategy-call booking URL.
+- WhatsApp business number, reusing existing country-aware settings if
+  present.
+- Privacy/consent copy.
+- Shared CTA labels.
+- Homepage introduction and the two offer cards.
+- Whether each offer is shown on the homepage.
+- Selected CirclesFundMe portfolio items for the proof-of-work
+  section.
+- Social-proof notification settings and consent-related controls.
+Persistence and compatibility
+- Prefer extending the existing typed SiteContent structure.
+- If the current Supabase site_content JSON structure supports new
+  fields, extend it compatibly instead of creating unnecessary tables.
+- Provide safe defaults for older saved content that lacks new fields.
+- Keep the price and video quantity as a single source of truth.
+- Ensure changes persist after refresh.
+- Keep admin saves authenticated.
+- Ensure public clients can read only public content.
+- Do not expose private lead details.
+- Use server-validated offer identifiers and pricing when storing
+  leads.
+- Do not rely only on browser validation.
+- Do not break country/currency selection, existing pricing, or
+  current site content.
+- Show loading, save confirmation, and useful errors. Warn about
+  unsaved changes.
+If the team changes a price, update every relevant public price display
+and generated message from the same saved offer data. Avoid stale
+hardcoded amounts. Default both offers to ₦200,000/month and 15 videos,
+but allow future edits through the dashboard.
+Phase 10 --- lead capture, strategy-call booking, and WhatsApp handoff
+The journey must collect the lead first, then offer booking and WhatsApp
+as clear next steps. Visitors must not be told that an appointment is
+booked simply because they clicked a booking link.
+Step 1: CTA opens a short lead form
+Use the existing strategy modal or lead form if appropriate. Preserve
+which offer the visitor was viewing.
+
+Required: - Full name. - Business name. - WhatsApp number. - Selected
+offer.
+
+Optional where useful: - Email. - Industry. - What the business sells. -
+Main content challenge or goal.
+
+Keep it concise and mobile-friendly. Validate clearly and accessibly.
+Add suitable consent language explaining how contact details will be
+used.
+Step 2: securely save the lead
+Use the existing lead submission API and Supabase workflow. Save the
+selected offer, source/route, and attribution data where supported.
+- Prevent duplicate submissions from repeated taps.
+- Display loading and failure states.
+- Do not claim success before server confirmation.
+- Never expose leads publicly.
+- Preserve UTM/referrer information where practical.
+Step 3: after successful lead capture, offer a strategy call
+Show a clear success state and next action to book the strategic call.
+- Inspect the current project for an existing scheduling integration
+  or configured booking URL.
+- Reuse it if available.
+- Otherwise add an admin-editable booking URL setting. Do not invent a
+  link.
+- Prefill name/email/offer only if the configured scheduler supports
+  it.
+- Allow users to continue to WhatsApp if they cannot book immediately.
+- Track booking-link clicks, but never mark a call as booked without a
+  confirmed booking signal.
+Step 4: WhatsApp handoff
+Use the existing WhatsApp utility and currently configured business
+number. Never hardcode an unverified number.
+
+After the lead is successfully saved, display "Continue on WhatsApp"
+and generate a URL-encoded message such as:
+
+"Hello AdVibe Studios. My name is \(name\), and I represent
+\(business\). I'm interested in your \(selected offer\) package at
+\(current configured price\) per month, which includes \(current
+configured quantity\) videos monthly. My main goal is \(goal\). I'd like
+to discuss how this could work for my business."
+
+Use the actual saved offer values, not a hardcoded ₦200,000/15 in the
+message. Respect existing country-aware settings. The user must
+intentionally click to open WhatsApp and send the message themselves;
+never send automatically.
+CTA hierarchy
+- Desktop: prominent strategy-call CTA, with WhatsApp as a clear
+  secondary action.
+- Mobile: both are easy to reach. WhatsApp may have strong visual
+  prominence but must not bypass lead capture.
+- A CTA on the mini-series page must preserve that offer; a CTA on the
+  retainer page must preserve that offer.
+- The same offer must remain selected through form, booking handoff,
+  and WhatsApp message.
+Track existing supported events for page views, CTA clicks, form starts,
+successful submissions, booking-link clicks, and WhatsApp handoff. Do
+not invent analytics events without following the existing event
+conventions.
+Phase 11 --- honest, consent-aware live notifications
+The project already contains src/components/LivePopups.tsx, which is
+designed to show real recent order activity, using consented public
+display fields where configured. Inspect it and reuse or extend it
+rather than building an unrelated popup system.
+
+The goal is to create reassuring social proof across the homepage and
+both sales pages without deception.
+Allowed notification types
+1. Real recent bookings or sign-ups: only from verified,
+   server-confirmed events, using only fields the person explicitly
+   consented to display publicly. Prefer first name plus broad
+   country/city if consented. Never show phone, email, full name, or
+   business details.
+2. Real recent lead submissions: only if a real lead action
+   occurred and the person gave the required consent for public
+   display. A lead submission is not a booked appointment; label it
+   accurately.
+3. Real booking confirmations: only when the scheduling integration
+   confirms a booking. Never infer a booking from a button click.
+4. Current visitor's own progress: truthful interface cues such as
+   "You're exploring the Monthly Content Retainer" or "Your details are
+   saved---book your strategy call next." These are not social-proof
+   claims.
+5. Evergreen reassurance: if there is no recent public activity,
+   show non-deceptive messages such as "You can talk through your goals
+   before deciding" or "Your first step is a short strategy
+   conversation." These must be clearly informational, not disguised as
+   activity from other customers.
+Prohibited behaviour
+- Never fabricate names, cities, countries, bookings, leads, page
+  visits, time stamps, or activity.
+- Never create fake notifications saying "someone just landed on this
+  page," "someone is reading this offer," or "someone is about to
+  book" unless a real, consent-compliant event system genuinely
+  records that exact action and the claim is accurate. In most cases,
+  do not implement person-level browsing notifications.
+- Do not use generated demo data as if it were real live activity in
+  production.
+- Do not manufacture urgency, limited slots, or a countdown unless
+  there is a real, admin-configured limit that is enforced.
+- Do not expose identifiable personal information.
+- Do not repeatedly interrupt visitors or cover the primary CTA.
+- Respect dismissal and frequency caps; allow users to close notices.
+- If the data source is unavailable or there are no consented real
+  events, show no social-proof toast. Never fall back to fabricated
+  activity.
+Notification design and settings
+- Reuse the existing LivePopups component, public API, consent
+  mechanism, and settings.
+- Make enable/disable, timing, frequency cap, eligible event types,
+  and page placement admin-configurable where practical.
+- The notification must identify the event accurately: "booked a
+  strategy call," "submitted an enquiry," or "started their creative
+  process" are not interchangeable.
+- Use minimal data, retention limits, and a clear opt-in for public
+  display.
+- If the current infrastructure cannot reliably verify an event or
+  consent, do not display it.
+- Test the component on the homepage and both sales pages, without
+  blocking modal/form interaction.
+Phase 12 --- accessibility, SEO, performance
+- Unique SEO title and meta description for each sales page.
+- Correct heading hierarchy and semantic HTML.
+- Accessible form labels, errors, dialogs, keyboard navigation, and
+  visible focus.
+- Descriptive CTA labels.
+- Appropriate alt text for meaningful images.
+- Lazy-load below-the-fold portfolio media.
+- Avoid loading large videos before the user needs them.
+- Do not autoplay sound.
+- Any autoplay preview must be muted, lightweight, and respect reduced
+  motion and data-conscious behaviour.
+- No layout shifts or horizontal overflow.
+- Preserve lazy loading of admin-only code.
+- Avoid new dependencies when the current stack already supports the
+  requirement.
+Phase 13 --- testing and acceptance criteria
+Actually run the project's existing checks, including TypeScript
+validation and production build.
+Routes
+- Homepage works.
+- #/monthly-content works.
+- #/promotional-mini-series works.
+- Existing case studies and public routes still work.
+- Admin route still works.
+- Browser back/forward navigation works.
+Visual experience
+- Existing cylinder video wall is preserved and functions.
+- The two sales pages have distinct art direction.
+- Both pages use real work or clear admin-editable fallbacks.
+- CircleFundMe preview opens the correct real videos.
+- No overflow at 320--360px, 390px, 430px, tablet, or desktop.
+- Motion respects reduced-motion settings.
+- CTAs are visible and usable on mobile.
+Content and admin
+- Default price is ₦200,000/month on both offers.
+- Default quantity is 15 videos/month on both offers.
+- Script/one-page brief approval process is clear.
+- One revision per video is clear.
+- Ownership language is accurate and editable.
+- Offer copy, price, quantity, FAQ, CTA labels, portfolio association,
+  and visibility can be edited from the existing admin.
+- Changes persist after refresh and are reflected on the public pages.
+- No stale hardcoded price appears in page, form, or WhatsApp message.
+- Existing content and admin functionality remain intact.
+Lead journey
+- Form validates correctly.
+- Successful lead is saved.
+- Failed submission does not show a false success state.
+- Selected offer is recorded and preserved.
+- WhatsApp message contains correct submitted information and current
+  offer values.
+- Number and message are properly encoded.
+- Repeated clicks do not create duplicate submissions.
+- Booking URL is configured, not invented.
+- Booking click is not recorded as a completed appointment.
+Notifications
+- Every social-proof toast is grounded in a real verified event and
+  valid consent.
+- No fake activity is shown if there are no eligible events.
+- Personal information is minimised.
+- Dismissal works and notifications do not obstruct the CTA or forms.
+Build
+Run the actual production build and TypeScript checks. Fix regressions
+introduced by this work. If a check cannot be run or an external
+integration is not configured, state that honestly rather than reporting
+success.
+PART D --- IMPLEMENTATION REPORT REQUIRED
+When the work is complete, report:
+1. What was implemented.
+2. Which routes were added.
+3. How the existing cylinder carousel was preserved.
+4. Which existing components and integrations were reused.
+5. What admin controls were added.
+6. How CircleFundMe preview works.
+7. How lead capture, booking handoff, and WhatsApp handoff work.
+8. How notifications use verified activity and consent.
+9. Which build/type checks were actually run and their results.
+10. Any external booking URL, Supabase migration, or configuration still
+    required.
+Do not stop after generating a visual mockup. Implement the complete
+working experience.
