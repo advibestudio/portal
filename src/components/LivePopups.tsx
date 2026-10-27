@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Sparkles, Eye, PhoneCall, GraduationCap, Flame, ShoppingBag, Film, CheckCircle2 } from 'lucide-react';
 import { useStore } from '@/lib/store';
-import { isLive } from '@/lib/supabase';
-import { fetchRecentOrders } from '@/lib/publicApi';
-import { fetchRecentTrainingToasts } from '@/lib/trainingApi';
 
 const OFF_KEY = 'advibe.popups.off';
 
@@ -21,23 +18,24 @@ export interface LiveActivityItem {
 
 export default function LivePopups({ paused }: { paused: boolean }) {
   const { content, leads, students } = useStore();
-  const cfg = content.popups;
 
   const [current, setCurrent] = useState<LiveActivityItem | null>(null);
   const [isExiting, setIsExiting] = useState(false);
-  const [off, setOff] = useState(() => {
-    try {
-      return sessionStorage.getItem(OFF_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
+  const [off, setOff] = useState(false);
 
   const shownCount = useRef(0);
   const itemIndex = useRef(0);
-  const [isTabVisible, setIsTabVisible] = useState(() =>
-    typeof document !== 'undefined' ? !document.hidden : true
-  );
+  const [isTabVisible, setIsTabVisible] = useState(true);
+
+  // Clear any past dismissal blocks from localStorage/sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem(OFF_KEY);
+      localStorage.removeItem(OFF_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   // Monitor browser tab visibility
   useEffect(() => {
@@ -187,22 +185,22 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     return list;
   }, [students, leads, content.countries]);
 
-  // Show one, auto-hide strictly after 5 seconds with graceful slide-out-and-fade, wait gap, show the next
+  // Natural cadence: display for 4.5s (exit animation starts at 4.1s), then wait 6.5s gap between popups (5-10s range)
   useEffect(() => {
-    if (off || !activityQueue.length || shownCount.current >= cfg.maxPerVisit || !isTabVisible) return;
+    if (off || !activityQueue.length || !isTabVisible) return;
 
     if (current) {
       setIsExiting(false);
-      // Start exit fade-and-slide at 4.6 seconds
+      // Start exit fade-and-slide at 4.1 seconds
       const exitTimer = setTimeout(() => {
         setIsExiting(true);
-      }, 4600);
+      }, 4100);
 
-      // Unmount completely at 5 seconds after smooth slide-and-fade exit completes
+      // Unmount completely at 4.5 seconds after smooth slide-and-fade exit
       const unmountTimer = setTimeout(() => {
         setCurrent(null);
         setIsExiting(false);
-      }, 5000);
+      }, 4500);
 
       return () => {
         clearTimeout(exitTimer);
@@ -212,8 +210,8 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
     if (paused) return;
 
-    // Show initial popup fast (1.5s after load), subsequent ones with natural gap (12s)
-    const delay = shownCount.current === 0 ? 1500 : 12000;
+    // First popup appears 1.5s after load, subsequent ones every 6.5s (natural 5-10s cycle)
+    const delay = shownCount.current === 0 ? 1500 : 6500;
     const timer = setTimeout(() => {
       shownCount.current += 1;
       const nextItem = activityQueue[itemIndex.current % activityQueue.length];
@@ -223,7 +221,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [activityQueue, current, paused, off, isTabVisible, cfg.maxPerVisit]);
+  }, [activityQueue, current, paused, off, isTabVisible]);
 
   if (!current || off || paused || !isTabVisible) return null;
 
@@ -232,13 +230,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     setTimeout(() => {
       setCurrent(null);
       setIsExiting(false);
-      setOff(true);
-      try {
-        sessionStorage.setItem(OFF_KEY, '1');
-      } catch {
-        /* ignore */
-      }
-    }, 380);
+    }, 350);
   };
 
   // Badge icon and styling based on category
@@ -307,7 +299,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
   return (
     <aside
-      className={`fixed left-3 sm:left-5 bottom-20 sm:bottom-6 z-50 max-w-[400px] w-[calc(100vw-24px)] sm:w-auto rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl overflow-hidden pointer-events-auto ${
+      className={`fixed left-3 sm:left-5 bottom-[calc(92px+env(safe-area-inset-bottom,0px))] sm:bottom-6 z-[9999] max-w-[400px] w-[calc(100vw-24px)] sm:w-auto rounded-2xl bg-[#0b0e12]/98 text-white border border-white/20 p-3.5 sm:p-4 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.9),0_0_24px_rgba(245,165,36,0.2)] backdrop-blur-2xl overflow-hidden pointer-events-auto ${
         isExiting ? 'toast-slide-exit' : 'toast-slide-enter'
       }`}
       role="status"
@@ -323,7 +315,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
           <button
             onClick={handleDismiss}
             className="grid h-6 w-6 place-items-center rounded-full text-zinc-400 hover:text-white hover:bg-white/15 transition active:scale-95"
-            aria-label="Dismiss live notices"
+            aria-label="Dismiss notice"
             title="Dismiss notice"
           >
             <X className="h-3.5 w-3.5" />
@@ -358,12 +350,12 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         </div>
       </div>
 
-      {/* 4.6-Second Animated Progress Bar Countdown */}
+      {/* Animated Progress Bar Countdown */}
       <div className="absolute bottom-0 left-0 h-[2.5px] w-full bg-white/10 overflow-hidden">
         <div
           className="h-full bg-gradient-to-r from-[#f5a524] via-amber-300 to-[#f5a524]"
           style={{
-            animation: 'shrinkWidth 4.6s linear forwards',
+            animation: 'shrinkWidth 4.1s linear forwards',
           }}
         />
       </div>

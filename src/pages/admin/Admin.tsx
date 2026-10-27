@@ -834,13 +834,14 @@ export default function Admin() {
                 </div>
 
                 <div className="rounded-xl border border-white/10 bg-black/40 p-4 space-y-2 text-xs font-mono text-white/80">
-                  <p className="text-white/60"># Deploy script configured in package.json:</p>
+                  <p className="text-white/60"># Deploy script in package.json:</p>
                   <p className="text-[#f5a524] font-bold">npm run deploy</p>
-                  <p className="text-white/60 pt-1"># Triggers on git push to main / master or manual workflow dispatch.</p>
+                  <p className="text-white/60 pt-1"># Triggers on git push to main / master or manual workflow_dispatch.</p>
+                  <p className="text-emerald-400/90 pt-1">✓ Resilient install enabled: works with or without package-lock.json</p>
                 </div>
 
                 <p className="text-xs text-white/60">
-                  Every commit pushed to your GitHub repository automatically builds and publishes the latest live website via GitHub Actions.
+                  Every commit pushed to your GitHub repository automatically builds and publishes the live website to GitHub Pages with relative routing and 404 SPA fallback.
                 </p>
               </div>
 

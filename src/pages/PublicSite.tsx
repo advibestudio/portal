@@ -75,7 +75,7 @@ function Page() {
       <Footer />
       <StickyBar onStrategy={() => setStrategyOpen(true)} />
       <Lightbox item={playing} onClose={() => setPlaying(null)} />
-      {sec.liveToasts && popupsReady && (
+      {sec?.liveToasts !== false && (
         <Suspense fallback={null}><LivePopups paused={orderOpen || Boolean(playing)} /></Suspense>
       )}
       {strategyOpen && <Suspense fallback={null}><StrategyModal onClose={() => setStrategyOpen(false)} /></Suspense>}

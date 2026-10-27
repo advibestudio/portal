@@ -552,7 +552,7 @@ p, li { text-wrap: pretty; }
   .live-toast {
     left: 12px;
     right: 12px;
-    bottom: 84px;
+    bottom: calc(98px + env(safe-area-inset-bottom, 0px));
     max-width: none;
   }
 }
