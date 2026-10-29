@@ -5,6 +5,7 @@ import { CountryProvider } from '@/lib/country';
 import { Nav, Hero, Proof, Showcase, StickyBar } from '@/sections/chrome';
 import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, FinalCta, Footer, ClientSpotlight, CommercialOffersShowcase } from '@/sections/sections';
 import { CostCompare } from '@/sections/CostCompare';
+import { SalesHome } from '@/sections/SalesHome';
 import { Lightbox } from '@/components/shared';
 import { ChooseYourPathStrip } from '@/components/ChooseYourPathStrip';
 
@@ -60,6 +61,7 @@ function Page() {
         {sec.proof && <Proof />}
         {sec.showcase && <Showcase onPlay={setPlaying} />}
         {sec.clients && <ClientSpotlight onPlay={setPlaying} />}
+        <SalesHome />
         {sec.problem && <Problem />}
         {sec.services && <Services />}
         <CommercialOffersShowcase />

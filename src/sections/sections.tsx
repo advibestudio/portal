@@ -389,7 +389,7 @@ export function FinalCta({ onStrategy }: { onStrategy: () => void }) {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="final-cta">
-              <button onClick={onStrategy} className="btn-studio is-wrap"><span>{content.finalCta.primaryCta}</span><ArrowBtn /></button>
+              <button onClick={onStrategy} className="btn-studio"><span>{content.finalCta.primaryCta}</span><ArrowBtn /></button>
               <a className="btn-ghost" href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want a video ad for my business.`)}
                 target="_blank" rel="noreferrer" onClick={() => track('Contact')}>
                 <MessageCircle size={18} /> Just a quick question? WhatsApp us
@@ -421,7 +421,17 @@ export function Footer() {
           </div>
           <div className="foot-col">
             <h4>Explore</h4>
-            {[['Work', '#work'], ['Packages', '#pricing'], ['How it works', '#process'], ['FAQs', '#faq']].map(([l, h]) => <a key={h} href={h}>{l}</a>)}
+            {[
+              ['Work', '#work'],
+              ['Packages', '#pricing'],
+              ['How it works', '#process'],
+              ['FAQs', '#faq'],
+              ...((content.salesPages?.offers || []).filter((o) => o.active).map((o) => [o.shortLabel, `#/${o.slug}`] as [string, string])),
+            ].map(([l, h]) => (
+              <a key={h} href={h}>
+                {l}
+              </a>
+            ))}
           </div>
         </div>
         <p className="foot-legal">© {new Date().getFullYear()} {content.brand.name}. AI-assisted production, human-directed creative.</p>

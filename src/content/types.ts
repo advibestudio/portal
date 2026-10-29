@@ -235,7 +235,17 @@ export interface SiteContent {
   commercialOffers?: Record<string, CommercialOfferPage>;
   /** The "What AI replaces" cost card under the packages, and the link to the full breakdown page. */
   aiCompare: { title: string; tradLabel: string; aiLabel: string; body: string; linkText: string };
-  popups: { delaySeconds: number; gapSeconds: number; maxPerVisit: number; withinHours: number };
+  popups: {
+    delaySeconds: number;
+    gapSeconds: number;
+    maxPerVisit: number;
+    withinHours: number;
+    types?: { orders: boolean; enquiries: boolean; bookings: boolean };
+    pages?: { home: boolean; sales: boolean };
+    ownProgress?: boolean;
+    reassurance?: boolean;
+    reassuranceMessages?: string[];
+  };
   banner: { enabled: boolean; campaignId: string };
   hero: {
     headline: string;
@@ -272,6 +282,84 @@ export interface SiteContent {
   faqs: Faq[];
   aiNote: { title: string; body: string };
   finalCta: { heading: string; subheading: string; primaryCta: string };
+  /** The two sales pages (#/monthly-content and #/promotional-mini-series) and their shared settings. */
+  salesPages?: SalesPages;
+}
+
+/* ---------- SALES PAGES & OFFERS ---------- */
+export interface SalesBlock { heading: string; paragraphs: string[]; closing?: string[] }
+export interface SalesItem { title: string; description: string }
+export interface SalesStep { title: string; description: string; tag?: string }
+export interface SalesFaq { id: string; q: string; a: string; visible: boolean }
+export interface SalesSeed { label: string; tag: string; text: string }
+
+export interface SalesOffer {
+  /** Stable id. Saved on every lead and checked by the database against the saved offer. */
+  id: string;
+  /** The address: #/<slug> */
+  slug: string;
+  /** Decides the art direction of the page. */
+  kind: 'retainer' | 'miniseries';
+  active: boolean;
+  showOnHome: boolean;
+  name: string;
+  shortLabel: string;
+  /** Price in the base country's currency (Settings → base country). THE single source of truth for price. */
+  price: number;
+  /** Optional price in another country's currency, keyed by country code. Missing = the base price is shown. */
+  countryPrices?: Record<string, number>;
+  period: string;
+  /** THE single source of truth for videos per month. */
+  quantity: number;
+  seoTitle?: string;
+  seoDescription?: string;
+  /** Optional: overrides the shared booking link for this offer. */
+  bookingUrl?: string;
+  homeCard: { blurb: string; cta: string };
+  hero?: { eyebrow?: string; headline?: string; body?: string[]; tagline?: string; ctaPrimary?: string; ctaSecondary?: string; formNote?: string };
+  problem?: SalesBlock & { lines?: string[] };
+  amplify?: SalesBlock;
+  solution?: SalesBlock & { seeds?: SalesSeed[]; seedsNote?: string; roles?: string[] };
+  value?: SalesBlock & {
+    listIntro?: string; bullets?: string[];
+    compare?: { oneLabel?: string; oneCaption?: string; oneRoles?: string[]; studioLabel?: string; studioCaption?: string };
+  };
+  features?: { heading?: string; intro?: string; items?: SalesItem[]; outro?: string };
+  process?: { heading?: string; flowTitle?: string; flow?: string[]; steps?: SalesStep[]; briefLabel?: string; briefCaption?: string };
+  revision?: { title?: string; body?: string; note?: string };
+  ownership?: SalesBlock & { note?: string };
+  proof?: { heading?: string; body?: string; cta?: string };
+  offer?: { heading?: string; included?: string[]; fineprint?: string; disclaimer?: string; ctaPrimary?: string; ctaSecondary?: string };
+  faqs?: SalesFaq[];
+  finalCta?: { heading?: string; paragraphs?: string[]; ctaPrimary?: string; ctaSecondary?: string; formNote?: string };
+}
+
+export interface SalesPages {
+  home: { enabled: boolean; eyebrow: string; heading: string; body: string };
+  settings: {
+    /** The scheduler link shown AFTER a lead is saved. Blank = no booking button. May contain {name} {email} {offer} {ref}. */
+    bookingUrl: string;
+    /** Country code whose currency the base prices are written in. */
+    baseCountry: string;
+    whatsappTemplate: string;
+    consentText: string;
+    publicDisplayLabel: string;
+    currencyNote: string;
+    labels?: {
+      modalKicker?: string;
+      modalTitle?: string;
+      submit?: string;
+      saving?: string;
+      savedTitle?: string;
+      whatsapp?: string;
+      book?: string;
+      bookClicked?: string;
+      noBooking?: string;
+    };
+    uiText?: Record<string, string>;
+  };
+  proof?: { videoIds: string[]; showLogo: boolean; emptyNote: string; modalTitle: string };
+  offers: SalesOffer[];
 }
 
 export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Won' | 'Lost';
@@ -298,6 +386,11 @@ export interface Lead {
   currency: string;     // currency code the price is in, e.g. 'GHS'
   source: string;       // 'website' or where a manually-entered order came from
   showPublic: boolean;  // customer agreed to appear in the "just started" pop-up
+  /** Sales-page leads only */
+  goal?: string;
+  pageRoute?: string;
+  bookingClickedAt?: string;
+  bookingConfirmedAt?: string;
 }
 
 export type ProjectStatus =

@@ -70,6 +70,11 @@ export function Nav({ onOrder }: { onOrder: () => void }) {
   // A link only appears if its section is switched on.
   const links = [
     { label: 'Work', href: '#work', on: sec.showcase },
+    {
+      label: 'Studio plans',
+      href: '#studio-plans',
+      on: Boolean(content.salesPages?.home?.enabled && content.salesPages?.offers?.some((o) => o.active && o.showOnHome)),
+    },
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
     { label: 'Mini Series', href: '#/promotional-mini-series', on: true },
     { label: 'Packages', href: '#pricing', on: true },
@@ -206,7 +211,7 @@ export function Hero({ onOrder, onStrategy, onPlay }: { onOrder: () => void; onS
         <h1 id="hero-title" className="h-hero"><span><EmLast text={content.hero.headline} /></span></h1>
         <p className="hero-sub">{content.hero.subheadline}</p>
         <div className="hero-cta">
-          <button onClick={onStrategy} className="btn-studio is-wrap"><span>{content.hero.primaryCta}</span><ArrowBtn /></button>
+          <button onClick={onStrategy} className="btn-studio"><span>{content.hero.primaryCta}</span><ArrowBtn /></button>
           {content.sections.showcase && <a className="btn-ghost" href="#work">{content.hero.secondaryCta} <ArrowDown size={18} /></a>}
         </div>
         {micro && <p className="hero-micro">{micro}</p>}

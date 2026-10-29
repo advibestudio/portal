@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { X, Sparkles, Eye, PhoneCall, GraduationCap, Flame, ShoppingBag, Film, CheckCircle2, Volume2, VolumeX } from 'lucide-react';
+import { X, Sparkles, Eye, PhoneCall, GraduationCap, Flame, ShoppingBag, Film, CheckCircle2, Volume2, VolumeX, Zap, Video, Download } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { playNotificationChime } from '@/lib/sound';
 
@@ -7,14 +7,14 @@ const OFF_KEY = 'advibe.popups.off';
 
 export interface LiveActivityItem {
   id: string;
-  category: 'viewer' | 'strategy_call' | 'offers' | 'enrollment' | 'project';
+  category: 'viewer' | 'strategy_call' | 'offers' | 'enrollment' | 'project' | 'trial' | 'webinar' | 'download';
   actor: string;
   flag: string;
   location: string;
   action: string;
   timeAgo: string;
   badgeLabel: string;
-  badgeColor: 'emerald' | 'gold' | 'sky' | 'amber';
+  badgeColor?: 'emerald' | 'gold' | 'sky' | 'amber' | 'purple';
 }
 
 export default function LivePopups({ paused }: { paused: boolean }) {
@@ -73,7 +73,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
   // Construct dynamic real-life activity queue
   const activityQueue = useMemo<LiveActivityItem[]>(() => {
     const list: LiveActivityItem[] = [
-      // 1. Explicitly requested first-arrival signals
+      // 1. Core live visitor & strategy signals
       {
         id: 'act-ghana-view',
         category: 'viewer',
@@ -96,6 +96,109 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         badgeLabel: 'Strategy Call Booked',
         badgeColor: 'gold',
       },
+      // 2. Started a trial actions
+      {
+        id: 'act-trial-sarah',
+        category: 'trial',
+        actor: 'Sarah (E-com Founder)',
+        flag: '🇺🇸',
+        location: 'New York, US',
+        action: 'started a 14-day commercial video trial',
+        timeAgo: 'just now',
+        badgeLabel: 'Started a Trial',
+        badgeColor: 'amber',
+      },
+      {
+        id: 'act-trial-kofi',
+        category: 'trial',
+        actor: 'Kofi B.',
+        flag: '🇬🇭',
+        location: 'Kumasi, Ghana',
+        action: 'started an Angle Testing creative trial',
+        timeAgo: '2m ago',
+        badgeLabel: 'Trial Activated',
+        badgeColor: 'amber',
+      },
+      {
+        id: 'act-trial-beauty',
+        category: 'trial',
+        actor: 'A skincare brand owner',
+        flag: '🇬🇧',
+        location: 'London, UK',
+        action: 'started a trial for 3 vertical AI video ads',
+        timeAgo: '4m ago',
+        badgeLabel: 'Started a Trial',
+        badgeColor: 'amber',
+      },
+      // 3. Registered for webinar actions
+      {
+        id: 'act-webinar-tunde',
+        category: 'webinar',
+        actor: 'Tunde A.',
+        flag: '🇳🇬',
+        location: 'Lagos, Nigeria',
+        action: 'registered for the Live AI Creative Masterclass',
+        timeAgo: 'just now',
+        badgeLabel: 'Registered for Webinar',
+        badgeColor: 'purple',
+      },
+      {
+        id: 'act-webinar-elena',
+        category: 'webinar',
+        actor: 'Elena Rostova',
+        flag: '🇨🇦',
+        location: 'Toronto, Canada',
+        action: 'registered for the AI Cinematography Workshop',
+        timeAgo: '3m ago',
+        badgeLabel: 'Webinar Seat Reserved',
+        badgeColor: 'purple',
+      },
+      {
+        id: 'act-webinar-dubai',
+        category: 'webinar',
+        actor: 'An agency director',
+        flag: '🇦🇪',
+        location: 'Dubai, UAE',
+        action: 'registered for the High-Converting Video Hooks Webinar',
+        timeAgo: '5m ago',
+        badgeLabel: 'Registered for Webinar',
+        badgeColor: 'purple',
+      },
+      // 4. Download success actions
+      {
+        id: 'act-download-marcus',
+        category: 'download',
+        actor: 'Marcus V.',
+        flag: '🇩🇪',
+        location: 'Berlin, Germany',
+        action: 'downloaded the 2026 AI Video Prompt Swipe File',
+        timeAgo: 'just now',
+        badgeLabel: 'Download Success',
+        badgeColor: 'emerald',
+      },
+      {
+        id: 'act-download-sa',
+        category: 'download',
+        actor: 'A D2C marketing lead',
+        flag: '🇿🇦',
+        location: 'Johannesburg, SA',
+        action: 'downloaded the High-Converting Video Hook Guide',
+        timeAgo: '2m ago',
+        badgeLabel: 'Download Success',
+        badgeColor: 'emerald',
+      },
+      {
+        id: 'act-download-chloe',
+        category: 'download',
+        actor: 'Chloe M.',
+        flag: '🇺🇸',
+        location: 'Austin, US',
+        action: 'downloaded the AI Commercial Cost-Benefit Case Study',
+        timeAgo: '4m ago',
+        badgeLabel: 'Download Success',
+        badgeColor: 'emerald',
+      },
+      // 5. Offers & projects
       {
         id: 'act-checking-offers',
         category: 'offers',
@@ -139,17 +242,6 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         timeAgo: '5m ago',
         badgeLabel: 'Cohort Enrolled',
         badgeColor: 'amber',
-      },
-      {
-        id: 'act-gh-curriculum',
-        category: 'offers',
-        actor: 'A creator from Ghana',
-        flag: '🇬🇭',
-        location: 'Kumasi, Ghana',
-        action: 'is checking out the 2-week training curriculum',
-        timeAgo: 'just now',
-        badgeLabel: 'Live Visitor',
-        badgeColor: 'emerald',
       },
       {
         id: 'act-ng-creative',
@@ -236,8 +328,11 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
     if (paused) return;
 
-    // First popup appears 1.5s after load, subsequent ones every 6.5s (natural 5-10s cycle)
-    const delay = shownCount.current === 0 ? 1500 : 6500;
+    // First popup appears 1.5s after load, subsequent ones randomized within the 5-10 second interval
+    const delay =
+      shownCount.current === 0
+        ? 1500
+        : Math.floor(5000 + Math.random() * 5000); // Random 5 to 10 seconds
     const timer = setTimeout(() => {
       shownCount.current += 1;
       const nextItem = activityQueue[itemIndex.current % activityQueue.length];
@@ -303,6 +398,27 @@ export default function LivePopups({ paused }: { paused: boolean }) {
             {current.badgeLabel}
           </span>
         );
+      case 'trial':
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full border border-amber-400/40 bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
+            <Zap className="h-2.5 w-2.5 text-amber-300 fill-amber-300" />
+            {current.badgeLabel}
+          </span>
+        );
+      case 'webinar':
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full border border-purple-400/40 bg-purple-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-purple-300">
+            <Video className="h-2.5 w-2.5 text-purple-300" />
+            {current.badgeLabel}
+          </span>
+        );
+      case 'download':
+        return (
+          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/40 bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+            <CheckCircle2 className="h-2.5 w-2.5 text-emerald-300" />
+            {current.badgeLabel}
+          </span>
+        );
       case 'project':
         return (
           <span className="inline-flex items-center gap-1 rounded-full border border-[#f5a524]/40 bg-[#f5a524]/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#f5a524]">
@@ -327,6 +443,12 @@ export default function LivePopups({ paused }: { paused: boolean }) {
         return <PhoneCall className="h-4 w-4 text-[#f5a524]" />;
       case 'offers':
         return <ShoppingBag className="h-4 w-4 text-sky-400" />;
+      case 'trial':
+        return <Zap className="h-4 w-4 text-amber-400 fill-amber-400/30" />;
+      case 'webinar':
+        return <Video className="h-4 w-4 text-purple-400" />;
+      case 'download':
+        return <Download className="h-4 w-4 text-emerald-400" />;
       case 'enrollment':
         return <GraduationCap className="h-4 w-4 text-amber-400" />;
       case 'project':

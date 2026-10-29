@@ -5,6 +5,7 @@ import type { SiteContent, Offer, PortfolioItem } from '@/content/types';
 import { defaultContent } from '@/content/defaultContent';
 import { ClientTab, CostCardTab, CountriesTab, CountryChips, EventsTab, SectionsTab } from './Markets';
 import { CommercialOffersEditor } from './CommercialOffersEditor';
+import { SalesAdminTab } from './SalesAdmin';
 
 const inputCls = 'w-full min-h-[48px] rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-base sm:text-sm text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none';
 const labelCls = 'mb-1.5 block text-xs font-bold uppercase tracking-widest text-white/50 font-mono';
@@ -80,7 +81,7 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
         </div>
       )}
 
-      {tab === 'Sales Pages & Offers' && <CommercialOffersEditor draft={draft} set={set} />}
+      {tab === 'Sales Pages & Offers' && <SalesAdminTab draft={draft} set={set} />}
       {tab === 'Portfolio' && <PortfolioEditor draft={draft} set={set} />}
       {tab === 'Pricing & Offers' && <OffersEditor draft={draft} set={set} />}
       {tab === 'Testimonials' && (

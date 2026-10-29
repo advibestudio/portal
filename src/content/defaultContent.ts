@@ -1,5 +1,6 @@
 import type { SiteContent, Lead, Project, Country } from './types';
 import { defaultCommercialOffers } from './commercialOffers';
+import { defaultSalesPages } from './salesDefaults';
 
 const IDS = ['single-30', 'single-60', 'bundle-5', 'bundle-10', 'monthly-studio'];
 const priceMap = (nums: number[]): Record<string, number> => Object.fromEntries(IDS.map((id, i) => [id, nums[i]]));
@@ -91,7 +92,7 @@ export const defaultContent: SiteContent = {
     headline: 'Ads that turn attention into orders.',
     subheadline:
       'We turn your product into scroll-stopping AI video ads for Facebook, Instagram, TikTok and WhatsApp Status — ready in 5 days, so you are never late for a sales season.',
-    primaryCta: 'Chat with our team on WhatsApp and get a free strategy session.',
+    primaryCta: 'Book Free Strategy Session',
     secondaryCta: 'See our work',
     stats: [
       { value: '120+', label: 'videos delivered' },
@@ -250,8 +251,9 @@ export const defaultContent: SiteContent = {
   finalCta: {
     heading: 'Your next sale starts with one good video.',
     subheading: 'Tell us what you are selling. We will handle the rest.',
-    primaryCta: 'Chat with our team on WhatsApp and get a free strategy session.',
+    primaryCta: 'Book Free Strategy Session',
   },
+  salesPages: defaultSalesPages,
 };
 
 export const seedLeads: Lead[] = [

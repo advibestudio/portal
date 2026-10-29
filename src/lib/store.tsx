@@ -7,6 +7,7 @@ import { isLive, getSupabase } from '@/lib/supabase';
 import { fetchSiteContent, submitLeadRemote } from '@/lib/publicApi';
 import { sendLeadToMake } from '@/lib/integrations';
 import { track } from '@/lib/tracking';
+import { mergeSalesPages } from '@/lib/sales';
 
 /* ==========================================================================
    THE STORE — where all the site's data lives.
@@ -67,16 +68,28 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...defaultContent.commercialOffers,
       ...(c.commercialOffers ?? {}),
     },
+    salesPages: mergeSalesPages(c.salesPages),
   } as SiteContent;
 
   if (!merged.settings.bookingUrl) {
     merged.settings.bookingUrl = defaultContent.settings.bookingUrl;
   }
 
-  // The call-to-action wording changed: sites still using the OLD default wording get the new one
-  // (anything you typed yourself is left alone).
-  if (merged.hero.primaryCta === 'Get my video ad') merged.hero.primaryCta = defaultContent.hero.primaryCta;
-  if (merged.finalCta?.primaryCta === 'Get my video ad') merged.finalCta = { ...merged.finalCta, primaryCta: defaultContent.finalCta.primaryCta };
+  // The call-to-action wording changed: migrate any old long CTA text to the concise version
+  if (
+    merged.hero.primaryCta === 'Get my video ad' ||
+    merged.hero.primaryCta?.includes('Chat with our team on WhatsApp') ||
+    (merged.hero.primaryCta?.length ?? 0) > 35
+  ) {
+    merged.hero.primaryCta = defaultContent.hero.primaryCta;
+  }
+  if (
+    merged.finalCta?.primaryCta === 'Get my video ad' ||
+    merged.finalCta?.primaryCta?.includes('Chat with our team on WhatsApp') ||
+    (merged.finalCta?.primaryCta?.length ?? 0) > 35
+  ) {
+    merged.finalCta = { ...merged.finalCta, primaryCta: defaultContent.finalCta.primaryCta };
+  }
 
   if (!c.countries?.length) {
     const ngPrices = Object.fromEntries((c.offers ?? []).map((o) => [o.id, o.price]));
@@ -131,18 +144,23 @@ const leadFromRow = (r: Row): Lead => ({
   industry: r.industry ?? '', product: r.product ?? '', event: r.event ?? 'None', notes: r.notes ?? '',
   status: r.status, paymentStatus: r.payment_status, utmSource: r.utm_source ?? undefined,
   country: r.country ?? 'NG', currency: r.currency ?? 'NGN', source: r.source ?? 'website', showPublic: Boolean(r.show_public),
+  goal: r.goal ?? undefined, pageRoute: r.page_route ?? undefined,
+  bookingClickedAt: r.booking_clicked_at ?? undefined, bookingConfirmedAt: r.booking_confirmed_at ?? undefined,
 });
 const leadToRow = (l: Omit<Lead, 'id' | 'ref' | 'date'>): Row => ({
   name: l.name, business: l.business, whatsapp: l.whatsapp, email: l.email,
   offer_id: l.offerId, offer_name: l.offerName, price: l.price, industry: l.industry,
   product: l.product, event: l.event, notes: l.notes, status: l.status, payment_status: l.paymentStatus,
   utm_source: l.utmSource ?? null, country: l.country, currency: l.currency, source: l.source, show_public: l.showPublic,
+  goal: l.goal ?? null, page_route: l.pageRoute ?? null,
+  booking_clicked_at: l.bookingClickedAt ?? null, booking_confirmed_at: l.bookingConfirmedAt ?? null,
 });
 const leadPatchToRow = (p: Partial<Lead>): Row => {
   const m: Row = {};
   if (p.status !== undefined) m.status = p.status;
   if (p.paymentStatus !== undefined) m.payment_status = p.paymentStatus;
   if (p.notes !== undefined) m.notes = p.notes;
+  if (p.bookingConfirmedAt !== undefined) m.booking_confirmed_at = p.bookingConfirmedAt;
   return m;
 };
 const projectFromRow = (r: Row): Project => ({
