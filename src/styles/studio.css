@@ -701,4 +701,54 @@ p, li { text-wrap: pretty; }
 .sh-film span:nth-child(2) { background: linear-gradient(160deg, rgb(var(--peach)), #8d4a38); }
 .sh-film span:nth-child(3) { background: linear-gradient(160deg, rgb(var(--lilac)), #4b3a7a); }
 
+/* ==========================================================================
+   DYNAMIC CINEMA ANIMATIONS & MOBILE TOUCH EFFECTS
+   ========================================================================== */
+
+@keyframes soundwave-bounce {
+  0% { transform: scaleY(0.2); }
+  50% { transform: scaleY(1.0); }
+  100% { transform: scaleY(0.35); }
+}
+
+@keyframes cinema-flare {
+  0%, 100% { opacity: 0.15; transform: scale(1) translate(0, 0); }
+  50% { opacity: 0.32; transform: scale(1.15) translate(15px, -10px); }
+}
+
+@keyframes gold-ripple-burst {
+  0% {
+    transform: scale(0);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.gold-touch-ripple {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(245, 165, 36, 0.45) 0%, rgba(245, 165, 36, 0.12) 60%, transparent 100%);
+  pointer-events: none;
+  transform: scale(0);
+  animation: gold-ripple-burst 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  z-index: 50;
+}
+
+/* Tactile Spring Press Physics */
+button, a.btn-spring, .interactive-card {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease;
+}
+button:active, a.btn-spring:active, .interactive-card:active {
+  transform: scale(0.965);
+}
+
+/* Ambient glow orb */
+.cinema-ambient-glow {
+  animation: cinema-flare 12s ease-in-out infinite;
+}
+
+
 

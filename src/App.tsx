@@ -12,6 +12,7 @@ const CreatorSalesPage = lazy(() => import('@/pages/training/CreatorSalesPage'))
 const TrainingThankYou = lazy(() => import('@/pages/training/TrainingThankYou'));
 const MonthlyRetainerPage = lazy(() => import('@/pages/commercial/MonthlyRetainerPage'));
 const MiniSeriesPage = lazy(() => import('@/pages/commercial/MiniSeriesPage'));
+import { TapRipple } from '@/components/animations/TapRipple';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -139,6 +140,7 @@ export default function App() {
   return (
     <StoreProvider>
       <CountryProvider>
+        <TapRipple />
         <ErrorBoundary>
           {isAdmin ? (
             <Suspense

@@ -16,6 +16,13 @@ import {
   Check, FileText, Clock, Users, Zap, TrendingUp, Compass, FolderCheck,
   Smartphone, Share2, HelpCircle, Flame, ArrowUpRight
 } from 'lucide-react';
+import { CameraViewfinder } from '@/components/animations/CameraViewfinder';
+import { ClapperboardGraphic } from '@/components/animations/ClapperboardGraphic';
+import { AnimatedStoryGraphic } from '@/components/animations/AnimatedStoryGraphic';
+import { SoundWaveVisualizer } from '@/components/animations/SoundWaveVisualizer';
+import { RetentionCurveGraph } from '@/components/animations/RetentionCurveGraph';
+import { StoryConceptBadge } from '@/components/animations/StoryConceptIcons';
+import { RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
 
 export default function MiniSeriesPage() {
   const { content } = useStore();
@@ -152,13 +159,13 @@ export default function MiniSeriesPage() {
               ))}
             </select>
 
-            <button
+            <RippleButton
               onClick={() => setStrategyOpen(true)}
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#111412] px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#f5a524] hover:text-black active:scale-95"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#111412] px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#f5a524] hover:text-black"
             >
               <span>Book Strategy Call</span>
               <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            </RippleButton>
           </div>
         </div>
       </header>
@@ -192,15 +199,6 @@ export default function MiniSeriesPage() {
               MESSAGES.
             </h1>
 
-            {/* Two-Tone Subheadline Hierarchy */}
-            <div className="mx-auto max-w-3xl space-y-4 pt-1">
-              <p className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-snug text-balance">
-                Advertising has never been easier.
-              </p>
-              <p className="font-sans text-base sm:text-lg md:text-xl text-white/75 leading-relaxed text-balance max-w-2xl mx-auto">
-                But getting people to notice your brand, remember you, and choose you over your competitors? <span className="text-white font-medium">That's a different story.</span>
-              </p>
-            </div>
 
             {/* Watch First Narrative Pivot Banner */}
             <div className="pt-3 max-w-3xl mx-auto">
@@ -232,16 +230,13 @@ export default function MiniSeriesPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.85)_100%)]" />
 
-                {/* Top Cinema Metadata Bar */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono text-white/90">
-                  <div className="flex items-center gap-2 bg-black/75 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/15">
-                    <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-                    <span>ORIGINAL SERIES CONCEPT · 4K UHD</span>
-                  </div>
-                  <div className="hidden sm:block bg-black/75 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/15">
-                    15 EPISODES / MONTH
-                  </div>
-                </div>
+                {/* 4K Camera Viewfinder HUD Recording Overlay */}
+                <CameraViewfinder
+                  active
+                  resolution="4K UHD"
+                  fps={60}
+                  label="ORIGINAL SERIES DIRECTING REEL"
+                />
 
                 {/* Center Glowing Play Button */}
                 <button
@@ -272,24 +267,24 @@ export default function MiniSeriesPage() {
             {/* Hero CTAs */}
             <div className="pt-6 flex flex-col items-center gap-3">
               <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
-                <button
+                <RippleButton
                   onClick={() => setStrategyOpen(true)}
-                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#f5a524] px-7 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/25 transition hover:brightness-110 active:scale-95"
+                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#f5a524] px-7 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/25 transition hover:brightness-110"
                 >
                   <span>Book Your Free Strategy Call</span>
                   <ArrowRight className="h-4 w-4" />
-                </button>
+                </RippleButton>
 
-                <a
+                <RippleAnchor
                   href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I read the AI Promotional Mini-Series page and want to chat on WhatsApp.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => track('Contact')}
-                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10 active:scale-95"
+                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10"
                 >
                   <MessageCircle className="h-4 w-4 text-emerald-400" />
                   <span>Chat on WhatsApp</span>
-                </a>
+                </RippleAnchor>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-mono text-white/50 pt-2">
@@ -382,6 +377,9 @@ export default function MiniSeriesPage() {
                   </ul>
                 </div>
               </div>
+
+              {/* Dynamic Retention Curve SVG Story Visualizer */}
+              <RetentionCurveGraph className="my-8" />
 
               <p>
                 In a crowded social media space, simply showing people what you sell isn't always enough. You need to give them a reason to stop scrolling, take an interest in your brand, and remember you when they're ready to buy.
@@ -487,6 +485,14 @@ export default function MiniSeriesPage() {
                 Imagine replacing another ordinary product advertisement with a funny, relatable, suspenseful, or emotionally engaging story. A story that draws people in before revealing the message behind it. A story that makes your product part of an experience rather than just another sales pitch.
               </p>
 
+              {/* High-Energy Audio Stem & Voice Frequency Visualizer */}
+              <SoundWaveVisualizer
+                label="STUDIO AUDIO STEMS &amp; DIALOGUE MASTERING · 48KHZ 24-BIT"
+                bars={32}
+                height={48}
+                className="my-6 border-[#f5a524]/20"
+              />
+
               {/* 3 Pillars of AI Brand Stories */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-8 font-sans">
                 <div className="rounded-2xl border border-white/15 bg-white/5 p-5 space-y-2">
@@ -525,40 +531,74 @@ export default function MiniSeriesPage() {
             <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
               <span>CHAPTER 5</span>
               <span className="text-[#111412]/30">·</span>
-              <span>CREATIVE FORMATS &amp; GENRES</span>
+              <span>TYPES OF STORIES YOUR BRAND CAN TELL</span>
+              <span className="text-[#111412]/30">·</span>
+              <span>5 CORE CONCEPTS</span>
             </div>
 
             <h2 className="font-display text-3xl sm:text-5xl md:text-6xl font-extrabold uppercase tracking-tight text-[#111412] leading-tight">
               TURN YOUR BRAND INTO A STORY PEOPLE WANT TO FOLLOW.
             </h2>
 
-            <div className="space-y-4 text-base sm:text-lg text-[#2a302b] leading-relaxed">
-              <p>
-                At AdVibe Studios, we help businesses move beyond repetitive promotional content by creating original, AI-powered video stories designed around their brands, products, and audiences.
-              </p>
-              <p>
-                We combine creative strategy, storytelling, scripting, AI-assisted video production, and professional editing to develop content that gives your brand a distinctive, cinematic voice.
-              </p>
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 rounded-3xl border border-[#111412]/10 bg-[#f3f4ef] p-6 sm:p-8">
+              <div className="space-y-2 max-w-xl">
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
+                  INTERACTIVE PRODUCTION SLATE
+                </span>
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111412]">
+                  Tap the clapperboard to clap into action
+                </h3>
+                <p className="text-sm text-[#586159]">
+                  Explore how we structure recurring original comedy, product-led narratives, and connected episodic arcs for your brand.
+                </p>
+              </div>
+
+              <div className="shrink-0 mx-auto md:mx-0 w-full max-w-[280px] sm:max-w-[320px]">
+                <AnimatedStoryGraphic
+                  type="combo"
+                  scene={`0${activeStoryFormat + 1}`}
+                  take="01"
+                  roll={`ARC${activeStoryFormat + 1}`}
+                  title={storyFormats[activeStoryFormat].title.slice(0, 18).toUpperCase()}
+                  onAction={() => setActiveStoryFormat((prev) => (prev + 1) % storyFormats.length)}
+                  interactive
+                  autoSnapOnInView
+                />
+              </div>
             </div>
 
-            {/* Storyboard Format Cards */}
+            {/* Storyboard Format Cards with Scroll-Triggered Animated SVG Icons */}
             <div className="space-y-6 pt-4">
               {storyFormats.map((fmt, idx) => (
                 <div
                   key={fmt.id}
-                  className="rounded-3xl border border-[#111412]/10 bg-white p-6 sm:p-8 shadow-sm hover:shadow-md transition space-y-4"
+                  className="group rounded-3xl border border-[#111412]/10 bg-white p-6 sm:p-8 shadow-sm hover:shadow-md transition space-y-5"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#111412]/10 pb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#111412] text-[#f5a524] font-mono font-bold text-xs">
-                        0{idx + 1}
-                      </span>
-                      <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111412]">
-                        {fmt.title}
-                      </h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#111412]/10 pb-5">
+                    <div className="flex items-center gap-4">
+                      {/* Animated SVG Icon (Sound waves, clapperboards, cinema reels, lens focus, film strip) triggering on scroll into view */}
+                      <StoryConceptBadge type={fmt.id} />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-[#a06200]">
+                            FORMAT 0{idx + 1}
+                          </span>
+                          <span className="text-[#111412]/20">·</span>
+                          <span className="font-mono text-[11px] font-semibold text-[#586159] uppercase tracking-wider">
+                            {fmt.id === 'relatable' && 'Acoustic Sound Waves & Resonance'}
+                            {fmt.id === 'comedy' && 'Clapperboard Scene Action'}
+                            {fmt.id === 'characters' && 'Spotlight & Cinema Reel'}
+                            {fmt.id === 'product-led' && 'Precision Lens Aperture Lock'}
+                            {fmt.id === 'mini-series' && 'Episodic Film Strip & Arc'}
+                          </span>
+                        </div>
+                        <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111412] mt-0.5">
+                          {fmt.title}
+                        </h3>
+                      </div>
                     </div>
                     {/* Clean unboxed genre metadata */}
-                    <span className="font-mono text-xs font-bold text-[#a06200] tracking-wider uppercase">
+                    <span className="font-mono text-xs font-bold text-[#a06200] tracking-wider uppercase sm:text-right">
                       {fmt.genre}
                     </span>
                   </div>
@@ -810,23 +850,23 @@ export default function MiniSeriesPage() {
 
               {/* Direct CTAs inside offer */}
               <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                <button
+                <RippleButton
                   onClick={() => setStrategyOpen(true)}
-                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#f5a524] px-8 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/25 transition hover:brightness-110 active:scale-95"
+                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#f5a524] px-8 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/25 transition hover:brightness-110"
                 >
                   <span>Book Your Free Strategy Call</span>
                   <ArrowRight className="h-4 w-4" />
-                </button>
-                <a
+                </RippleButton>
+                <RippleAnchor
                   href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want to start the AI Promotional Mini Series package for ${formattedPrice}/mo.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => track('Contact')}
-                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10 active:scale-95"
+                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10"
                 >
                   <MessageCircle className="h-4 w-4 text-emerald-400" />
                   <span>Chat on WhatsApp</span>
-                </a>
+                </RippleAnchor>
               </div>
             </div>
           </div>
@@ -864,24 +904,24 @@ export default function MiniSeriesPage() {
 
             {/* Closing Dual CTAs */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-              <button
+              <RippleButton
                 onClick={() => setStrategyOpen(true)}
-                className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#111412] px-8 font-display text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-black/20 transition hover:bg-[#f5a524] hover:text-black active:scale-95"
+                className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#111412] px-8 font-display text-sm font-bold uppercase tracking-wider text-white shadow-xl shadow-black/20 transition hover:bg-[#f5a524] hover:text-black"
               >
                 <span>BOOK YOUR FREE STRATEGY CALL</span>
                 <ArrowRight className="h-4 w-4" />
-              </button>
+              </RippleButton>
 
-              <a
+              <RippleAnchor
                 href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I read the complete Mini-Series story and want to chat on WhatsApp.`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track('Contact')}
-                className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-[#111412]/20 bg-white px-6 font-display text-sm font-bold uppercase tracking-wider text-[#111412] shadow-sm transition hover:bg-black/5 active:scale-95"
+                className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-[#111412]/20 bg-white px-6 font-display text-sm font-bold uppercase tracking-wider text-[#111412] shadow-sm transition hover:bg-black/5"
               >
                 <MessageCircle className="h-4 w-4 text-emerald-600" />
                 <span>CHAT ON WHATSAPP</span>
-              </a>
+              </RippleAnchor>
             </div>
           </div>
         </section>
@@ -916,24 +956,24 @@ export default function MiniSeriesPage() {
           MOBILE STICKY BOTTOM BAR
       ====================================================================== */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#111412]/10 bg-[#fafaf6]/95 px-4 py-3 backdrop-blur-md sm:hidden flex items-center justify-between gap-3 shadow-lg">
-        <button
+        <RippleButton
           onClick={() => setStrategyOpen(true)}
-          className="flex min-h-[46px] flex-1 items-center justify-center gap-2 rounded-full bg-[#111412] font-display text-xs font-bold uppercase tracking-wider text-white shadow-md active:scale-95"
+          className="flex min-h-[46px] flex-1 items-center justify-center gap-2 rounded-full bg-[#111412] font-display text-xs font-bold uppercase tracking-wider text-white shadow-md"
         >
           <span>Book Strategy Call</span>
           <ArrowRight className="h-3.5 w-3.5" />
-        </button>
+        </RippleButton>
 
-        <a
+        <RippleAnchor
           href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want to ask about the AI Promotional Mini Series.`)}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => track('Contact')}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[#111412]/15 bg-white text-emerald-600 active:scale-95 shadow-sm"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-[#111412]/15 bg-white text-emerald-600 shadow-sm"
           aria-label="Chat on WhatsApp"
         >
           <MessageCircle className="h-5 w-5" />
-        </a>
+        </RippleAnchor>
       </div>
 
       {/* MODALS */}
