@@ -1,6 +1,6 @@
 {
-  "summary":  "Implementation plan to remove all placeholder videos across the site, replace them with the 9 real CirclesFundMe 9:16 vertical videos across ad categories, and hide the top VSL player on the Mini-Series and Monthly Retainer pages until the dedicated VSL links are provided.",
-  "updatedAt":  "2026-10-31T14:32:43.217874133Z",
+  "summary":  "Implementation plan for adding the Mini-Series hero second-hook subheadline while the VSL is hidden, transforming the mobile CirclesFundMe spotlight cards into a smooth horizontal swipe carousel (3-across on desktop), eliminating YouTube player boot-up lag with domain preconnects and GPU pause-on-modal, and adding a high-contrast exit/close button on the cylinder video player lightbox.",
+  "updatedAt":  "2026-10-31T15:19:46.336252912Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

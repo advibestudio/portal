@@ -18,6 +18,7 @@ import { AffiliatesAdmin } from './AffiliatesAdmin';
 import { PromotionsAdmin } from './PromotionsAdmin';
 import { QuizFunnelAdmin } from './QuizFunnelAdmin';
 import { TeamAndSyncAdmin } from './TeamAndSyncAdmin';
+import { RealtimeFirestoreSummaryWidget } from '@/components/admin/RealtimeFirestoreSummaryWidget';
 
 export type PrimaryAdminTab =
   | 'analytics'
@@ -194,7 +195,8 @@ function AnalyticsView({
   goPipeline,
   goMarkets,
   goPromotions,
-  goAffiliates
+  goAffiliates,
+  goQuiz,
 }: {
   goCohort: () => void;
   goStudents: () => void;
@@ -203,6 +205,7 @@ function AnalyticsView({
   goMarkets: () => void;
   goPromotions: () => void;
   goAffiliates: () => void;
+  goQuiz: () => void;
 }) {
   const { leads, projects, students, activeCohort, confirmedPaidCount, session, content } = useStore();
 
@@ -261,6 +264,14 @@ function AnalyticsView({
           </span>
         </div>
       </div>
+
+      {/* REAL-TIME FIRESTORE SUMMARY WIDGET */}
+      <RealtimeFirestoreSummaryWidget
+        onNavigatePipeline={goPipeline}
+        onNavigateQuiz={goQuiz}
+        onNavigateAffiliates={goAffiliates}
+        onNavigateStudents={goStudents}
+      />
 
       {/* URGENT NEEDS ATTENTION QUEUE */}
       {pendingStudents.length > 0 && (
@@ -844,6 +855,9 @@ export default function Admin() {
               }}
               goAffiliates={() => {
                 handleTabSwitch('affiliates');
+              }}
+              goQuiz={() => {
+                handleTabSwitch('quiz');
               }}
             />
           )}
