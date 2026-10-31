@@ -35,7 +35,17 @@ export const defaultSalesPages: SalesPages = {
     },
   },
   proof: {
-    videoIds: ['aqz-KE-bpKQ', 'eRsGyueVLvQ', '60ItHLz5WEA'],
+    videoIds: [
+      'YSTvgHJ9vRU',
+      'NuUviJm2DLo',
+      'XUn7L2s-Bqk',
+      'QsqKNOo1uDQ',
+      'JecWfFOuUp0',
+      'lE5JSLxRCU4',
+      'sbirMUA3WNU',
+      '1nUi3LNvFHs',
+      'a1HbWwqF5-A',
+    ],
     showLogo: true,
     emptyNote: 'Verified work samples will load here.',
     modalTitle: 'Verified Client Work',

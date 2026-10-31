@@ -54,6 +54,20 @@ export default function MonthlyRetainerPage() {
   const formattedTraditionalUnitPrice = fmtMoney(traditionalUnitPrice, country);
 
   const items = content.portfolio.filter((p) => p.visible).sort((a, b) => a.order - b.order);
+  const vslYoutubeId = offerData.hero.vslYoutubeId?.trim() || '';
+  const vslVideoItem: PortfolioItem | null = vslYoutubeId
+    ? {
+        id: 'retainer-vsl',
+        title: `${offerData.name} — Official VSL`,
+        client: 'AdVibe Studios',
+        category: 'Service Ads',
+        youtubeId: vslYoutubeId,
+        orientation: 'vertical',
+        featured: true,
+        visible: true,
+        order: 0,
+      }
+    : null;
   const featuredVideo = items[0] || null;
   const secondaryVideo = items[1] || items[0] || null;
   const tertiaryVideo = items[2] || items[0] || null;
@@ -185,6 +199,30 @@ export default function MonthlyRetainerPage() {
               <span className="font-semibold text-white">Never let your ad pipeline run dry. </span>
               {offerData.hero.subheadline}
             </p>
+
+            {/* Optional Top VSL Player Box (Hidden until dedicated VSL link is provided) */}
+            {vslVideoItem && (
+              <div className="relative mx-auto mt-6 max-w-3xl overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl group">
+                <div className="relative aspect-video w-full overflow-hidden flex items-center justify-center">
+                  <img
+                    src={`https://img.youtube.com/vi/${vslVideoItem.youtubeId}/maxresdefault.jpg`}
+                    alt="Monthly Retainer VSL"
+                    className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${vslVideoItem.youtubeId}/hqdefault.jpg`;
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
+                  <button
+                    onClick={() => setPlayingVideo(vslVideoItem)}
+                    className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[#f5a524] text-black shadow-2xl transition-transform hover:scale-110 active:scale-95"
+                    aria-label="Play Monthly Retainer VSL"
+                  >
+                    <Play className="h-7 w-7 translate-x-0.5 fill-black text-black" />
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* =====================================================================
                 INTERACTIVE UNIT ECONOMICS: HOVER REVEAL PRICE-PER-VIDEO COMPONENT
@@ -344,29 +382,41 @@ export default function MonthlyRetainerPage() {
               DELIVERABLE 01: DIRECT-RESPONSE COMMERCIALS (MEDIA LEFT, TEXT RIGHT)
           ====================================================================== */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center py-12 border-b border-white/10">
-            {/* Large Hero Media Placeholder 01 */}
+            {/* Large Hero Media Placeholder 01 (9:16 Vertical Reel + Studio Monitor) */}
             <div className="lg:col-span-7 relative group">
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl shadow-black/80">
+              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl shadow-black/80 flex items-center justify-center">
                 {featuredVideo ? (
-                  <img
-                    src={`https://img.youtube.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
-                    alt="Direct-Response Video Deliverable"
-                    className="h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredVideo.youtubeId}/hqdefault.jpg`;
-                    }}
-                  />
+                  <>
+                    <img
+                      src={`https://img.youtube.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover opacity-30 blur-md scale-110"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredVideo.youtubeId}/hqdefault.jpg`;
+                      }}
+                    />
+                    <div className="relative z-10 h-[86%] aspect-[9/16] overflow-hidden rounded-xl border border-white/30 bg-black shadow-2xl">
+                      <img
+                        src={`https://img.youtube.com/vi/${featuredVideo.youtubeId}/maxresdefault.jpg`}
+                        alt={featuredVideo.title}
+                        className="h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredVideo.youtubeId}/hqdefault.jpg`;
+                        }}
+                      />
+                    </div>
+                  </>
                 ) : (
                   <div className="h-full w-full bg-[#111418] flex items-center justify-center" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
                 {/* 4K Viewfinder HUD Overlay */}
                 <CameraViewfinder
                   active
-                  resolution="4K RAW"
+                  resolution="9:16 REEL"
                   fps={60}
-                  label="DELIVERABLE 01 · 15 MASTER EDITS"
+                  label="DELIVERABLE 01 · CIRCLESFUNDME MASTER"
                 />
 
                 {/* Interactive Play Trigger */}
@@ -384,9 +434,9 @@ export default function MonthlyRetainerPage() {
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs font-mono text-white/80 z-20">
                   <span className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    15 Finished Master Cuts
+                    CirclesFundMe · 9:16 Vertical Reel
                   </span>
-                  <span className="text-[#f5a524]">4K UHD 60FPS</span>
+                  <span className="text-[#f5a524]">TAP TO WATCH</span>
                 </div>
               </div>
             </div>

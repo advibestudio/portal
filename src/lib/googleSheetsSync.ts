@@ -1,16 +1,54 @@
 import type {
   BusinessAssessment,
+  Lead,
   PipelineStage,
   QuizFunnelAnalyticsEvent,
+  TrainingStudent,
 } from '@/content/types';
+import { doc, setDoc } from 'firebase/firestore';
+import { db, isFirebaseConfigured, trackFirestoreWrite } from '@/firebase';
 
 /* ==========================================================================
-   PRIMARY ASSESSMENT & FUNNEL ANALYTICS STORE + GOOGLE SHEETS 4-TAB SYNC
+   PRIMARY ASSESSMENT & FUNNEL ANALYTICS STORE + GOOGLE SHEETS 6-TAB SYNC
    ========================================================================== */
 
 const LS_ASSESSMENTS = 'advibe.assessments.v1';
 const LS_FUNNEL_EVENTS = 'advibe.quiz.events.v1';
 const SESSION_ID_KEY = 'advibe.quiz.session_id.v1';
+const LS_SHEETS_WEBHOOK = 'advibe.sheets_webhook_url.v1';
+
+export function getSavedSheetsWebhookUrl(overrideUrl?: string): string {
+  const explicit = (overrideUrl || '').trim();
+  if (explicit) return explicit;
+  if (typeof window !== 'undefined') {
+    const saved = (localStorage.getItem(LS_SHEETS_WEBHOOK) || '').trim();
+    if (saved) return saved;
+    try {
+      const contentRaw = localStorage.getItem('advibe.content.v9');
+      if (contentRaw) {
+        const parsed = JSON.parse(contentRaw);
+        const fromQuiz = (parsed?.quizConfig?.googleSheetsWebhookUrl || '').trim();
+        if (fromQuiz) return fromQuiz;
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+  return (
+    (import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL as string | undefined)?.trim() ||
+    (import.meta.env.VITE_MAKE_WEBHOOK_URL as string | undefined)?.trim() ||
+    ''
+  );
+}
+
+export function setSavedSheetsWebhookUrl(url: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LS_SHEETS_WEBHOOK, url.trim());
+  } catch {
+    /* ignore */
+  }
+}
 
 export function getQuizSessionId(): string {
   if (typeof window === 'undefined') return 'srv-session';
@@ -296,18 +334,14 @@ export async function syncAssessmentToGoogleSheets(
   assessment: BusinessAssessment,
   webhookUrl?: string
 ): Promise<{ ok: boolean; status: 'synced' | 'pending' | 'failed'; error?: string }> {
-  const targetUrl =
-    (webhookUrl || '').trim() ||
-    (import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL as string | undefined)?.trim() ||
-    (import.meta.env.VITE_MAKE_WEBHOOK_URL as string | undefined)?.trim() ||
-    '';
+  const targetUrl = getSavedSheetsWebhookUrl(webhookUrl);
 
   if (!targetUrl) {
     // Graceful queue when no external webhook/Apps Script endpoint is configured yet
     return {
       ok: true,
       status: 'pending',
-      error: 'Saved to primary local database. Connect a Google Apps Script / Sheets Webhook URL in Admin to enable live cloud spreadsheet push.',
+      error: 'Saved to Firebase & local database. Connect a Google Apps Script / Sheets Webhook URL in Admin to enable live Google Sheet push.',
     };
   }
 
@@ -400,6 +434,17 @@ export async function recordCompletedAssessment(
   };
 
   saveAssessments([finalRecord, ...withoutDup]);
+
+  // Also persist to Firebase Firestore (/assessments/{assessmentId})
+  if (isFirebaseConfigured) {
+    try {
+      await setDoc(doc(db, 'assessments', finalRecord.assessmentId), finalRecord, { merge: true });
+      trackFirestoreWrite(1);
+    } catch (err) {
+      console.warn('Firestore assessment save queued locally:', err);
+    }
+  }
+
   return finalRecord;
 }
 
@@ -411,9 +456,6 @@ export async function markAssessmentWhatsAppClicked(
   const idx = list.findIndex((x) => x.assessmentId === assessmentId);
   if (idx === -1) return null;
 
-  // IMPORTANT RULE (Part 1.2 & Part 6.4):
-  // Do NOT falsely mark leadStatus as 'Contacted' simply because the WhatsApp link was opened.
-  // Only set whatsappCtaClicked = true and whatsappCtaClickedAt.
   const updated: BusinessAssessment = {
     ...list[idx],
     whatsappCtaClicked: true,
@@ -427,6 +469,16 @@ export async function markAssessmentWhatsAppClicked(
   const next = [...list];
   next[idx] = updated;
   saveAssessments(next);
+
+  if (isFirebaseConfigured) {
+    try {
+      await setDoc(doc(db, 'assessments', updated.assessmentId), updated, { merge: true });
+      trackFirestoreWrite(1);
+    } catch {
+      /* ignore */
+    }
+  }
+
   return updated;
 }
 
@@ -452,6 +504,16 @@ export async function updateAssessmentPipeline(
   const next = [...list];
   next[idx] = updated;
   saveAssessments(next);
+
+  if (isFirebaseConfigured) {
+    try {
+      await setDoc(doc(db, 'assessments', updated.assessmentId), updated, { merge: true });
+      trackFirestoreWrite(1);
+    } catch {
+      /* ignore */
+    }
+  }
+
   return updated;
 }
 
@@ -478,6 +540,311 @@ export async function retryPendingAssessments(webhookUrl?: string): Promise<{ re
   saveAssessments(next);
   return { retried, synced };
 }
+
+/* ---------- SYNC CLIENT LEADS, BOOKINGS & REFERRALS TO GOOGLE SHEETS ---------- */
+
+export function buildLeadSheetRow(lead: Lead): Record<string, string> {
+  return {
+    Lead_Ref: lead.ref,
+    Lead_ID: lead.id,
+    Submitted_At: lead.date,
+    Customer_Name: lead.name,
+    Business_Name: lead.business || '',
+    WhatsApp_Number: lead.whatsapp || '',
+    Email_Address: lead.email || '',
+    Package_ID: lead.offerId,
+    Package_Name: lead.offerName,
+    Price: String(lead.price ?? 0),
+    Currency: lead.currency || 'NGN',
+    Country: lead.country || 'NG',
+    Lead_Status: lead.status,
+    Payment_Status: lead.paymentStatus,
+    Acquisition_Source: lead.source || 'website',
+    UTM_Source: lead.utmSource || '',
+    Industry: lead.industry || '',
+    Product_or_Service: lead.product || '',
+    Campaign_Event: lead.event || '',
+    Goal: lead.goal || '',
+    Page_Route: lead.pageRoute || '',
+    Booking_Link_Clicked_At: lead.bookingClickedAt || '',
+    Booking_Confirmed_At: lead.bookingConfirmedAt || '',
+    Referral_Code: lead.referralCode || lead.manualReferralCode || '',
+    Affiliate_ID: lead.affiliateId || '',
+    Referral_Source: lead.referralSource || 'none',
+    Discount_5_Percent_Claimed: lead.discountClaimed ? 'Yes' : 'No',
+    Discount_Amount: String(lead.discountAmount || 0),
+    How_Did_You_Hear: lead.howDidYouHear || '',
+    Customer_Notes: lead.notes || '',
+    Sales_Notes: lead.salesNotes || '',
+  };
+}
+
+export async function syncLeadToGoogleSheets(
+  lead: Lead,
+  webhookUrl?: string
+): Promise<{ ok: boolean; status: 'synced' | 'pending' }> {
+  const targetUrl = getSavedSheetsWebhookUrl(webhookUrl);
+  if (!targetUrl) return { ok: true, status: 'pending' };
+
+  const row = buildLeadSheetRow(lead);
+  const payload = {
+    spreadsheetName: 'ADVIBE STUDIO — LEADS & BUSINESS ASSESSMENTS',
+    deduplicationKey: lead.ref || lead.id,
+    tabs: {
+      Client_Leads_Orders: row,
+    },
+  };
+
+  try {
+    await fetch(targetUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        ...row,
+        record_type: 'client_lead',
+        payload_json: JSON.stringify(payload),
+      }).toString(),
+    });
+    return { ok: true, status: 'synced' };
+  } catch {
+    return { ok: false, status: 'pending' };
+  }
+}
+
+/* ---------- SYNC TRAINING STUDENTS TO GOOGLE SHEETS ---------- */
+
+export function buildStudentSheetRow(s: TrainingStudent): Record<string, string> {
+  return {
+    Student_Ref: s.ref,
+    Student_ID: s.id,
+    Cohort_ID: s.cohortId,
+    Registered_At: s.date,
+    Full_Name: s.name,
+    Email_Address: s.email,
+    WhatsApp_Number: s.whatsapp,
+    Country: s.country,
+    Learning_Track: s.track === 'business' ? 'Business Growth Track' : 'Creator & Filmmaker Track',
+    Business_Name: s.businessName || '',
+    Experience_Level: s.experienceLevel,
+    Enrollment_Status: s.status,
+    Tuition_Price: String(s.price),
+    Currency: s.currency,
+    Payment_Method: s.paymentMethod || '',
+    Primary_Goal: s.goal || '',
+    Admin_Notes: s.notes || '',
+  };
+}
+
+export async function syncStudentToGoogleSheets(
+  student: TrainingStudent,
+  webhookUrl?: string
+): Promise<{ ok: boolean; status: 'synced' | 'pending' }> {
+  const targetUrl = getSavedSheetsWebhookUrl(webhookUrl);
+  if (!targetUrl) return { ok: true, status: 'pending' };
+
+  const row = buildStudentSheetRow(student);
+  const payload = {
+    spreadsheetName: 'ADVIBE STUDIO — LEADS & BUSINESS ASSESSMENTS',
+    deduplicationKey: student.ref || student.id,
+    tabs: {
+      Training_Students: row,
+    },
+  };
+
+  try {
+    await fetch(targetUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        ...row,
+        record_type: 'training_student',
+        payload_json: JSON.stringify(payload),
+      }).toString(),
+    });
+    return { ok: true, status: 'synced' };
+  } catch {
+    return { ok: false, status: 'pending' };
+  }
+}
+
+/* ---------- BULK SYNC ALL RECORDS TO GOOGLE SHEETS ---------- */
+
+export async function syncAllRecordsToGoogleSheets(params: {
+  leads: Lead[];
+  students: TrainingStudent[];
+  assessments?: BusinessAssessment[];
+  webhookUrl?: string;
+}): Promise<{
+  ok: boolean;
+  leadsSynced: number;
+  studentsSynced: number;
+  assessmentsSynced: number;
+  message: string;
+}> {
+  const targetUrl = getSavedSheetsWebhookUrl(params.webhookUrl);
+  if (!targetUrl) {
+    return {
+      ok: false,
+      leadsSynced: 0,
+      studentsSynced: 0,
+      assessmentsSynced: 0,
+      message: 'Please paste your Google Apps Script Web App URL first to sync records to Google Sheets.',
+    };
+  }
+
+  const assessmentsList = params.assessments || loadAssessments();
+  let leadsSynced = 0;
+  let studentsSynced = 0;
+  let assessmentsSynced = 0;
+
+  for (const lead of params.leads) {
+    const res = await syncLeadToGoogleSheets(lead, targetUrl);
+    if (res.status === 'synced') leadsSynced++;
+  }
+
+  for (const student of params.students) {
+    const res = await syncStudentToGoogleSheets(student, targetUrl);
+    if (res.status === 'synced') studentsSynced++;
+  }
+
+  const updatedAssessments: BusinessAssessment[] = [];
+  for (const assessment of assessmentsList) {
+    const res = await syncAssessmentToGoogleSheets(assessment, targetUrl);
+    if (res.status === 'synced') assessmentsSynced++;
+    updatedAssessments.push({
+      ...assessment,
+      syncStatus: res.status,
+      lastSyncAttemptAt: new Date().toISOString(),
+    });
+  }
+  saveAssessments(updatedAssessments);
+
+  return {
+    ok: true,
+    leadsSynced,
+    studentsSynced,
+    assessmentsSynced,
+    message: `Synced ${leadsSynced} client leads/bookings, ${assessmentsSynced} quiz assessments, and ${studentsSynced} training students to Google Sheets.`,
+  };
+}
+
+export function exportLeadsCsv(leads: Lead[]): void {
+  if (leads.length === 0) return;
+  const rows = leads.map(buildLeadSheetRow);
+  const headers = Object.keys(rows[0]);
+  const escapeCsv = (val: string) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+  const csvLines = [
+    headers.map(escapeCsv).join(','),
+    ...rows.map((r) => headers.map((h) => escapeCsv(r[h] || '')).join(',')),
+  ];
+  const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `advibe-client-leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export function exportStudentsCsv(students: TrainingStudent[]): void {
+  if (students.length === 0) return;
+  const rows = students.map(buildStudentSheetRow);
+  const headers = Object.keys(rows[0]);
+  const escapeCsv = (val: string) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+  const csvLines = [
+    headers.map(escapeCsv).join(','),
+    ...rows.map((r) => headers.map((h) => escapeCsv(r[h] || '')).join(',')),
+  ];
+  const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `advibe-training-students-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export const GOOGLE_APPS_SCRIPT_CODE = `/**
+ * ADVIBE STUDIO — HAND-IN-HAND FIREBASE + GOOGLE SHEETS SYNC SCRIPT
+ * 
+ * Setup (takes 60 seconds):
+ * 1. Open any Google Sheet -> click Extensions -> Apps Script.
+ * 2. Paste this entire code and click Save.
+ * 3. Click Deploy -> New deployment -> Select type: Web app.
+ * 4. Set "Execute as: Me" and "Who has access: Anyone".
+ * 5. Copy the Web App URL and paste it in AdVibe Admin -> Team, Firebase & Sheets.
+ */
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var params = e.parameter || {};
+
+    if (params.test_ping === 'true') {
+      return ContentService.createTextOutput(JSON.stringify({ ok: true, ping: 'pong' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (params.payload_json) {
+      var payload = JSON.parse(params.payload_json);
+      var dedupKey = String(payload.deduplicationKey || '');
+      var tabs = payload.tabs || {};
+
+      Object.keys(tabs).forEach(function(tabName) {
+        var rowObj = tabs[tabName];
+        if (!rowObj) return;
+        upsertRowInTab(ss, tabName, rowObj, dedupKey);
+      });
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function upsertRowInTab(ss, tabName, rowObj, dedupKey) {
+  var sheet = ss.getSheetByName(tabName);
+  var headers = Object.keys(rowObj);
+  if (!sheet) {
+    sheet = ss.insertSheet(tabName);
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold').setBackground('#FFF7ED');
+    sheet.setFrozenRows(1);
+  } else if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+  }
+
+  var existingHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var values = existingHeaders.map(function(h) {
+    return rowObj[h] !== undefined ? String(rowObj[h]) : '';
+  });
+
+  if (dedupKey && sheet.getLastRow() > 1) {
+    var firstColValues = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+    for (var i = 0; i < firstColValues.length; i++) {
+      if (String(firstColValues[i][0]) === dedupKey) {
+        sheet.getRange(i + 2, 1, 1, values.length).setValues([values]);
+        return;
+      }
+    }
+  }
+
+  sheet.appendRow(values);
+}`;
 
 export async function testGoogleSheetsConnection(webhookUrl?: string): Promise<{ ok: boolean; message: string }> {
   const targetUrl =

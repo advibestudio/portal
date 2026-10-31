@@ -48,17 +48,30 @@ export default function MiniSeriesPage() {
   const formattedUnitPrice = fmtMoney(unitPrice, country);
 
   const items = content.portfolio.filter((p) => p.visible).sort((a, b) => a.order - b.order);
-  const featuredTrailer = items[0] || {
-    id: 'trailer',
-    title: 'AdVibe Cinematic Branded Series',
-    client: 'AdVibe Studios',
-    category: 'Brand Film',
-    youtubeId: 'dQw4w9WgXcQ',
-    orientation: 'horizontal' as const,
-    featured: true,
-    visible: true,
-    order: 1,
-  };
+  const vslYoutubeId = offerData.hero.vslYoutubeId?.trim() || '';
+  const featuredTrailer: PortfolioItem = vslYoutubeId
+    ? {
+        id: 'mini-series-vsl',
+        title: 'AdVibe Cinematic Branded Series',
+        client: 'AdVibe Studios',
+        category: 'Brand Films',
+        youtubeId: vslYoutubeId,
+        orientation: 'vertical',
+        featured: true,
+        visible: true,
+        order: 0,
+      }
+    : (items[0] || {
+        id: 'cfm-1',
+        title: 'CirclesFundMe Campaign Reel 01',
+        client: 'CirclesFundMe',
+        category: 'Service Ads',
+        youtubeId: 'YSTvgHJ9vRU',
+        orientation: 'vertical' as const,
+        featured: true,
+        visible: true,
+        order: 1,
+      });
 
   const storyFormats = [
     {
@@ -67,7 +80,7 @@ export default function MiniSeriesPage() {
       genre: 'Top-of-Funnel Resonance · Universal Emotion',
       subtitle: 'Real human friction points your customers instantly recognise, dramatised with humour, wit, and high cinematic craft.',
       example: 'A customer struggling with chaotic daily routines before discovering an effortless, joyful alternative.',
-      youtubeId: items[1]?.youtubeId || 'eRsGyueVLvQ',
+      youtubeId: items[0]?.youtubeId || 'YSTvgHJ9vRU',
     },
     {
       id: 'comedy',
@@ -75,7 +88,7 @@ export default function MiniSeriesPage() {
       genre: 'Scroll-Stopping Hook · High Virality',
       subtitle: 'Fast-paced, suspenseful situations that subvert audience expectations and make viewers curious about what happens next.',
       example: 'A high-stakes boardroom confrontation that gets playfully derailed by an unexpected product reveal.',
-      youtubeId: items[2]?.youtubeId || 'jfKfPfyJRdk',
+      youtubeId: items[1]?.youtubeId || 'NuUviJm2DLo',
     },
     {
       id: 'characters',
@@ -83,7 +96,7 @@ export default function MiniSeriesPage() {
       genre: 'Brand Equity Builder · Loyal Following',
       subtitle: 'Familiar, charismatic personalities whose ongoing adventures turn your commercial feed into an anticipated television show.',
       example: 'An eccentric founder or lovable protagonist whose hilarious misadventures feature your brand as their loyal ally.',
-      youtubeId: items[3]?.youtubeId || 'dQw4w9WgXcQ',
+      youtubeId: items[2]?.youtubeId || 'XUn7L2s-Bqk',
     },
     {
       id: 'product-led',
@@ -91,7 +104,7 @@ export default function MiniSeriesPage() {
       genre: 'Seamless Integration · Organic Context',
       subtitle: 'Stories that demonstrate the true relevance and craft of your offering without ever sounding like an invasive sales pitch.',
       example: 'Your product woven into the narrative climax as the natural solution that resolves the story tension.',
-      youtubeId: items[4]?.youtubeId || '60ItHLz5WEA',
+      youtubeId: items[3]?.youtubeId || 'QsqKNOo1uDQ',
     },
     {
       id: 'mini-series',
@@ -99,7 +112,7 @@ export default function MiniSeriesPage() {
       genre: 'Episodic Retention · Binge-Worthy Series',
       subtitle: 'A multi-part cliffhanger sequence released on schedule that trains your social audience to wait eagerly for the next episode.',
       example: 'A 5-part suspense arc where each episode uncovers another layer of your brand world and leaves audiences debating.',
-      youtubeId: items[0]?.youtubeId || 'aqz-KE-bpKQ',
+      youtubeId: items[4]?.youtubeId || 'JecWfFOuUp0',
     },
   ];
 
@@ -207,69 +220,73 @@ export default function MiniSeriesPage() {
             </h1>
 
 
-            {/* Watch First Narrative Pivot Banner */}
-            <div className="pt-3 max-w-3xl mx-auto">
-              <div className="rounded-2xl border border-white/15 bg-white/5 p-4 sm:p-5 backdrop-blur-md shadow-lg text-left sm:text-center space-y-2">
-                <div className="flex items-center justify-start sm:justify-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
-                  <Play className="h-3 w-3 fill-[#f5a524] text-[#f5a524]" />
-                  <span>WATCH THIS FIRST · 2-MINUTE CINEMA TRAILER</span>
-                </div>
-                <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug text-balance">
-                  Here is how to get their attention:
-                  <span className="block font-sans text-sm sm:text-base text-white/80 font-normal mt-1 leading-relaxed">
-                    Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions.
-                  </span>
-                </h2>
-              </div>
-            </div>
-
-            {/* VSL CINEMA LETTERBOX PLAYER CONTAINER (2.39:1 Anamorphic Frame) */}
-            <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-black shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9),0_0_35px_rgba(245,165,36,0.25)] group">
-              <div className="relative aspect-video sm:aspect-[2.39/1] w-full overflow-hidden flex items-center justify-center">
-                <img
-                  src={`https://img.youtube.com/vi/${featuredTrailer.youtubeId}/maxresdefault.jpg`}
-                  alt="AI Promotional Mini Series Cinema Trailer"
-                  className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredTrailer.youtubeId}/hqdefault.jpg`;
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.85)_100%)]" />
-
-                {/* 4K Camera Viewfinder HUD Recording Overlay */}
-                <CameraViewfinder
-                  active
-                  resolution="4K UHD"
-                  fps={60}
-                  label="ORIGINAL SERIES DIRECTING REEL"
-                />
-
-                {/* Center Glowing Play Button */}
-                <button
-                  onClick={() => setPlayingVideo(featuredTrailer)}
-                  className="relative z-10 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#f5a524] text-black shadow-2xl shadow-[#f5a524]/60 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn"
-                  aria-label="Play Mini Series Trailer"
-                >
-                  <Play className="h-7 w-7 sm:h-9 sm:w-9 translate-x-0.5 fill-black text-black" />
-                </button>
-
-                {/* Bottom Trailer Metadata */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-left">
-                  <div>
-                    <p className="font-display text-sm sm:text-base font-bold text-white leading-tight">
-                      {featuredTrailer.title}
-                    </p>
-                    <p className="text-xs text-[#f5a524] font-mono mt-0.5">
-                      Tap to experience our episodic film directing reel
-                    </p>
+            {/* Watch First Narrative Pivot Banner & Top VSL Player (Hidden until dedicated VSL link is provided) */}
+            {vslYoutubeId && (
+              <>
+                <div className="pt-3 max-w-3xl mx-auto">
+                  <div className="rounded-2xl border border-white/15 bg-white/5 p-4 sm:p-5 backdrop-blur-md shadow-lg text-left sm:text-center space-y-2">
+                    <div className="flex items-center justify-start sm:justify-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
+                      <Play className="h-3 w-3 fill-[#f5a524] text-[#f5a524]" />
+                      <span>WATCH THIS FIRST · 2-MINUTE CINEMA TRAILER</span>
+                    </div>
+                    <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug text-balance">
+                      Here is how to get their attention:
+                      <span className="block font-sans text-sm sm:text-base text-white/80 font-normal mt-1 leading-relaxed">
+                        Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions.
+                      </span>
+                    </h2>
                   </div>
-                  <span className="rounded-lg bg-black/75 px-3 py-1.5 font-mono text-xs text-white/90 border border-white/15 hover:border-[#f5a524] transition">
-                    WATCH TRAILER
-                  </span>
                 </div>
-              </div>
-            </div>
+
+                {/* VSL CINEMA LETTERBOX PLAYER CONTAINER */}
+                <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-black shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9),0_0_35px_rgba(245,165,36,0.25)] group">
+                  <div className="relative aspect-video sm:aspect-[2.39/1] w-full overflow-hidden flex items-center justify-center">
+                    <img
+                      src={`https://img.youtube.com/vi/${featuredTrailer.youtubeId}/maxresdefault.jpg`}
+                      alt="AI Promotional Mini Series Cinema Trailer"
+                      className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredTrailer.youtubeId}/hqdefault.jpg`;
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.85)_100%)]" />
+
+                    {/* 4K Camera Viewfinder HUD Recording Overlay */}
+                    <CameraViewfinder
+                      active
+                      resolution="4K UHD"
+                      fps={60}
+                      label="ORIGINAL SERIES DIRECTING REEL"
+                    />
+
+                    {/* Center Glowing Play Button */}
+                    <button
+                      onClick={() => setPlayingVideo(featuredTrailer)}
+                      className="relative z-10 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#f5a524] text-black shadow-2xl shadow-[#f5a524]/60 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn"
+                      aria-label="Play Mini Series Trailer"
+                    >
+                      <Play className="h-7 w-7 sm:h-9 sm:w-9 translate-x-0.5 fill-black text-black" />
+                    </button>
+
+                    {/* Bottom Trailer Metadata */}
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-left">
+                      <div>
+                        <p className="font-display text-sm sm:text-base font-bold text-white leading-tight">
+                          {featuredTrailer.title}
+                        </p>
+                        <p className="text-xs text-[#f5a524] font-mono mt-0.5">
+                          Tap to experience our episodic film directing reel
+                        </p>
+                      </div>
+                      <span className="rounded-lg bg-black/75 px-3 py-1.5 font-mono text-xs text-white/90 border border-white/15 hover:border-[#f5a524] transition">
+                        WATCH TRAILER
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
 
             {/* Hero CTAs */}
             <div className="pt-6 flex flex-col items-center gap-3">

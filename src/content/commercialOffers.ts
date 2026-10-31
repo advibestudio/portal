@@ -26,6 +26,7 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       primaryCta: 'Book a Free Strategy Call',
       secondaryCta: 'Chat With Us on WhatsApp',
       contextNote: 'Tell us a little about your business first. We’ll use that context to make your strategy conversation more useful.',
+      vslYoutubeId: '',
     },
     problem: {
       heading: 'Your Business Is Growing. Why Does Creating Content Still Feel Like Another Full-Time Job?',
@@ -171,7 +172,17 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       heading: 'Real Work. Real Creative Collaboration.',
       body: 'AdVibe Studios has worked with CirclesFundMe, a brand in the digital savings and loans space. Explore selected videos we’ve produced for the company and see our creative work in action.',
       ctaText: 'Watch Our Work for CirclesFundMe',
-      featuredVideoIds: ['dQw4w9WgXcQ'],
+      featuredVideoIds: [
+        'YSTvgHJ9vRU',
+        'NuUviJm2DLo',
+        'XUn7L2s-Bqk',
+        'QsqKNOo1uDQ',
+        'JecWfFOuUp0',
+        'lE5JSLxRCU4',
+        'sbirMUA3WNU',
+        '1nUi3LNvFHs',
+        'a1HbWwqF5-A',
+      ],
     },
     offerSummary: {
       heading: 'Give Your Brand the Creative Support It Deserves.',
@@ -281,6 +292,7 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       primaryCta: 'Book a Mini-Series Strategy Call',
       secondaryCta: 'Chat With Us on WhatsApp',
       contextNote: 'Tell us about your brand and the kind of story you want people to remember.',
+      vslYoutubeId: '',
     },
     problem: {
       heading: 'Your Audience Doesn’t Need Another Brand Asking Them to Buy Something.',
@@ -433,7 +445,17 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       heading: 'Storytelling and Video Production for Real Brands.',
       body: 'AdVibe Studios has worked with CirclesFundMe, a brand in the digital savings and loans space. Explore selected videos we’ve produced for the company and see our creative work in action.',
       ctaText: 'Watch Our Work for CirclesFundMe',
-      featuredVideoIds: ['dQw4w9WgXcQ'],
+      featuredVideoIds: [
+        'YSTvgHJ9vRU',
+        'NuUviJm2DLo',
+        'XUn7L2s-Bqk',
+        'QsqKNOo1uDQ',
+        'JecWfFOuUp0',
+        'lE5JSLxRCU4',
+        'sbirMUA3WNU',
+        '1nUi3LNvFHs',
+        'a1HbWwqF5-A',
+      ],
     },
     offerSummary: {
       heading: 'Give People More Reasons to Remember Your Brand.',

@@ -233,6 +233,23 @@ export function CommercialOffersEditor({ draft, set }: { draft: SiteContent; set
               onChange={(e) => updateOffer((o) => { o.hero.contextNote = e.target.value; })}
             />
           </Field>
+
+          <Field
+            label="Top VSL YouTube Link or ID (Leave blank to hide VSL player box)"
+            hint="When blank, the top VSL video box stays hidden on the page. Paste a YouTube link or 11-character ID when your VSL is ready."
+          >
+            <input
+              className={inputCls}
+              placeholder="e.g. https://www.youtube.com/watch?v=... (currently hidden)"
+              value={currentOffer.hero.vslYoutubeId ?? ''}
+              onChange={(e) => {
+                const raw = e.target.value.trim();
+                const m = raw.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/);
+                const id = m ? m[1] : raw;
+                updateOffer((o) => { o.hero.vslYoutubeId = id; });
+              }}
+            />
+          </Field>
         </div>
       </div>
 

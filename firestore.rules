@@ -1,0 +1,250 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ---------------------------------------------------------
+    // Core Helpers
+    // ---------------------------------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedEmail() {
+      return isSignedIn() && request.auth.token.email_verified == true && request.auth.token.email is string;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidAdminId(id) {
+      return id is string && id.size() >= 3 && id.size() <= 256 && id.matches('^[a-zA-Z0-9_.@\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Bootstrapped primary owner + dynamic Super Admins in /admins/{email}
+    function isBootstrappedSuperAdmin() {
+      return isVerifiedEmail() && request.auth.token.email == 'shittu.cfm@gmail.com';
+    }
+
+    function isSuperAdmin() {
+      return isBootstrappedSuperAdmin() || (
+        isVerifiedEmail() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.active == true &&
+        get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.role == 'owner'
+      );
+    }
+
+    function isAdmin() {
+      return isSuperAdmin() || (
+        isVerifiedEmail() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.active == true &&
+        get(/databases/$(database)/documents/admins/$(request.auth.token.email)).data.role in ['owner', 'ops']
+      );
+    }
+
+    // ---------------------------------------------------------
+    // Validation Blueprints
+    // ---------------------------------------------------------
+    function isValidLead(data) {
+      return data.keys().hasAll(['id', 'ref', 'date', 'name', 'offerId', 'offerName', 'price', 'status', 'paymentStatus']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.ref is string && data.ref.size() >= 1 && data.ref.size() <= 64 &&
+        data.date is string && data.date.size() >= 1 && data.date.size() <= 64 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+        data.offerId is string && data.offerId.size() >= 1 && data.offerId.size() <= 128 &&
+        data.offerName is string && data.offerName.size() >= 1 && data.offerName.size() <= 256 &&
+        data.price is number && data.price >= 0 &&
+        data.status in ['New', 'Contacted', 'Qualified', 'Won', 'Lost'] &&
+        data.paymentStatus in ['Unpaid', 'Deposit', 'Paid'];
+    }
+
+    function isValidAssessment(data) {
+      return data.keys().hasAll(['assessmentId', 'timestampSubmitted', 'fullName', 'businessName', 'whatsappNumber']) &&
+        data.assessmentId is string && data.assessmentId.size() >= 1 && data.assessmentId.size() <= 128 &&
+        data.timestampSubmitted is string && data.timestampSubmitted.size() >= 1 && data.timestampSubmitted.size() <= 64 &&
+        data.fullName is string && data.fullName.size() >= 1 && data.fullName.size() <= 200 &&
+        data.businessName is string && data.businessName.size() >= 1 && data.businessName.size() <= 200 &&
+        data.whatsappNumber is string && data.whatsappNumber.size() >= 1 && data.whatsappNumber.size() <= 64;
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'ref', 'client', 'packageName', 'status']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.ref is string && data.ref.size() >= 1 && data.ref.size() <= 64 &&
+        data.client is string && data.client.size() >= 1 && data.client.size() <= 200 &&
+        data.packageName is string && data.packageName.size() >= 1 && data.packageName.size() <= 256 &&
+        data.status in ['Briefing', 'In production', 'Review', 'Revision', 'Delivered', 'Closed'];
+    }
+
+    function isValidCohort(data) {
+      return data.keys().hasAll(['id', 'cohortNumber', 'name', 'status']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.cohortNumber is number &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 256 &&
+        data.status in ['upcoming', 'open', 'almost_full', 'final_seats', 'full', 'paused', 'ended'];
+    }
+
+    function isValidStudent(data) {
+      return data.keys().hasAll(['id', 'ref', 'cohortId', 'name', 'email', 'whatsapp', 'status', 'price']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.ref is string && data.ref.size() >= 1 && data.ref.size() <= 64 &&
+        data.cohortId is string && data.cohortId.size() >= 1 && data.cohortId.size() <= 128 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+        data.email is string && data.email.size() >= 1 && data.email.size() <= 256 &&
+        data.whatsapp is string && data.whatsapp.size() >= 1 && data.whatsapp.size() <= 64 &&
+        data.status in ['registered', 'payment_pending', 'paid', 'confirmed'] &&
+        data.price is number && data.price >= 0;
+    }
+
+    function isValidAdminAccount(data) {
+      return data.keys().hasAll(['id', 'email', 'name', 'role', 'createdAt', 'active']) &&
+        data.id is string && data.id.size() >= 3 && data.id.size() <= 256 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 256 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 128 &&
+        data.role in ['owner', 'ops'] &&
+        data.createdAt is string && data.createdAt.size() >= 1 && data.createdAt.size() <= 64 &&
+        data.active is bool;
+    }
+
+    function isValidAuditEntry(data) {
+      return data.keys().hasAll(['id', 'at', 'user', 'action']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.at is string && data.at.size() >= 1 && data.at.size() <= 64 &&
+        data.user is string && data.user.size() >= 1 && data.user.size() <= 200 &&
+        data.action is string && data.action.size() >= 1 && data.action.size() <= 500;
+    }
+
+    // ---------------------------------------------------------
+    // Connection Test Document
+    // ---------------------------------------------------------
+    match /test/{docId} {
+      allow get: if isValidId(docId);
+    }
+
+    // ---------------------------------------------------------
+    // 1. Site Content (/site_content/{docId})
+    // Publicly readable so visitors see live pricing, offers, and quiz config.
+    // Writable by admins.
+    // ---------------------------------------------------------
+    match /site_content/{docId} {
+      allow get: if isValidId(docId);
+      allow list: if true;
+      allow create, update: if isValidId(docId) && isAdmin();
+      allow delete: if isValidId(docId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 2. Client Leads, Bookings & Referrals (/leads/{leadId})
+    // Public visitors can create instant leads without login.
+    // Visitors can also read public toast leads (showPublic == true) or admins can read/manage all.
+    // ---------------------------------------------------------
+    match /leads/{leadId} {
+      allow get: if isValidId(leadId) && (isAdmin() || resource.data.showPublic == true);
+      allow list: if isAdmin() || resource.data.showPublic == true;
+      allow create: if isValidId(leadId) && isValidLead(incoming()) && incoming().id == leadId;
+      allow update: if isValidId(leadId) && isValidLead(incoming()) && (
+        isAdmin() ||
+        (
+          incoming().id == resource.data.id &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['bookingClickedAt', 'bookingConfirmedAt', 'whatsappCtaClicked', 'whatsappCtaClickedAt', 'sheetsSynced', 'sheetsSyncedAt'])
+        )
+      );
+      allow delete: if isValidId(leadId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 3. Service Discovery Quiz & Business Assessments (/assessments/{assessmentId})
+    // Public visitors can submit assessments and update CTA click / sync status on their submission.
+    // Admins have full read/update access.
+    // ---------------------------------------------------------
+    match /assessments/{assessmentId} {
+      allow get: if isValidId(assessmentId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(assessmentId) && isValidAssessment(incoming()) && incoming().assessmentId == assessmentId;
+      allow update: if isValidId(assessmentId) && isValidAssessment(incoming()) && (
+        isAdmin() ||
+        (
+          incoming().assessmentId == resource.data.assessmentId &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['whatsappCtaClicked', 'whatsappCtaClickedAt', 'syncStatus', 'lastSyncAttemptAt', 'syncErrorMessage'])
+        )
+      );
+      allow delete: if isValidId(assessmentId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 4. Production Projects (/projects/{projectId})
+    // Accessible to admins.
+    // ---------------------------------------------------------
+    match /projects/{projectId} {
+      allow get: if isValidId(projectId) && isAdmin();
+      allow list: if isAdmin();
+      allow create, update: if isValidId(projectId) && isAdmin() && isValidProject(incoming());
+      allow delete: if isValidId(projectId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 5. Training Cohorts (/cohorts/{cohortId})
+    // Publicly readable for /training page; writable by admins.
+    // ---------------------------------------------------------
+    match /cohorts/{cohortId} {
+      allow get: if isValidId(cohortId);
+      allow list: if true;
+      allow create, update: if isValidId(cohortId) && isAdmin() && isValidCohort(incoming());
+      allow delete: if isValidId(cohortId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 6. Training Students (/students/{studentId})
+    // Public visitors can register instantly without login.
+    // Admins can view and verify payments.
+    // ---------------------------------------------------------
+    match /students/{studentId} {
+      allow get: if isValidId(studentId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(studentId) && isValidStudent(incoming()) && incoming().id == studentId;
+      allow update: if isValidId(studentId) && isValidStudent(incoming()) && (
+        isAdmin() ||
+        (
+          incoming().id == resource.data.id &&
+          incoming().diff(resource.data).affectedKeys().hasOnly(['sheetsSynced', 'sheetsSyncedAt'])
+        )
+      );
+      allow delete: if isValidId(studentId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 7. Admin Team Directory (/admins/{adminId})
+    // Authenticated user can read their own admin record to verify role;
+    // Super Admins (owner) can list, create, update, and remove admins.
+    // ---------------------------------------------------------
+    match /admins/{adminId} {
+      allow get: if isValidAdminId(adminId) && (
+        isAdmin() ||
+        (isVerifiedEmail() && request.auth.token.email == adminId)
+      );
+      allow list: if isAdmin();
+      allow create, update: if isValidAdminId(adminId) && isSuperAdmin() && isValidAdminAccount(incoming());
+      allow delete: if isValidAdminId(adminId) && isSuperAdmin() && adminId != 'shittu.cfm@gmail.com';
+    }
+
+    // ---------------------------------------------------------
+    // 8. Admin Audit Log (/audit_log/{entryId})
+    // ---------------------------------------------------------
+    match /audit_log/{entryId} {
+      allow get: if isValidId(entryId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isValidId(entryId) && isAdmin() && isValidAuditEntry(incoming());
+      allow update, delete: if isValidId(entryId) && isSuperAdmin();
+    }
+  }
+}

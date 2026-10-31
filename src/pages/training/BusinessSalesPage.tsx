@@ -9,6 +9,8 @@ import { StickyTrainingBar } from '@/components/training/StickyTrainingBar';
 import { RegistrationModal } from '@/components/training/RegistrationModal';
 import { Wall } from '@/components/Wall';
 import { CaseStudyModal } from '@/components/CaseStudyModal';
+import { Lightbox } from '@/components/shared';
+import type { PortfolioItem } from '@/content/types';
 import {
   Sparkles, CheckCircle2, XCircle, ArrowRight, ShieldCheck, Flame,
   DollarSign, Clock, Users, Video, Zap, Award, Gift, ChevronDown,
@@ -21,6 +23,7 @@ export default function BusinessSalesPage() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [caseStudyOpen, setCaseStudyOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<PortfolioItem | null>(null);
 
   const items = content.portfolio.filter((p) => p.visible).sort((a, b) => a.order - b.order);
 
@@ -179,7 +182,7 @@ export default function BusinessSalesPage() {
           </div>
 
           <div className="relative py-4">
-            <Wall items={items} onPlay={() => {}} />
+            <Wall items={items} onPlay={(item) => setPlayingVideo(item)} />
           </div>
         </section>
 
@@ -816,6 +819,10 @@ export default function BusinessSalesPage() {
         onClose={() => setCaseStudyOpen(false)}
         onAction={() => setRegisterOpen(true)}
       />
+
+      {playingVideo && (
+        <Lightbox item={playingVideo} onClose={() => setPlayingVideo(null)} />
+      )}
     </div>
   );
 }

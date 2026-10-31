@@ -8,6 +8,8 @@ import { UrgencyCountdown } from '@/components/training/UrgencyCountdown';
 import { StickyTrainingBar } from '@/components/training/StickyTrainingBar';
 import { RegistrationModal } from '@/components/training/RegistrationModal';
 import { Wall } from '@/components/Wall';
+import { Lightbox } from '@/components/shared';
+import type { PortfolioItem } from '@/content/types';
 import {
   Sparkles, CheckCircle2, ArrowRight, ShieldCheck, Flame,
   Film, Camera, Clapperboard, Layers, Award, Briefcase, ChevronDown
@@ -18,6 +20,7 @@ export default function CreatorSalesPage() {
   const { country, setCountry } = useCountry();
   const [registerOpen, setRegisterOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<string | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<PortfolioItem | null>(null);
 
   const items = content.portfolio.filter((p) => p.visible).sort((a, b) => a.order - b.order);
 
@@ -172,7 +175,7 @@ export default function CreatorSalesPage() {
           </div>
 
           <div className="relative py-4">
-            <Wall items={items} onPlay={() => {}} />
+            <Wall items={items} onPlay={(item) => setPlayingVideo(item)} />
           </div>
         </section>
 
@@ -580,6 +583,10 @@ export default function CreatorSalesPage() {
         initialTrack="creators"
         activeCountry={country}
       />
+
+      {playingVideo && (
+        <Lightbox item={playingVideo} onClose={() => setPlayingVideo(null)} />
+      )}
     </div>
   );
 }

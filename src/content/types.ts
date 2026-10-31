@@ -150,6 +150,7 @@ export interface CommercialOfferPage {
     primaryCta: string;
     secondaryCta: string;
     contextNote: string;
+    vslYoutubeId?: string;
   };
   problem: {
     heading: string;
@@ -457,6 +458,9 @@ export interface Lead {
   retainerOpportunity?: boolean;
   miniSeriesOpportunity?: boolean;
   entryPoint?: string;
+  /** Google Sheets hand-in-hand sync tracking */
+  sheetsSynced?: boolean;
+  sheetsSyncedAt?: string;
 }
 
 export type ProjectStatus =
@@ -481,7 +485,25 @@ export interface Project {
 
 export interface AuditEntry { id: string; at: string; user: string; action: string }
 
-export interface SessionUser { email: string; name: string; role: 'owner' | 'ops' }
+export interface SessionUser {
+  email: string;
+  name: string;
+  role: 'owner' | 'ops';
+  authMethod?: 'google' | 'password';
+  photoURL?: string;
+}
+
+export interface AdminAccount {
+  id: string; // lowercase email key
+  email: string;
+  name: string;
+  role: 'owner' | 'ops'; // 'owner' = Super Admin, 'ops' = Regular Admin
+  backupPassword?: string;
+  addedBy?: string;
+  createdAt: string;
+  active: boolean;
+  isPrimaryOwner?: boolean;
+}
 
 /* ---------- TRAINING PROGRAM TYPES ---------- */
 
@@ -579,6 +601,8 @@ export interface TrainingStudent {
   date: string;
   paymentMethod?: string;
   notes?: string;
+  sheetsSynced?: boolean;
+  sheetsSyncedAt?: string;
 }
 
 /* ---------- INTERACTIVE SERVICE DISCOVERY QUIZ & FUNNEL TYPES ---------- */

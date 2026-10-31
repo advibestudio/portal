@@ -1,0 +1,378 @@
+{
+  "entities": {
+    "SiteContentDoc": {
+      "title": "SiteContentDoc",
+      "description": "Consolidated site configuration, pricing, offers, testimonials, portfolio, and settings document.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document identifier (typically 'main').",
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp of last update.",
+          "maxLength": 64
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Email of admin who updated the content.",
+          "maxLength": 256
+        }
+      },
+      "required": ["id"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Customer package inquiry, strategy call booking, or referral order.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique lead ID.",
+          "maxLength": 128
+        },
+        "ref": {
+          "type": "string",
+          "description": "Human-readable order reference code.",
+          "maxLength": 64
+        },
+        "date": {
+          "type": "string",
+          "description": "Submission timestamp.",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Customer full name.",
+          "maxLength": 200
+        },
+        "business": {
+          "type": "string",
+          "description": "Customer business name.",
+          "maxLength": 200
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "Customer WhatsApp phone number.",
+          "maxLength": 64
+        },
+        "email": {
+          "type": "string",
+          "description": "Customer email address.",
+          "maxLength": 256
+        },
+        "offerId": {
+          "type": "string",
+          "description": "Selected package ID.",
+          "maxLength": 128
+        },
+        "offerName": {
+          "type": "string",
+          "description": "Selected package name.",
+          "maxLength": 256
+        },
+        "price": {
+          "type": "number",
+          "description": "Package price in local currency."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["New", "Contacted", "Qualified", "Won", "Lost"],
+          "description": "Lead sales status."
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["Unpaid", "Deposit", "Paid"],
+          "description": "Payment verification status."
+        },
+        "country": {
+          "type": "string",
+          "description": "ISO country code.",
+          "maxLength": 16
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code.",
+          "maxLength": 16
+        },
+        "source": {
+          "type": "string",
+          "description": "Acquisition source.",
+          "maxLength": 128
+        },
+        "showPublic": {
+          "type": "boolean",
+          "description": "Whether visitor consented to public activity toast."
+        }
+      },
+      "required": ["id", "ref", "date", "name", "offerId", "offerName", "price", "status", "paymentStatus"]
+    },
+    "BusinessAssessment": {
+      "title": "BusinessAssessment",
+      "description": "12-question service discovery quiz and business assessment submission.",
+      "type": "object",
+      "properties": {
+        "assessmentId": {
+          "type": "string",
+          "description": "Unique assessment ID.",
+          "maxLength": 128
+        },
+        "timestampSubmitted": {
+          "type": "string",
+          "description": "ISO timestamp when quiz was submitted.",
+          "maxLength": 64
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Respondent full name.",
+          "maxLength": 200
+        },
+        "businessName": {
+          "type": "string",
+          "description": "Respondent business name.",
+          "maxLength": 200
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "description": "Respondent WhatsApp number.",
+          "maxLength": 64
+        },
+        "email": {
+          "type": "string",
+          "description": "Respondent email.",
+          "maxLength": 256
+        },
+        "primaryRecommendedService": {
+          "type": "string",
+          "description": "Primary recommended service category.",
+          "maxLength": 128
+        },
+        "leadStatus": {
+          "type": "string",
+          "description": "Current sales pipeline stage.",
+          "maxLength": 64
+        }
+      },
+      "required": ["assessmentId", "timestampSubmitted", "fullName", "businessName", "whatsappNumber"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Active video production project in the delivery pipeline.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique project ID.",
+          "maxLength": 128
+        },
+        "ref": {
+          "type": "string",
+          "description": "Order reference code.",
+          "maxLength": 64
+        },
+        "client": {
+          "type": "string",
+          "description": "Client business name.",
+          "maxLength": 200
+        },
+        "packageName": {
+          "type": "string",
+          "description": "Package being produced.",
+          "maxLength": 256
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Briefing", "In production", "Review", "Revision", "Delivered", "Closed"],
+          "description": "Production workflow stage."
+        }
+      },
+      "required": ["id", "ref", "client", "packageName", "status"]
+    },
+    "TrainingCohort": {
+      "title": "TrainingCohort",
+      "description": "AI Filmmaking & Ad Mastery live cohort configuration and schedule.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique cohort ID.",
+          "maxLength": 128
+        },
+        "cohortNumber": {
+          "type": "number",
+          "description": "Sequential cohort number."
+        },
+        "name": {
+          "type": "string",
+          "description": "Cohort display title.",
+          "maxLength": 256
+        },
+        "status": {
+          "type": "string",
+          "enum": ["upcoming", "open", "almost_full", "final_seats", "full", "paused", "ended"],
+          "description": "Cohort enrollment status."
+        }
+      },
+      "required": ["id", "cohortNumber", "name", "status"]
+    },
+    "TrainingStudent": {
+      "title": "TrainingStudent",
+      "description": "Student enrollment record for a training cohort.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique student ID.",
+          "maxLength": 128
+        },
+        "ref": {
+          "type": "string",
+          "description": "Student registration reference.",
+          "maxLength": 64
+        },
+        "cohortId": {
+          "type": "string",
+          "description": "Target cohort ID.",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Student full name.",
+          "maxLength": 200
+        },
+        "email": {
+          "type": "string",
+          "description": "Student email address.",
+          "maxLength": 256
+        },
+        "whatsapp": {
+          "type": "string",
+          "description": "Student WhatsApp number.",
+          "maxLength": 64
+        },
+        "status": {
+          "type": "string",
+          "enum": ["registered", "payment_pending", "paid", "confirmed"],
+          "description": "Enrollment payment status."
+        },
+        "price": {
+          "type": "number",
+          "description": "Tuition fee amount."
+        }
+      },
+      "required": ["id", "ref", "cohortId", "name", "email", "whatsapp", "status", "price"]
+    },
+    "AdminAccount": {
+      "title": "AdminAccount",
+      "description": "Authorized Super Admin (owner) or Regular Admin (ops) account.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Normalized email key or UID.",
+          "maxLength": 256
+        },
+        "email": {
+          "type": "string",
+          "description": "Admin Google/email address (lowercase).",
+          "maxLength": 256
+        },
+        "name": {
+          "type": "string",
+          "description": "Admin display name.",
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "enum": ["owner", "ops"],
+          "description": "Admin role: 'owner' (Super Admin) or 'ops' (Regular Admin)."
+        },
+        "backupPassword": {
+          "type": "string",
+          "description": "Optional backup password for email+password sign-in.",
+          "maxLength": 128
+        },
+        "addedBy": {
+          "type": "string",
+          "description": "Email of the Super Admin who granted access.",
+          "maxLength": 256
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp when admin was added.",
+          "maxLength": 64
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether this admin account is currently active."
+        }
+      },
+      "required": ["id", "email", "name", "role", "createdAt", "active"]
+    },
+    "AuditEntry": {
+      "title": "AuditEntry",
+      "description": "Admin activity audit log entry.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique audit log ID.",
+          "maxLength": 128
+        },
+        "at": {
+          "type": "string",
+          "description": "Timestamp string.",
+          "maxLength": 64
+        },
+        "user": {
+          "type": "string",
+          "description": "Admin user name or email.",
+          "maxLength": 200
+        },
+        "action": {
+          "type": "string",
+          "description": "Description of the action performed.",
+          "maxLength": 500
+        }
+      },
+      "required": ["id", "at", "user", "action"]
+    }
+  },
+  "firestore": {
+    "/site_content/{docId}": {
+      "schema": { "$ref": "#/entities/SiteContentDoc" },
+      "description": "Publicly readable site configuration, pricing, portfolio, and quiz settings. Writable by admins."
+    },
+    "/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Customer leads, bookings, and referral claims. Publicly creatable from instant forms; readable and manageable by admins."
+    },
+    "/assessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/BusinessAssessment" },
+      "description": "Service Discovery Quiz & Business Assessments. Publicly creatable; manageable by admins."
+    },
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Client production pipeline records. Accessible to admins."
+    },
+    "/cohorts/{cohortId}": {
+      "schema": { "$ref": "#/entities/TrainingCohort" },
+      "description": "Publicly readable training cohorts. Writable by admins."
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/TrainingStudent" },
+      "description": "Training cohort student signups. Publicly creatable from instant registration forms; manageable by admins."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminAccount" },
+      "description": "Admin team directory storing Super Admins (owner) and Regular Admins (ops)."
+    },
+    "/audit_log/{entryId}": {
+      "schema": { "$ref": "#/entities/AuditEntry" },
+      "description": "Audit log of admin actions."
+    }
+  }
+}

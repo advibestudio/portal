@@ -17,6 +17,7 @@ import { StudentsView } from './StudentsView';
 import { AffiliatesAdmin } from './AffiliatesAdmin';
 import { PromotionsAdmin } from './PromotionsAdmin';
 import { QuizFunnelAdmin } from './QuizFunnelAdmin';
+import { TeamAndSyncAdmin } from './TeamAndSyncAdmin';
 
 export type PrimaryAdminTab =
   | 'analytics'
@@ -26,15 +27,17 @@ export type PrimaryAdminTab =
   | 'pipeline'
   | 'promotions'
   | 'affiliates'
+  | 'team'
   | 'more';
 
 /* ---------- SIGN IN SCREEN ---------- */
 function SignIn() {
-  const { signIn, mode } = useStore();
+  const { signIn, signInWithGoogle } = useStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,25 +48,72 @@ function SignIn() {
     if (err) setError(err);
   };
 
+  const handleGoogleSignIn = async () => {
+    setGoogleBusy(true);
+    setError('');
+    const err = await signInWithGoogle();
+    setGoogleBusy(false);
+    if (err) setError(err);
+  };
+
   const inputCls =
     'w-full min-h-[48px] rounded-xl border border-white/15 bg-white/5 px-4 py-3.5 text-base text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none';
 
   return (
     <div className="grid min-h-dvh place-items-center bg-[#0b0b0c] px-4 py-8">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl border border-white/10 bg-[#121416] p-7 sm:p-8 shadow-2xl">
+      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#121416] p-7 sm:p-8 shadow-2xl">
         <p className="font-display text-2xl tracking-tight text-white font-bold">
           AdVibe<span className="text-[#f5a524]">.</span>
         </p>
         <p className="mt-1 flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-white/50">
-          <Lock className="h-3.5 w-3.5 text-[#f5a524]" /> Admin Portal
+          <Lock className="h-3.5 w-3.5 text-[#f5a524]" /> Admin Portal · Firebase + Google Sheets
         </p>
 
-        <div className="mt-7 space-y-3.5">
+        {/* PRIMARY: GOOGLE SIGN-IN */}
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={googleBusy || busy}
+          className="mt-6 min-h-[50px] w-full rounded-xl bg-white text-black font-display text-sm font-bold flex items-center justify-center gap-3 transition hover:bg-white/90 active:scale-[0.98] disabled:opacity-60 shadow-lg cursor-pointer"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          <span>{googleBusy ? 'Connecting Google Account…' : 'Continue with Google'}</span>
+        </button>
+
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/10" />
+          <span className="text-[11px] font-mono uppercase tracking-wider text-white/40">
+            or use backup admin password
+          </span>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+
+        {/* BACKUP ADMIN EMAIL & PASSWORD */}
+        <form onSubmit={submit} className="space-y-3.5">
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">Email</label>
+            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">
+              Admin Email
+            </label>
             <input
               className={inputCls}
-              placeholder="e.g. owner@advibe.studio"
+              placeholder="shittu.cfm@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               inputMode="email"
@@ -71,7 +121,9 @@ function SignIn() {
             />
           </div>
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">Password</label>
+            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">
+              Backup Password
+            </label>
             <input
               className={inputCls}
               type="password"
@@ -81,35 +133,55 @@ function SignIn() {
               autoComplete="current-password"
             />
           </div>
-        </div>
 
-        {error && (
-          <p className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300">
-            {error}
-          </p>
-        )}
+          {error && (
+            <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-300 leading-relaxed">
+              {error}
+            </p>
+          )}
 
-        <button
-          type="submit"
-          disabled={busy}
-          className="mt-6 min-h-[50px] w-full rounded-xl bg-[#f5a524] font-display text-sm font-bold uppercase tracking-wider text-black transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60 shadow-lg"
-        >
-          {busy ? 'Signing in…' : 'Sign in to Dashboard'}
-        </button>
+          <button
+            type="submit"
+            disabled={busy || googleBusy}
+            className="mt-2 min-h-[50px] w-full rounded-xl bg-[#f5a524] font-display text-sm font-bold uppercase tracking-wider text-black transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60 shadow-lg cursor-pointer"
+          >
+            {busy ? 'Signing in…' : 'Sign in with Backup Password'}
+          </button>
+        </form>
 
-        {mode === 'demo' && (
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs leading-relaxed text-white/50">
-            <p className="font-semibold text-white/80">Demo Credentials:</p>
-            <p className="mt-1 font-mono text-[11px]">Owner: owner@advibe.studio / owner2026</p>
-            <p className="font-mono text-[11px]">Ops: ops@advibe.studio / ops2026</p>
-            <p className="mt-1 text-[10px] text-white/35">Tap Sign In directly to enter.</p>
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs leading-relaxed text-white/60 space-y-2">
+          <p className="font-semibold text-white/85">Quick Backup Sign-In:</p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('shittu.cfm@gmail.com');
+                setPassword('advibe-owner-2026');
+              }}
+              className="px-3 py-1.5 rounded-lg bg-[#f5a524]/15 border border-[#f5a524]/30 text-[#f5a524] font-mono text-[11px] hover:bg-[#f5a524]/25 transition cursor-pointer"
+            >
+              Super Admin: shittu.cfm@gmail.com
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail('ops@advibestudio.com');
+                setPassword('advibe-ops-2026');
+              }}
+              className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-white/80 font-mono text-[11px] hover:bg-white/15 transition cursor-pointer"
+            >
+              Regular Admin: ops@advibestudio.com
+            </button>
           </div>
-        )}
+          <p className="text-[11px] text-white/40 pt-1">
+            Inside the dashboard, go to <strong>Team & Sheets</strong> to add your new Gmail as a Super Admin or Regular Admin.
+          </p>
+        </div>
 
         <a href="#/" className="mt-5 block text-center text-xs text-white/40 hover:text-white">
           ← Back to AdVibe Studios Website
         </a>
-      </form>
+      </div>
     </div>
   );
 }
@@ -615,6 +687,24 @@ export default function Admin() {
             </span>
           </button>
 
+          {/* Team, Firebase & Google Sheets Sync */}
+          <button
+            onClick={() => handleTabSwitch('team')}
+            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
+              tab === 'team'
+                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <span>Team & Sheets Sync</span>
+            </div>
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
+              LIVE
+            </span>
+          </button>
+
           {/* Settings & More */}
           <button
             onClick={() => handleTabSwitch('more')}
@@ -884,7 +974,10 @@ export default function Admin() {
             <AffiliatesAdmin onNavigateToPromotions={() => handleTabSwitch('promotions')} />
           )}
 
-          {/* 6. MORE & SETTINGS */}
+          {/* 6.5 TEAM ACCESS, FIREBASE & GOOGLE SHEETS SYNC */}
+          {tab === 'team' && <TeamAndSyncAdmin />}
+
+          {/* 7. MORE & SETTINGS */}
           {tab === 'more' && (
             <div className="space-y-6 text-left">
               <div>
@@ -892,12 +985,14 @@ export default function Admin() {
                   Platform Settings
                 </span>
                 <h1 className="font-display text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
-                  Settings & System Controls
+                  Settings, Team & Cloud Sync
                 </h1>
                 <p className="mt-1 text-xs text-white/50 sm:text-sm">
-                  Configure multi-currency rates, export project data, and manage administrative session.
+                  Manage Super Admins & Regular Admins, connect Google Sheets with Firebase, and configure multi-currency rates.
                 </p>
               </div>
+
+              <TeamAndSyncAdmin />
 
               {/* Markets & Pricing Section */}
               <div className="rounded-2xl border border-white/10 bg-[#121518] p-5 space-y-4">
@@ -1090,7 +1185,18 @@ export default function Admin() {
           <span>Affiliates</span>
         </button>
 
-        {/* 6. More / Settings */}
+        {/* 6.5 Team & Sheets */}
+        <button
+          onClick={() => handleTabSwitch('team')}
+          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
+            tab === 'team' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          }`}
+        >
+          <ShieldCheck className="h-4 w-4" />
+          <span>Team/Sync</span>
+        </button>
+
+        {/* 7. More / Settings */}
         <button
           onClick={() => handleTabSwitch('more')}
           className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${

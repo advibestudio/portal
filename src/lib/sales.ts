@@ -121,7 +121,19 @@ export function mergeSalesPages(saved?: Partial<SalesPages> | null): SalesPages 
       },
     },
     proof: {
-      videoIds: saved.proof?.videoIds ?? defaultSalesPages.proof?.videoIds ?? [],
+      videoIds: (() => {
+        const legacyIds = new Set([
+          'aqz-KE-bpKQ',
+          'eRsGyueVLvQ',
+          'jfKfPfyJRdk',
+          'dQw4w9WgXcQ',
+          '60ItHLz5WEA',
+          '9bZkp7q19f0',
+          'kJQP7kiw5Fk',
+        ]);
+        const cleaned = (saved.proof?.videoIds ?? []).filter((id) => id && !legacyIds.has(id));
+        return cleaned.length > 0 ? cleaned : (defaultSalesPages.proof?.videoIds ?? []);
+      })(),
       showLogo: saved.proof?.showLogo ?? defaultSalesPages.proof?.showLogo ?? true,
       emptyNote: saved.proof?.emptyNote ?? defaultSalesPages.proof?.emptyNote ?? '',
       modalTitle: saved.proof?.modalTitle ?? defaultSalesPages.proof?.modalTitle ?? '',
