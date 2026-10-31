@@ -49,7 +49,7 @@ function CountrySwitch() {
 }
 
 /* ---------- NAV ---------- */
-export function Nav({ onOrder }: { onOrder: () => void }) {
+export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?: () => void }) {
   const { content, activeCohort } = useStore();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -67,26 +67,30 @@ export function Nav({ onOrder }: { onOrder: () => void }) {
     activeCohort.status === 'final_seats'
   );
 
-  // A link only appears if its section is switched on.
+  // Recommended main navigation per Part 1.1:
+  // Our Work, Services, Packages, Monthly Retainer, How It Works (plus non-competing access to Mini-Series & Training)
   const links = [
-    { label: 'Work', href: '#work', on: sec.showcase },
-    {
-      label: 'Studio plans',
-      href: '#studio-plans',
-      on: Boolean(content.salesPages?.home?.enabled && content.salesPages?.offers?.some((o) => o.active && o.showOnHome)),
-    },
-    { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
-    { label: 'Mini Series', href: '#/promotional-mini-series', on: true },
+    { label: 'Our Work', href: '#work', on: sec.showcase },
+    { label: 'Services', href: '#services', on: sec.services },
     { label: 'Packages', href: '#pricing', on: true },
+    { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
+    { label: 'How It Works', href: '#process', on: sec.process },
+    { label: 'AI Mini-Series', href: '#/promotional-mini-series', on: true },
     {
       label: 'Training',
       href: '#/training',
       on: true,
       pill: isCohortActive ? 'Founding Cohort' : undefined
     },
-    { label: 'How it works', href: '#process', on: sec.process },
-    { label: 'FAQs', href: '#faq', on: sec.faq },
   ].filter((l) => l.on);
+
+  const handlePrimaryCta = () => {
+    if (onStrategy) {
+      onStrategy();
+    } else {
+      onOrder();
+    }
+  };
 
   return (
     <header className={`site-nav ${scrolled ? 'is-scrolled' : ''}`}>
@@ -109,8 +113,8 @@ export function Nav({ onOrder }: { onOrder: () => void }) {
         </nav>
         <div className="site-actions">
           <CountrySwitch />
-          <button onClick={onOrder} className="btn-studio is-sm">
-            <span>Get your video</span><span className="btn-arrow" aria-hidden="true"><ArrowRight size={16} strokeWidth={2.4} /></span>
+          <button onClick={handlePrimaryCta} className="btn-studio is-sm">
+            <span>Book a Free Strategy Session</span><span className="btn-arrow" aria-hidden="true"><ArrowRight size={16} strokeWidth={2.4} /></span>
           </button>
           <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -211,8 +215,8 @@ export function Hero({ onOrder, onStrategy, onPlay }: { onOrder: () => void; onS
         <h1 id="hero-title" className="h-hero"><span><EmLast text={content.hero.headline} /></span></h1>
         <p className="hero-sub">{content.hero.subheadline}</p>
         <div className="hero-cta">
-          <button onClick={onStrategy} className="btn-studio"><span>{content.hero.primaryCta}</span><ArrowBtn /></button>
-          {content.sections.showcase && <a className="btn-ghost" href="#work">{content.hero.secondaryCta} <ArrowDown size={18} /></a>}
+          <button onClick={onStrategy} className="btn-studio"><span>Book a Free Strategy Session</span><ArrowBtn /></button>
+          {content.sections.showcase && <a className="btn-ghost" href="#work">Watch Our Work <ArrowDown size={18} /></a>}
         </div>
         {micro && <p className="hero-micro">{micro}</p>}
         <ClientBadge />
@@ -339,11 +343,9 @@ export function StickyBar({ onStrategy }: { onStrategy: () => void }) {
 
   return (
     <div className={`sticky-bar ${scrolled ? 'is-visible' : ''}`} aria-hidden={!scrolled}>
-      <button onClick={onStrategy} className="btn-studio"><span>Free strategy session</span><ArrowBtn /></button>
-      <a className="sticky-wa" href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want to ask about a video ad.`)}
-        target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" onClick={() => track('Contact')}>
-        <MessageCircle size={22} />
-      </a>
+      <button onClick={onStrategy} className="btn-studio" style={{ width: '100%', justifyContent: 'center' }}>
+        <span>Book a Free Strategy Session</span><ArrowBtn />
+      </button>
     </div>
   );
 }

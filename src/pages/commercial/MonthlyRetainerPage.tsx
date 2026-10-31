@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCountry } from '@/lib/country';
 import { fmtMoney, waLink, waNumberFor } from '@/lib/money';
@@ -10,6 +10,8 @@ import { Lightbox } from '@/components/shared';
 import LivePopups from '@/components/LivePopups';
 import { defaultCommercialOffers } from '@/content/commercialOffers';
 import type { PortfolioItem } from '@/content/types';
+import { captureReferralFromUrl } from '@/lib/referral';
+import { captureInitialChannel } from '@/lib/quizEngine';
 import {
   Sparkles, ArrowRight, MessageCircle, CheckCircle2, ShieldCheck,
   ChevronDown, Video, FileText, Layers, Clock, Users, DollarSign,
@@ -33,10 +35,15 @@ export default function MonthlyRetainerPage() {
   const [priceHovered, setPriceHovered] = useState(false);
   const [activeSprintWeek, setActiveSprintWeek] = useState<number>(1);
 
+  useEffect(() => {
+    captureInitialChannel();
+    captureReferralFromUrl(content.affiliates, content.referralSettings);
+  }, [content.affiliates, content.referralSettings]);
+
   const offerData = content.commercialOffers?.['monthly-content'] || defaultCommercialOffers['monthly-content'];
 
   // Currency aware pricing
-  const basePrice = offerData.pricesByCountry?.[country.code] ?? offerData.price ?? 200000;
+  const basePrice = offerData.pricesByCountry?.[country.code] ?? offerData.price ?? 250000;
   const formattedPrice = fmtMoney(basePrice, country);
   const videoQty = offerData.monthlyVideoQuantity || 15;
   const unitPrice = Math.round(basePrice / videoQty);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCountry } from '@/lib/country';
 import { fmtMoney, waLink, waNumberFor } from '@/lib/money';
@@ -10,6 +10,8 @@ import LivePopups from '@/components/LivePopups';
 import { Lightbox } from '@/components/shared';
 import { defaultCommercialOffers } from '@/content/commercialOffers';
 import type { PortfolioItem } from '@/content/types';
+import { captureReferralFromUrl } from '@/lib/referral';
+import { captureInitialChannel } from '@/lib/quizEngine';
 import {
   Film, Sparkles, ArrowRight, MessageCircle, CheckCircle2, ShieldCheck,
   ChevronDown, Clapperboard, Layers, Play, Video, Eye, Tv, Award,
@@ -32,9 +34,14 @@ export default function MiniSeriesPage() {
   const [activeStoryFormat, setActiveStoryFormat] = useState(0);
   const [playingVideo, setPlayingVideo] = useState<PortfolioItem | null>(null);
 
+  useEffect(() => {
+    captureInitialChannel();
+    captureReferralFromUrl(content.affiliates, content.referralSettings);
+  }, [content.affiliates, content.referralSettings]);
+
   const offerData = content.commercialOffers?.['promotional-mini-series'] || defaultCommercialOffers['promotional-mini-series'];
 
-  const basePrice = offerData.pricesByCountry?.[country.code] ?? offerData.price ?? 200000;
+  const basePrice = offerData.pricesByCountry?.[country.code] ?? offerData.price ?? 300000;
   const formattedPrice = fmtMoney(basePrice, country);
   const videoQty = offerData.monthlyVideoQuantity || 15;
   const unitPrice = Math.round(basePrice / videoQty);
@@ -541,28 +548,42 @@ export default function MiniSeriesPage() {
             </h2>
 
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 rounded-3xl border border-[#111412]/10 bg-[#f3f4ef] p-6 sm:p-8">
-              <div className="space-y-2 max-w-xl">
-                <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
-                  INTERACTIVE PRODUCTION SLATE
+              <div className="space-y-3 max-w-xl">
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#a06200] flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-[#f5a524] animate-pulse" />
+                  INTERACTIVE PRODUCTION SLATE &amp; VIEWFINDER
                 </span>
                 <h3 className="font-display text-xl sm:text-2xl font-bold text-[#111412]">
                   Tap the clapperboard to clap into action
                 </h3>
-                <p className="text-sm text-[#586159]">
-                  Explore how we structure recurring original comedy, product-led narratives, and connected episodic arcs for your brand.
+                <p className="text-sm text-[#586159] leading-relaxed">
+                  Tap the clapperboard on your phone to trigger the scene snap and cycle through our storytelling formats, or switch to the 4K viewfinder to test optical focus-pulling.
                 </p>
+                <div className="flex items-center gap-3 pt-1 text-xs font-mono text-[#a06200]">
+                  <span className="font-bold">Active Story Concept: 0{activeStoryFormat + 1} — {storyFormats[activeStoryFormat].title}</span>
+                </div>
               </div>
 
-              <div className="shrink-0 mx-auto md:mx-0 w-full max-w-[280px] sm:max-w-[320px]">
+              <div className="shrink-0 mx-auto md:mx-0 w-full max-w-[280px] sm:max-w-[340px]">
                 <AnimatedStoryGraphic
                   type="combo"
                   scene={`0${activeStoryFormat + 1}`}
                   take="01"
                   roll={`ARC${activeStoryFormat + 1}`}
                   title={storyFormats[activeStoryFormat].title.slice(0, 18).toUpperCase()}
-                  onAction={() => setActiveStoryFormat((prev) => (prev + 1) % storyFormats.length)}
+                  resolution="4K UHD"
+                  fps={60}
+                  focalLength="35mm"
+                  aperture="f/1.8"
+                  focusDistance="1.8m"
                   interactive
                   autoSnapOnInView
+                  onAction={() => {
+                    setActiveStoryFormat((prev) => (prev + 1) % storyFormats.length);
+                  }}
+                  onFocusChange={() => {
+                    setActiveStoryFormat((prev) => (prev + 1) % storyFormats.length);
+                  }}
                 />
               </div>
             </div>

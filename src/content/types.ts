@@ -284,6 +284,36 @@ export interface SiteContent {
   finalCta: { heading: string; subheading: string; primaryCta: string };
   /** The two sales pages (#/monthly-content and #/promotional-mini-series) and their shared settings. */
   salesPages?: SalesPages;
+  /** Referral-based 5% discount settings and affiliate partner directory */
+  referralSettings?: ReferralDiscountSettings;
+  affiliates?: AffiliatePartner[];
+  /** Service Discovery Quiz, Weighted Recommendation Engine & Google Sheets Config */
+  quizConfig?: QuizConfig;
+}
+
+export interface ReferralDiscountSettings {
+  enabled: boolean;
+  discountPercent: number; // default: 5
+  attributionWindowDays: number; // default: 30 days
+  firstTimeOnly: boolean; // default: true
+  eligibleServices: string[]; // e.g. ['strategy', 'monthly-content', 'promotional-mini-series', 'bundle-5']
+  promotionExpiry?: string | null; // ISO date or null for ongoing
+  minPurchaseValue: number; // minimum eligible purchase value
+}
+
+export interface AffiliatePartner {
+  id: string;
+  code: string; // e.g. 'ADV-JOHN'
+  name: string;
+  email: string;
+  whatsapp: string;
+  status: 'active' | 'deactivated';
+  approved: boolean;
+  commissionPercent: number; // default: 10
+  createdAt: string;
+  totalReferrals?: number;
+  totalRevenue?: number;
+  clicks?: number; // referral link visits / usage
 }
 
 /* ---------- SALES PAGES & OFFERS ---------- */
@@ -391,6 +421,26 @@ export interface Lead {
   pageRoute?: string;
   bookingClickedAt?: string;
   bookingConfirmedAt?: string;
+  /** Referral & Affiliate Tracking */
+  referralCode?: string;
+  affiliateId?: string;
+  referralSource?: string; // 'affiliate_link' | 'manual_code' | 'none'
+  discountClaimed?: boolean;
+  discountPercent?: number;
+  discountAmount?: number;
+  howDidYouHear?: string;
+  manualReferralCode?: string;
+  isFirstTimeCustomer?: boolean;
+  /** Quiz Assessment & WhatsApp Funnel Tracking */
+  assessmentId?: string;
+  whatsappCtaClicked?: boolean;
+  whatsappCtaClickedAt?: string;
+  pipelineStage?: PipelineStage;
+  salesNotes?: string;
+  secondaryRecommendation?: string;
+  retainerOpportunity?: boolean;
+  miniSeriesOpportunity?: boolean;
+  entryPoint?: string;
 }
 
 export type ProjectStatus =
@@ -514,3 +564,172 @@ export interface TrainingStudent {
   paymentMethod?: string;
   notes?: string;
 }
+
+/* ---------- INTERACTIVE SERVICE DISCOVERY QUIZ & FUNNEL TYPES ---------- */
+
+export type ServiceCategoryKey =
+  | 'regular-ads'
+  | 'monthly-retainer'
+  | 'ai-mini-series'
+  | 'explainer-educational'
+  | 'brand-storytelling';
+
+export type PipelineStage =
+  | 'New lead'
+  | 'Contacted'
+  | 'Conversation ongoing'
+  | 'Consultation/discovery completed'
+  | 'Proposal sent'
+  | 'Awaiting payment'
+  | 'Won'
+  | 'Lost'
+  | 'Follow-up required';
+
+export interface QuizOption {
+  id: string;
+  label: string;
+  description?: string;
+  /** Optional score boosts per service category when this option is selected */
+  weights?: Partial<Record<ServiceCategoryKey, number>>;
+  /** Optional branching flag (e.g. triggers educational interlude or skips active-only questions) */
+  triggersInterlude?: boolean;
+  disqualifiesCategory?: ServiceCategoryKey;
+}
+
+export interface QuizQuestion {
+  id: string; // 'q1' .. 'q12'
+  stepNumber: number;
+  title: string;
+  subtitle?: string;
+  type: 'single' | 'multi' | 'contact';
+  maxSelections?: number;
+  required: boolean;
+  enabled: boolean;
+  options: QuizOption[];
+  /** Optional branching note shown in Admin */
+  branchingRuleNote?: string;
+}
+
+export interface RecommendationConfig {
+  /** Base multipliers for each service category (default 1.0) */
+  categoryMultipliers: Record<ServiceCategoryKey, number>;
+  /** Minimum score threshold to trigger Monthly Retainer opportunity */
+  retainerThreshold: number;
+  /** Minimum score threshold to trigger AI Mini-Series opportunity */
+  miniSeriesThreshold: number;
+  /** High budget threshold multiplier */
+  highBudgetBoost: number;
+  /** Customisable explanation templates per category */
+  explanations: Record<ServiceCategoryKey, string>;
+}
+
+export interface QuizConfig {
+  enabled: boolean;
+  introHeading: string;
+  introCopy: string;
+  introCta: string;
+  introReassurance: string;
+  questions: QuizQuestion[];
+  recommendation: RecommendationConfig;
+  whatsappTemplate: string;
+  googleSheetsWebhookUrl: string;
+  spreadsheetName: string;
+}
+
+/**
+ * Full 39-column Business Assessment record saved to primary store/database
+ * and synced to Google Sheets ("ADVIBE STUDIO — LEADS & BUSINESS ASSESSMENTS").
+ */
+export interface BusinessAssessment {
+  // 1-3: Metadata
+  assessmentId: string;
+  timestampSubmitted: string; // ISO
+  entryPage: string; // homepage, service-page, package-page, popup, monthly-retainer, affiliate
+  entryContextOfferId?: string;
+  entryContextOfferName?: string;
+  originalAcquisitionChannel: string; // 'monthly-retainer' | 'affiliate' | 'direct' | 'product-page'
+
+  // 4-9: Contact & Business Details (Q12)
+  fullName: string;
+  businessName: string;
+  whatsappNumber: string;
+  email: string;
+  websiteOrSocial: string;
+  whatBusinessSells: string;
+  howDidYouHear: string;
+
+  // 10-20: Quiz Answers (Q1 - Q11)
+  socialMediaStatus: string; // Q1
+  platformsUsed: string[]; // Q2
+  postingFrequency: string; // Q3
+  wantsMoreConsistency: string; // Q4
+  biggestChallenges: string[]; // Q5 (up to 2)
+  storytellingInterest: string; // Q6
+  aiSeriesFamiliarity: string; // Q7
+  sawEducationalInterlude: boolean;
+  aiMiniSeriesInterest: string; // Q8
+  monthlyAdSpendRange: string; // Q9
+  monthlyContentSpendRange: string; // Q10
+  primaryGoal: string; // Q11
+
+  // 21-26: Recommendation Engine Outputs
+  primaryRecommendedService: string;
+  primaryRecommendedPackageId: string;
+  primaryRecommendedPackageName: string;
+  primaryRecommendedPrice: number;
+  secondaryRecommendation: string;
+  secondaryPackageId: string;
+  secondaryPackageName: string;
+  monthlyRetainerOpportunity: boolean;
+  aiMiniSeriesOpportunity: boolean;
+  categoryScores: Record<ServiceCategoryKey, number>;
+
+  // 27-32: Affiliate & 5% Discount Attribution
+  referralSource: string;
+  affiliateId: string;
+  affiliateCode: string;
+  eligibleFor5PercentDiscount: boolean;
+  claimed5PercentDiscount: boolean;
+  discountAmount: number;
+
+  // 33-35: UTM & Campaign Attribution
+  utmSource: string;
+  utmMedium: string;
+  utmCampaign: string;
+  countryCode: string;
+  currencyCode: string;
+
+  // 36-39: Conversion & Pipeline Status
+  quizCompletionStatus: 'completed' | 'abandoned';
+  whatsappCtaClicked: boolean;
+  whatsappCtaClickedAt?: string;
+  leadStatus: PipelineStage;
+  salesNotes: string;
+
+  // Sync tracking
+  syncStatus: 'synced' | 'pending' | 'failed';
+  lastSyncAttemptAt?: string;
+  syncErrorMessage?: string;
+}
+
+export interface QuizFunnelAnalyticsEvent {
+  id: string;
+  sessionId: string;
+  timestamp: string;
+  type:
+    | 'quiz_opened'
+    | 'quiz_started'
+    | 'question_answered'
+    | 'interlude_viewed'
+    | 'quiz_completed'
+    | 'results_viewed'
+    | 'package_explored'
+    | 'whatsapp_cta_clicked';
+  questionId?: string;
+  stepNumber?: number;
+  entryPage?: string;
+  channel?: string;
+  affiliateCode?: string;
+  metadata?: Record<string, unknown>;
+}
+

@@ -69,22 +69,43 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...(c.commercialOffers ?? {}),
     },
     salesPages: mergeSalesPages(c.salesPages),
+    referralSettings: {
+      ...defaultContent.referralSettings,
+      ...(c.referralSettings ?? {}),
+    },
+    affiliates: Array.isArray(c.affiliates) && c.affiliates.length > 0 ? c.affiliates : defaultContent.affiliates,
+    quizConfig: {
+      ...defaultContent.quizConfig,
+      ...(c.quizConfig ?? {}),
+      recommendation: {
+        ...defaultContent.quizConfig!.recommendation,
+        ...(c.quizConfig?.recommendation ?? {}),
+      },
+      questions: Array.isArray(c.quizConfig?.questions) && c.quizConfig!.questions.length > 0
+        ? c.quizConfig!.questions
+        : defaultContent.quizConfig!.questions,
+    },
   } as SiteContent;
 
   if (!merged.settings.bookingUrl) {
     merged.settings.bookingUrl = defaultContent.settings.bookingUrl;
   }
 
-  // The call-to-action wording changed: migrate any old long CTA text to the concise version
+  // Standardize primary & secondary CTAs to "Book a Free Strategy Session" and "Watch Our Work"
   if (
     merged.hero.primaryCta === 'Get my video ad' ||
+    merged.hero.primaryCta === 'Book Free Strategy Session' ||
     merged.hero.primaryCta?.includes('Chat with our team on WhatsApp') ||
     (merged.hero.primaryCta?.length ?? 0) > 35
   ) {
     merged.hero.primaryCta = defaultContent.hero.primaryCta;
   }
+  if (merged.hero.secondaryCta === 'See our work') {
+    merged.hero.secondaryCta = defaultContent.hero.secondaryCta;
+  }
   if (
     merged.finalCta?.primaryCta === 'Get my video ad' ||
+    merged.finalCta?.primaryCta === 'Book Free Strategy Session' ||
     merged.finalCta?.primaryCta?.includes('Chat with our team on WhatsApp') ||
     (merged.finalCta?.primaryCta?.length ?? 0) > 35
   ) {
@@ -103,11 +124,59 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...defaultContent.campaigns.filter((x) => !have.has(x.id)),
     ];
   }
+  // Remove legacy "Monthly Studio" offer & goal from cached localStorage state
+  merged.offers = (merged.offers || []).filter((o) => o.id !== 'monthly-studio' && o.goal !== 'monthly');
+  if (merged.pricing?.goals) {
+    merged.pricing = {
+      ...merged.pricing,
+      goals: merged.pricing.goals.filter((g) => g.id !== 'monthly'),
+    };
+  }
+  if (merged.referralSettings?.eligibleServices) {
+    merged.referralSettings = {
+      ...merged.referralSettings,
+      eligibleServices: merged.referralSettings.eligibleServices.filter((id) => id !== 'monthly-studio'),
+    };
+  }
+
+  // Migrate cached commercialOffers prices: Monthly Retainer -> ₦250,000, AI Mini-Series -> ₦300,000
+  if (merged.commercialOffers?.['monthly-content']) {
+    const mc = merged.commercialOffers['monthly-content'];
+    const ngPrice = mc.pricesByCountry?.NG === 200000 ? 250000 : (mc.pricesByCountry?.NG ?? 250000);
+    merged.commercialOffers['monthly-content'] = {
+      ...mc,
+      price: mc.price === 200000 ? 250000 : mc.price,
+      pricesByCountry: {
+        ...(defaultContent.commercialOffers?.['monthly-content']?.pricesByCountry || {}),
+        ...(mc.pricesByCountry || {}),
+        NG: ngPrice,
+      },
+    };
+  }
+  if (merged.commercialOffers?.['promotional-mini-series']) {
+    const ms = merged.commercialOffers['promotional-mini-series'];
+    const ngPrice = (ms.pricesByCountry?.NG === 200000 || ms.pricesByCountry?.NG === 150000)
+      ? 300000
+      : (ms.pricesByCountry?.NG ?? 300000);
+    merged.commercialOffers['promotional-mini-series'] = {
+      ...ms,
+      price: (ms.price === 200000 || ms.price === 150000) ? 300000 : ms.price,
+      pricesByCountry: {
+        ...(defaultContent.commercialOffers?.['promotional-mini-series']?.pricesByCountry || {}),
+        ...(ms.pricesByCountry || {}),
+        NG: ngPrice,
+      },
+    };
+  }
+
   // countries saved before the cost card existed get the starter "typical cost" estimates
   merged.countries = merged.countries.map((k) => {
     const def = defaultCountries.find((x) => x.code === k.code);
+    const cleanedPrices = { ...k.prices };
+    delete cleanedPrices['monthly-studio'];
     return {
       ...k,
+      prices: cleanedPrices,
       tradLow: typeof k.tradLow === 'number' ? k.tradLow : def?.tradLow ?? 0,
       tradHigh: typeof k.tradHigh === 'number' ? k.tradHigh : def?.tradHigh ?? 0,
     };
@@ -146,6 +215,15 @@ const leadFromRow = (r: Row): Lead => ({
   country: r.country ?? 'NG', currency: r.currency ?? 'NGN', source: r.source ?? 'website', showPublic: Boolean(r.show_public),
   goal: r.goal ?? undefined, pageRoute: r.page_route ?? undefined,
   bookingClickedAt: r.booking_clicked_at ?? undefined, bookingConfirmedAt: r.booking_confirmed_at ?? undefined,
+  referralCode: r.referral_code ?? undefined,
+  affiliateId: r.affiliate_id ?? undefined,
+  referralSource: r.referral_source ?? undefined,
+  discountClaimed: r.discount_claimed !== undefined ? Boolean(r.discount_claimed) : undefined,
+  discountPercent: r.discount_percent !== undefined ? Number(r.discount_percent) : undefined,
+  discountAmount: r.discount_amount !== undefined ? Number(r.discount_amount) : undefined,
+  howDidYouHear: r.how_did_you_hear ?? undefined,
+  manualReferralCode: r.manual_referral_code ?? undefined,
+  isFirstTimeCustomer: r.is_first_time_customer !== undefined ? Boolean(r.is_first_time_customer) : undefined,
 });
 const leadToRow = (l: Omit<Lead, 'id' | 'ref' | 'date'>): Row => ({
   name: l.name, business: l.business, whatsapp: l.whatsapp, email: l.email,
@@ -154,6 +232,15 @@ const leadToRow = (l: Omit<Lead, 'id' | 'ref' | 'date'>): Row => ({
   utm_source: l.utmSource ?? null, country: l.country, currency: l.currency, source: l.source, show_public: l.showPublic,
   goal: l.goal ?? null, page_route: l.pageRoute ?? null,
   booking_clicked_at: l.bookingClickedAt ?? null, booking_confirmed_at: l.bookingConfirmedAt ?? null,
+  referral_code: l.referralCode ?? null,
+  affiliate_id: l.affiliateId ?? null,
+  referral_source: l.referralSource ?? null,
+  discount_claimed: l.discountClaimed ?? false,
+  discount_percent: l.discountPercent ?? null,
+  discount_amount: l.discountAmount ?? null,
+  how_did_you_hear: l.howDidYouHear ?? null,
+  manual_referral_code: l.manualReferralCode ?? null,
+  is_first_time_customer: l.isFirstTimeCustomer ?? true,
 });
 const leadPatchToRow = (p: Partial<Lead>): Row => {
   const m: Row = {};

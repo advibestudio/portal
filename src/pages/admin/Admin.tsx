@@ -4,7 +4,8 @@ import {
   Clock, TrendingUp, Wallet, Lock, Download, Sparkles, GraduationCap,
   Flame, Menu, X, ChevronRight, Settings, Sliders, DollarSign,
   CheckCircle2, ArrowRight, BarChart3, AlertCircle, FileEdit, Check,
-  Search, SlidersHorizontal, Layers, ShieldCheck, Zap, ArrowUpRight, Rocket
+  Search, SlidersHorizontal, Layers, ShieldCheck, Zap, ArrowUpRight, Rocket,
+  Tag, Percent
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { fmtMoney } from '@/lib/money';
@@ -13,12 +14,18 @@ import { ContentView } from './Content';
 import { MarketsView } from './Markets';
 import { CohortView } from './CohortView';
 import { StudentsView } from './StudentsView';
+import { AffiliatesAdmin } from './AffiliatesAdmin';
+import { PromotionsAdmin } from './PromotionsAdmin';
+import { QuizFunnelAdmin } from './QuizFunnelAdmin';
 
 export type PrimaryAdminTab =
   | 'analytics'
+  | 'quiz'
   | 'cohorts'
   | 'content'
   | 'pipeline'
+  | 'promotions'
+  | 'affiliates'
   | 'more';
 
 /* ---------- SIGN IN SCREEN ---------- */
@@ -113,13 +120,17 @@ function AnalyticsView({
   goStudents,
   goContent,
   goPipeline,
-  goMarkets
+  goMarkets,
+  goPromotions,
+  goAffiliates
 }: {
   goCohort: () => void;
   goStudents: () => void;
   goContent: () => void;
   goPipeline: () => void;
   goMarkets: () => void;
+  goPromotions: () => void;
+  goAffiliates: () => void;
 }) {
   const { leads, projects, students, activeCohort, confirmedPaidCount, session, content } = useStore();
 
@@ -386,6 +397,20 @@ function AnalyticsView({
             <span>Edit Offers CMS</span>
           </button>
           <button
+            onClick={goPromotions}
+            className="min-h-[48px] flex items-center gap-2.5 rounded-xl border border-[#f5a524]/30 bg-[#f5a524]/10 p-3 text-left text-xs font-semibold text-[#f5a524] hover:bg-[#f5a524]/20 active:scale-[0.98] transition"
+          >
+            <Tag className="h-4 w-4 shrink-0 text-[#f5a524]" />
+            <span>Promotions & 5% Off</span>
+          </button>
+          <button
+            onClick={goAffiliates}
+            className="min-h-[48px] flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs font-semibold text-white/80 hover:border-[#f5a524] hover:text-[#f5a524] active:scale-[0.98] transition"
+          >
+            <Sparkles className="h-4 w-4 shrink-0 text-[#f5a524]" />
+            <span>Affiliate Partners</span>
+          </button>
+          <button
             onClick={goMarkets}
             className="min-h-[48px] flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-xs font-semibold text-white/80 hover:border-[#f5a524] hover:text-[#f5a524] active:scale-[0.98] transition"
           >
@@ -412,7 +437,8 @@ export default function Admin() {
     confirmedPaidCount,
     students,
     leads,
-    projects
+    projects,
+    content
   } = useStore();
 
   // Primary navigation tab
@@ -532,6 +558,60 @@ export default function Admin() {
             </div>
             <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-white/60">
               {leads.length}
+            </span>
+          </button>
+
+          {/* Service Discovery Quiz & Funnel */}
+          <button
+            onClick={() => handleTabSwitch('quiz')}
+            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
+              tab === 'quiz'
+                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <Layers className="h-4 w-4 text-[#f5a524]" />
+              <span>Quiz & Funnel</span>
+            </div>
+            <span className="rounded-full bg-[#f5a524]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#f5a524]">
+              12 Qs
+            </span>
+          </button>
+
+          {/* Promotions & 5% Discount Eligibility */}
+          <button
+            onClick={() => handleTabSwitch('promotions')}
+            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
+              tab === 'promotions'
+                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <Tag className="h-4 w-4 text-[#f5a524]" />
+              <span>Promotions</span>
+            </div>
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
+              5% OFF
+            </span>
+          </button>
+
+          {/* Affiliates & 5% Promo */}
+          <button
+            onClick={() => handleTabSwitch('affiliates')}
+            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
+              tab === 'affiliates'
+                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-4 w-4 text-[#f5a524]" />
+              <span>Affiliates & Partners</span>
+            </div>
+            <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-white/60">
+              {content.affiliates?.length ?? 4}
             </span>
           </button>
 
@@ -669,6 +749,12 @@ export default function Admin() {
               goMarkets={() => {
                 setTab('more');
               }}
+              goPromotions={() => {
+                handleTabSwitch('promotions');
+              }}
+              goAffiliates={() => {
+                handleTabSwitch('affiliates');
+              }}
             />
           )}
 
@@ -785,7 +871,20 @@ export default function Admin() {
             </div>
           )}
 
-          {/* 5. MORE & SETTINGS */}
+          {/* 4.5 SERVICE DISCOVERY QUIZ, RECOMMENDATIONS & GOOGLE SHEETS HUB */}
+          {tab === 'quiz' && <QuizFunnelAdmin />}
+
+          {/* 5. PROMOTIONS & 5% DISCOUNT ELIGIBILITY */}
+          {tab === 'promotions' && (
+            <PromotionsAdmin onNavigateToAffiliates={() => handleTabSwitch('affiliates')} />
+          )}
+
+          {/* 6. AFFILIATES & PARTNERS */}
+          {tab === 'affiliates' && (
+            <AffiliatesAdmin onNavigateToPromotions={() => handleTabSwitch('promotions')} />
+          )}
+
+          {/* 6. MORE & SETTINGS */}
           {tab === 'more' && (
             <div className="space-y-6 text-left">
               <div>
@@ -958,7 +1057,40 @@ export default function Admin() {
           <span>Pipeline</span>
         </button>
 
-        {/* 5. More / Settings */}
+        {/* 4.5 Quiz & Funnel */}
+        <button
+          onClick={() => handleTabSwitch('quiz')}
+          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
+            tab === 'quiz' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          }`}
+        >
+          <Layers className="h-4 w-4" />
+          <span>Quiz</span>
+        </button>
+
+        {/* 5. Promotions */}
+        <button
+          onClick={() => handleTabSwitch('promotions')}
+          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
+            tab === 'promotions' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          }`}
+        >
+          <Tag className="h-4 w-4" />
+          <span>Promos</span>
+        </button>
+
+        {/* 6. Affiliates */}
+        <button
+          onClick={() => handleTabSwitch('affiliates')}
+          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
+            tab === 'affiliates' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          }`}
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>Affiliates</span>
+        </button>
+
+        {/* 6. More / Settings */}
         <button
           onClick={() => handleTabSwitch('more')}
           className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${

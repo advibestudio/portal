@@ -12,8 +12,8 @@ export function ChooseYourPathStrip() {
   const retainer = content.commercialOffers?.['monthly-content'] || defaultCommercialOffers['monthly-content'];
   const miniSeries = content.commercialOffers?.['promotional-mini-series'] || defaultCommercialOffers['promotional-mini-series'];
 
-  const retPriceNum = retainer.pricesByCountry?.[country.code] ?? retainer.price ?? 200000;
-  const msPriceNum = miniSeries.pricesByCountry?.[country.code] ?? miniSeries.price ?? 200000;
+  const retPriceNum = retainer.pricesByCountry?.[country.code] ?? retainer.price ?? 250000;
+  const msPriceNum = miniSeries.pricesByCountry?.[country.code] ?? miniSeries.price ?? 300000;
 
   const retPrice = fmtMoney(retPriceNum, country);
   const msPrice = fmtMoney(msPriceNum, country);

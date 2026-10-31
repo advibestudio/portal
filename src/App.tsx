@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { StoreProvider } from '@/lib/store';
+import { ReferralProvider } from '@/lib/referralStore';
 import { CountryProvider } from '@/lib/country';
 import PublicSite from '@/pages/PublicSite';
 
@@ -109,6 +110,7 @@ export default function App() {
   const isTrainingBusiness = route.startsWith('/training/business') || route.startsWith('training/business');
   const isTrainingCreators = route.startsWith('/training/creators') || route.startsWith('training/creators');
   const isTrainingThankYou = route.startsWith('/training/thank-you') || route.startsWith('training/thank-you');
+  const isBookStrategy = route.startsWith('/book-strategy-session') || route.startsWith('book-strategy-session');
   const isTrainingSelector =
     (route.startsWith('/training') || route.startsWith('training')) &&
     !isTrainingBusiness &&
@@ -118,6 +120,8 @@ export default function App() {
   useEffect(() => {
     if (isAdmin) {
       document.title = 'Admin Portal — AdVibe Studios';
+    } else if (isBookStrategy) {
+      document.title = 'Book Free Strategy Session — AdVibe Studios';
     } else if (isMonthlyContent) {
       document.title = 'Monthly AI Video Content Retainer — AdVibe Studios';
     } else if (isMiniSeries) {
@@ -135,13 +139,14 @@ export default function App() {
     } else {
       document.title = 'AdVibe Studio — AI Video Ads That Turn Attention Into Orders';
     }
-  }, [isAdmin, isCase, isMonthlyContent, isMiniSeries, isTrainingBusiness, isTrainingCreators, isTrainingSelector, isTrainingThankYou]);
+  }, [isAdmin, isBookStrategy, isCase, isMonthlyContent, isMiniSeries, isTrainingBusiness, isTrainingCreators, isTrainingSelector, isTrainingThankYou]);
 
   return (
     <StoreProvider>
-      <CountryProvider>
-        <TapRipple />
-        <ErrorBoundary>
+      <ReferralProvider>
+        <CountryProvider>
+          <TapRipple />
+          <ErrorBoundary>
           {isAdmin ? (
             <Suspense
               fallback={
@@ -209,6 +214,7 @@ export default function App() {
           )}
         </ErrorBoundary>
       </CountryProvider>
-    </StoreProvider>
+    </ReferralProvider>
+  </StoreProvider>
   );
 }

@@ -37,7 +37,11 @@ export function SoundWaveVisualizer({
               className="flex-1 rounded-full bg-gradient-to-t from-[#f5a524]/60 via-[#f5a524] to-amber-200 transition-all"
               style={{
                 height: `${Math.max(15, ((idx * 17) % 85) + 15)}%`,
-                animation: `soundwave-bounce ${animDuration}s ease-in-out infinite alternate`,
+                animationName: 'soundwave-bounce',
+                animationDuration: `${animDuration}s`,
+                animationTimingFunction: 'ease-in-out',
+                animationIterationCount: 'infinite',
+                animationDirection: 'alternate',
                 animationDelay: `${animDelay}s`,
               }}
             />

@@ -129,13 +129,28 @@ export function mergeSalesPages(saved?: Partial<SalesPages> | null): SalesPages 
     offers: defaultSalesPages.offers.map((defOffer) => {
       const found = saved.offers?.find((o) => o.id === defOffer.id || o.slug === defOffer.slug);
       if (!found) return defOffer;
+      const mergedCountryPrices = {
+        ...defOffer.countryPrices,
+        ...(found.countryPrices || {}),
+      };
+      let nextPrice = found.price ?? defOffer.price;
+      if (defOffer.id === 'monthly-content' && nextPrice === 200000) {
+        nextPrice = 250000;
+      }
+      if (defOffer.id === 'monthly-content' && mergedCountryPrices.NG === 200000) {
+        mergedCountryPrices.NG = 250000;
+      }
+      if (defOffer.id === 'promotional-mini-series' && (nextPrice === 200000 || nextPrice === 150000)) {
+        nextPrice = 300000;
+      }
+      if (defOffer.id === 'promotional-mini-series' && (mergedCountryPrices.NG === 200000 || mergedCountryPrices.NG === 150000)) {
+        mergedCountryPrices.NG = 300000;
+      }
       return {
         ...defOffer,
         ...found,
-        countryPrices: {
-          ...defOffer.countryPrices,
-          ...(found.countryPrices || {}),
-        },
+        price: nextPrice,
+        countryPrices: mergedCountryPrices,
         homeCard: {
           ...defOffer.homeCard,
           ...(found.homeCard || {}),

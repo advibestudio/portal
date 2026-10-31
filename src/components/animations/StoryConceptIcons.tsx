@@ -177,9 +177,11 @@ export function SoundWaveStoryIcon({ active = false, onClick }: { active: boolea
               className="transition-all duration-300"
               style={{
                 transformOrigin: `${x + 1.25}px 32px`,
-                animation: active
-                  ? `story-soundwave-bounce ${duration}s ease-in-out infinite alternate`
-                  : 'none',
+                animationName: active ? 'story-soundwave-bounce' : 'none',
+                animationDuration: `${duration}s`,
+                animationTimingFunction: 'ease-in-out',
+                animationIterationCount: 'infinite',
+                animationDirection: 'alternate',
                 animationDelay: `${delay}s`,
               }}
             />
@@ -634,7 +636,10 @@ export function EpisodicFilmStripStoryIcon({ active = false, onClick }: { active
           style={{
             strokeDasharray: '60',
             strokeDashoffset: active ? '0' : '60',
-            animation: active ? 'story-sine-pulse 3s ease-in-out infinite' : 'none',
+            animationName: active ? 'story-sine-pulse' : 'none',
+            animationDuration: '3s',
+            animationTimingFunction: 'ease-in-out',
+            animationIterationCount: 'infinite',
           }}
         />
 

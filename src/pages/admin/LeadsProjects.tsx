@@ -83,7 +83,20 @@ export function LeadsView() {
                 <p className="font-display text-lg uppercase text-white font-bold">{l.business} <span className="font-mono text-xs normal-case text-white/40">{l.ref}</span></p>
                 <p className="text-sm text-white/60">{l.name} · {l.whatsapp}{l.email ? ` · ${l.email}` : ''}</p>
                 <p className="mt-1 text-sm text-white/80">{l.offerName} — <span className="font-semibold text-[#f5a524]">{l.price > 0 ? money(l) : 'free session'}</span></p>
-                <p className="mt-1 text-xs text-white/40">{flagOf(l.country)} {l.country}{l.industry ? ` · ${l.industry}` : ''}{l.product ? ` · selling: ${l.product}` : ''} · event: {l.event} · {l.date}{l.utmSource ? ` · via ${l.utmSource}` : ''}{l.source === 'strategy' ? ' · strategy-session request' : l.source !== 'website' ? ` · entered manually (${l.source})` : ''}</p>
+                <p className="mt-1 text-xs text-white/40">
+                  {flagOf(l.country)} {l.country}{l.industry ? ` · ${l.industry}` : ''}{l.product ? ` · selling: ${l.product}` : ''} · event: {l.event} · {l.date}
+                  {l.utmSource ? ` · via ${l.utmSource}` : ''}
+                  {l.source === 'strategy' ? ' · strategy-session request' : l.source !== 'website' ? ` · entered manually (${l.source})` : ''}
+                  {l.howDidYouHear ? ` · heard: ${l.howDidYouHear}` : ''}
+                  {l.referralCode ? (
+                    <span className="text-[#f5a524] font-mono font-bold"> · Ref: {l.referralCode} ({l.referralSource === 'affiliate_link' ? 'Partner Link' : 'Manual Code'})</span>
+                  ) : ''}
+                  {l.discountClaimed ? (
+                    <span className="inline-block rounded bg-[#f5a524]/20 px-1.5 py-0.5 text-[10px] font-mono font-bold text-[#f5a524] ml-2">
+                      5% DISCOUNT CLAIMED
+                    </span>
+                  ) : ''}
+                </p>
                 {l.notes && <p className="mt-2 rounded-xl bg-white/5 p-3 text-xs text-white/65">“{l.notes}”</p>}
               </div>
               <div className="flex flex-col items-end gap-2">

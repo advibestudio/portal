@@ -257,6 +257,9 @@ export function Pricing({ onChoose }: { onChoose: (o: Offer) => void }) {
 
             {activeGoal?.id === 'test' && <p className="pricing-foot">One ad gives you one chance. Multiple ads give you data. {activeGoal.blurb}</p>}
             <p className="pricing-foot">Prices shown in {country.name} ({country.currency}).</p>
+            <p className="pricing-foot" style={{ marginTop: 4, color: '#9e6203' }}>
+              ✨ <strong>Partner Referral Promotion:</strong> Have an Advibe affiliate referral code? Apply it at checkout to claim <strong>5% off</strong> your first eligible project.
+            </p>
           </>
         )}
       </div>
@@ -378,7 +381,6 @@ export function Faq() {
 /* ---------- FINAL CTA ---------- */
 export function FinalCta({ onStrategy }: { onStrategy: () => void }) {
   const { content } = useStore();
-  const { country } = useCountry();
   return (
     <section className="sec" style={{ paddingTop: 0 }}>
       <div className="wrap">
@@ -389,10 +391,9 @@ export function FinalCta({ onStrategy }: { onStrategy: () => void }) {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="final-cta">
-              <button onClick={onStrategy} className="btn-studio"><span>{content.finalCta.primaryCta}</span><ArrowBtn /></button>
-              <a className="btn-ghost" href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I want a video ad for my business.`)}
-                target="_blank" rel="noreferrer" onClick={() => track('Contact')}>
-                <MessageCircle size={18} /> Just a quick question? WhatsApp us
+              <button onClick={onStrategy} className="btn-studio"><span>Book a Free Strategy Session</span><ArrowBtn /></button>
+              <a className="btn-ghost" href="#work">
+                Watch Our Work
               </a>
             </div>
           </Reveal>
@@ -422,11 +423,13 @@ export function Footer() {
           <div className="foot-col">
             <h4>Explore</h4>
             {[
-              ['Work', '#work'],
+              ['Our Work', '#work'],
+              ['Services', '#services'],
               ['Packages', '#pricing'],
-              ['How it works', '#process'],
-              ['FAQs', '#faq'],
-              ...((content.salesPages?.offers || []).filter((o) => o.active).map((o) => [o.shortLabel, `#/${o.slug}`] as [string, string])),
+              ['Monthly Retainer', '#/monthly-content'],
+              ['How It Works', '#process'],
+              ['AI Mini-Series', '#/promotional-mini-series'],
+              ['Training', '#/training'],
             ].map(([l, h]) => (
               <a key={h} href={h}>
                 {l}
@@ -447,8 +450,8 @@ export function CommercialOffersShowcase() {
   const retainer = content.commercialOffers?.['monthly-content'] || defaultCommercialOffers['monthly-content'];
   const miniSeries = content.commercialOffers?.['promotional-mini-series'] || defaultCommercialOffers['promotional-mini-series'];
 
-  const retPrice = fmtMoney(retainer.pricesByCountry?.[country.code] ?? retainer.price ?? 200000, country);
-  const msPrice = fmtMoney(miniSeries.pricesByCountry?.[country.code] ?? miniSeries.price ?? 200000, country);
+  const retPrice = fmtMoney(retainer.pricesByCountry?.[country.code] ?? retainer.price ?? 250000, country);
+  const msPrice = fmtMoney(miniSeries.pricesByCountry?.[country.code] ?? miniSeries.price ?? 300000, country);
 
   return (
     <section className="sec" style={{ paddingTop: 0 }}>
