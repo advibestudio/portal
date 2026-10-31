@@ -228,7 +228,7 @@ export default function MonthlyRetainerPage() {
                       <span className="font-mono text-sm text-white/50">/ month</span>
                     </div>
                     <p className="mt-1 font-mono text-xs text-white/50">
-                      Includes {videoQty} master direct-response videos
+                      Includes {videoQty} master direct-response videos (up to 1 min 30 secs each)
                     </p>
                   </div>
 
@@ -408,6 +408,12 @@ export default function MonthlyRetainerPage() {
               </p>
 
               <div className="pt-2 space-y-3 font-mono text-xs text-white/80">
+                <div className="flex items-start gap-3 border-l-2 border-[#f5a524] pl-3 py-1">
+                  <div>
+                    <strong className="text-white block">Up to 1 Min 30 Secs Max Duration:</strong>
+                    <span className="text-white/60">Each video can run up to 90 seconds, giving you room for both punchy hooks and deeper persuasion.</span>
+                  </div>
+                </div>
                 <div className="flex items-start gap-3 border-l-2 border-[#f5a524] pl-3 py-1">
                   <div>
                     <strong className="text-white block">3 Distinct Hook Variations:</strong>

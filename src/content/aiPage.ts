@@ -40,7 +40,7 @@ export const aiPage = {
   audiences: [
     { title: 'ONLINE SHOPS & FASHION', points: ['Product ads for new drops', 'Sales and Black Friday promos', 'Several versions to test', 'Short videos for WhatsApp Status'] },
     { title: 'RESTAURANTS & FOOD', points: ['Menu and offer promos', 'New-location announcements', 'Festive-season campaigns', 'Delivery and takeaway ads'] },
-    { title: 'SERVICE BUSINESSES', points: ['Salons, clinics, schools and studios', 'Explain what you do in 30 seconds', 'Turn viewers into enquiries', 'Simple monthly videos'] },
+    { title: 'SERVICE BUSINESSES', points: ['Salons, clinics, schools and studios', 'Explain what you do clearly (up to 2m 30s)', 'Turn viewers into enquiries', 'Simple monthly videos'] },
     { title: 'FINANCE & FINTECH', points: ['Explain a product simply', 'Campaign launches and reminders', 'Clear, trustworthy tone', 'Repeat campaigns without re-filming'] },
     { title: 'REAL ESTATE', points: ['Property and estate promos', 'Launch and open-day announcements', 'Walk-through style stories', 'Ads for several locations'] },
     { title: 'EVENTS & CAMPAIGNS', points: ['Concerts, launches and sales seasons', 'Countdown and reminder videos', 'Quick turnaround before the date', 'Versions for different countries'] },

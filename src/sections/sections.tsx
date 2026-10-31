@@ -9,6 +9,7 @@ import { track } from '@/lib/tracking';
 import type { Offer, PortfolioItem } from '@/content/types';
 import { defaultCommercialOffers } from '@/content/commercialOffers';
 import { Reveal, SecHead, EmLast, Collapse, VideoCard } from '@/components/shared';
+import { TestimonialCarousel } from '@/components/TestimonialCarousel';
 
 const ArrowBtn = () => <span className="btn-arrow" aria-hidden="true"><ArrowRight size={18} strokeWidth={2.4} /></span>;
 const TONES = ['peach', 'mint', 'butter', 'sky', 'lilac'];
@@ -316,35 +317,9 @@ export function Process() {
   );
 }
 
-/* ---------- TESTIMONIALS ---------- */
-const initials = (n: string) => n.split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-export function Testimonials() {
-  const { content } = useStore();
-  const items = content.testimonials.filter((t) => t.visible);
-  if (!items.length) return null;
-  return (
-    <section className="sec" style={{ paddingTop: 0 }}>
-      <div className="wrap">
-        <SecHead label="Word on the street">Businesses that stopped scrolling past <em>themselves.</em></SecHead>
-        <ul className="quotes">
-          {items.map((t, i) => (
-            <li key={t.id}>
-              <Reveal delay={i * 0.07} className="quote-wrap">
-                <figure className={`quote ${i === 0 ? 'is-lead' : ''}`}>
-                  <span className="quote-mark" aria-hidden="true">“</span>
-                  <blockquote>{t.quote}</blockquote>
-                  <figcaption>
-                    <span className="quote-avatar">{initials(t.name)}</span>
-                    <span><span className="quote-name">{t.name}</span><span className="quote-role">{t.business} · {t.industry}</span></span>
-                  </figcaption>
-                </figure>
-              </Reveal>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
+/* ---------- TESTIMONIALS (BEFORE & AFTER ROI CAROUSEL) ---------- */
+export function Testimonials({ onStrategy }: { onStrategy?: () => void }) {
+  return <TestimonialCarousel onStrategy={onStrategy} />;
 }
 
 /* ---------- FAQ + AI NOTE ---------- */

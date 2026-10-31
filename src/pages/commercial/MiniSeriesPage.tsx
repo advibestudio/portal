@@ -297,7 +297,7 @@ export default function MiniSeriesPage() {
               <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-mono text-white/50 pt-2">
                 <span>{formattedPrice} / month</span>
                 <span>·</span>
-                <span>15 Custom AI Videos</span>
+                <span>15 Custom AI Videos (Up to 2 Mins Each)</span>
                 <span>·</span>
                 <span>Full Asset Ownership</span>
               </div>
@@ -748,7 +748,7 @@ export default function MiniSeriesPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
                   <div className="rounded-2xl border border-[#111412]/10 bg-[#fafaf6] p-4 space-y-1">
-                    <span className="font-bold text-[#111412] block">15 Master Videos</span>
+                    <span className="font-bold text-[#111412] block">15 Master Videos (Up to 2m Each)</span>
                     <span className="text-[#586159]">Rendered in native 4K UHD with clean audio stems</span>
                   </div>
                   <div className="rounded-2xl border border-[#111412]/10 bg-[#fafaf6] p-4 space-y-1">
@@ -820,7 +820,7 @@ export default function MiniSeriesPage() {
                   <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#f5a524] text-black mt-0.5">
                     <Check className="h-3.5 w-3.5 stroke-[3]" />
                   </span>
-                  <span>15 AI-powered videos per month.</span>
+                  <span>15 AI-powered videos per month (up to 2 minutes maximum duration per episode).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#f5a524] text-black mt-0.5">

@@ -93,14 +93,30 @@ export interface FeaturedClient {
   clientApprovedPublic?: boolean; // Gate for public mention of metrics/screenshots until confirmed
 }
 
+export interface TestimonialMetricPair {
+  label: string;
+  before: string;
+  after: string;
+  improvement?: string;
+}
+
 export interface Testimonial {
   id: string;
   name: string;
+  role?: string;
   business: string;
   industry: string;
   quote: string;
   featured: boolean;
   visible: boolean;
+  packageUsed?: string;
+  roiHeadline?: string;
+  roiMultiplier?: string;
+  timeframe?: string;
+  beforeSummary?: string;
+  afterSummary?: string;
+  metricComparisons?: TestimonialMetricPair[];
+  highlightStats?: { value: string; label: string }[];
 }
 
 export interface Faq { id: string; q: string; a: string; visible: boolean; }

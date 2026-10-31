@@ -177,7 +177,7 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       heading: 'Give Your Brand the Creative Support It Deserves.',
       packageTitle: 'ADVIBE MONTHLY VIDEO CONTENT RETAINER',
       inclusions: [
-        '15 videos every month.',
+        '15 videos every month (up to 1 minute 30 seconds max duration per video).',
         'Creative ideation and agreed content planning.',
         'Scriptwriting and creative development.',
         'A script and one-page creative brief for review before production.',
@@ -205,8 +205,8 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       },
       {
         id: 'r-f3',
-        q: 'How many videos do I receive?',
-        a: 'Your package includes 15 videos per month. The formats and durations are agreed according to your needs and the package scope.',
+        q: 'How many videos do I receive, and what is the maximum duration?',
+        a: 'Your package includes 15 videos per month, with each video up to a maximum duration of 1 minute 30 seconds. The exact formats and pacing are tailored to your campaign needs and package scope.',
         visible: true,
       },
       {
@@ -355,8 +355,8 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
           desc: 'We turn approved concepts and scripts into finished video content using the agreed visual and production approach.',
         },
         {
-          title: '15 videos every month',
-          desc: 'Your monthly output is planned around the agreed mini-series concept and episode structure. Fifteen videos do not automatically mean fifteen long-form episodes; the exact structure, durations, and supporting content are agreed based on the concept and production scope.',
+          title: '15 videos every month (up to 2 minutes each)',
+          desc: 'Your monthly output is planned around the agreed mini-series concept and episode structure, with a maximum time duration of 2 minutes per episode/video.',
         },
         {
           title: 'Editing and delivery',
@@ -439,7 +439,7 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       heading: 'Give People More Reasons to Remember Your Brand.',
       packageTitle: 'ADVIBE AI PROMOTIONAL MINI SERIES',
       inclusions: [
-        '15 videos per month.',
+        '15 videos per month (up to 2 minutes max duration per episode/video).',
         'Original story and creative concept development.',
         'Scriptwriting and episode planning.',
         'Character and continuity planning.',
@@ -467,8 +467,8 @@ export const defaultCommercialOffers: Record<'monthly-content' | 'promotional-mi
       },
       {
         id: 'ms-f3',
-        q: 'Do I get 15 episodes every month?',
-        a: 'Your package includes 15 videos per month. Whether those videos form 15 short episodes, fewer longer episodes plus supporting content, or another agreed structure depends on the creative concept and production scope.',
+        q: 'Do I get 15 episodes every month, and what is the maximum duration?',
+        a: 'Your package includes 15 videos per month, with a maximum time duration of 2 minutes per video/episode. Whether those videos form 15 episodic installments or a mix of longer episodes and supporting story cuts depends on the creative concept and production scope.',
         visible: true,
       },
       {

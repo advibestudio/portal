@@ -156,7 +156,7 @@ export function CountriesTab({ draft, set }: { draft: SiteContent; set: SetFn })
             </div>
             <p className="mt-2 text-xs text-white/40">Used by the cost-comparison card and the “AI video ads” page. <strong className="text-amber-300/90">The starter numbers are rough estimates I filled in — replace them with figures you can stand behind.</strong> Leave 0 to hide the comparison in this country.</p>
           </div>
-          <p className="text-xs text-white/40">Preview: Single 30s Video would show as <strong className="text-white/70">{c.prices['single-30'] ? fmtMoney(c.prices['single-30'], c) : 'hidden'}</strong></p>
+          <p className="text-xs text-white/40">Preview: Single Video Ad would show as <strong className="text-white/70">{c.prices['single-video'] ? fmtMoney(c.prices['single-video'], c) : 'hidden'}</strong></p>
         </div>
       ))}
 

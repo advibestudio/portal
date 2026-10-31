@@ -702,11 +702,11 @@ export function resolveCataloguePackages(content: SiteContent, country: Country)
       price: rPrice,
       formattedPrice: `${fmtMoney(rPrice, country)}/month`,
       quantity: retainer.monthlyVideoQuantity || 15,
-      durationOrPeriod: `${retainer.monthlyVideoQuantity || 15} videos every month`,
+      durationOrPeriod: `${retainer.monthlyVideoQuantity || 15} videos every month (up to 1m 30s each)`,
       description: retainer.tagline,
       whoFor: 'Growing businesses that want a dedicated creative studio producing consistent videos every month.',
       features: retainer.offerSummary?.inclusions?.slice(0, 6) || [
-        `${retainer.monthlyVideoQuantity || 15} strategic videos every month`,
+        `${retainer.monthlyVideoQuantity || 15} strategic videos every month (up to 1m 30s each)`,
         'Creative ideation, scripting & one-page creative briefs',
         'AI-assisted video production, voiceover & editing',
         '1 consolidated revision round per video',
@@ -727,11 +727,11 @@ export function resolveCataloguePackages(content: SiteContent, country: Country)
       price: mPrice,
       formattedPrice: `${fmtMoney(mPrice, country)}/month`,
       quantity: miniSeries.monthlyVideoQuantity || 15,
-      durationOrPeriod: `${miniSeries.monthlyVideoQuantity || 15} episodic / story videos monthly`,
+      durationOrPeriod: `${miniSeries.monthlyVideoQuantity || 15} episodic / story videos monthly (up to 2 mins each)`,
       description: miniSeries.tagline,
       whoFor: 'Brands ready to stand out with original characters, relatable drama, comedy, or connected episodic stories.',
       features: miniSeries.offerSummary?.inclusions?.slice(0, 6) || [
-        `${miniSeries.monthlyVideoQuantity || 15} story-driven / episodic videos monthly`,
+        `${miniSeries.monthlyVideoQuantity || 15} story-driven / episodic videos monthly (up to 2 mins each)`,
         'Character bible, world-building & episode scripts',
         '1-page creative brief before each production sprint',
         'Cinema-grade AI visuals, sound design & voice acting',
@@ -748,9 +748,9 @@ export function resolveCataloguePackages(content: SiteContent, country: Country)
     let cat: ServiceCategoryKey = 'regular-ads';
     let catLabel = 'Direct-Response Video Advertisements';
 
-    if (offer.id === 'single-60') {
+    if (offer.id === 'single-video' || offer.id === 'single-60') {
       cat = 'explainer-educational';
-      catLabel = 'Explainer & Educational Videos';
+      catLabel = 'Single Video Ad & Explainer Production';
     } else if (offer.id === 'bundle-10') {
       cat = 'brand-storytelling';
       catLabel = 'Brand Storytelling & Multi-Angle Campaigns';
@@ -872,8 +872,9 @@ export function calculateRecommendations(opts: {
     scores['monthly-retainer'] += 22;
   } else if (entryOfferId === 'promotional-mini-series') {
     scores['ai-mini-series'] += 22;
-  } else if (entryOfferId === 'single-60') {
+  } else if (entryOfferId === 'single-video' || entryOfferId === 'single-60') {
     scores['explainer-educational'] += 18;
+    scores['regular-ads'] += 18;
   } else if (entryOfferId === 'bundle-5' || entryOfferId === 'bundle-10' || entryOfferId === 'single-30') {
     scores['regular-ads'] += 18;
   }
@@ -915,15 +916,15 @@ export function calculateRecommendations(opts: {
     }
     if (cat === 'explainer-educational') {
       if (isHighBudget) {
-        return catalogue.find((p) => p.id === 'bundle-5') || catalogue.find((p) => p.id === 'single-60') || catalogue[0];
+        return catalogue.find((p) => p.id === 'bundle-5') || catalogue.find((p) => p.id === 'single-video') || catalogue[0];
       }
-      return catalogue.find((p) => p.id === 'single-60') || catalogue[0];
+      return catalogue.find((p) => p.id === 'single-video') || catalogue[0];
     }
     if (cat === 'brand-storytelling') {
       if (['cnt_300k_500k', 'cnt_above_500k', 'ad_500k_1m', 'ad_above_1m'].includes(answers.q9) || ['cnt_300k_500k', 'cnt_above_500k'].includes(answers.q10)) {
         return catalogue.find((p) => p.id === 'bundle-10') || catalogue.find((p) => p.id === 'bundle-5') || catalogue[0];
       }
-      return catalogue.find((p) => p.id === 'bundle-5') || catalogue.find((p) => p.id === 'single-60') || catalogue[0];
+      return catalogue.find((p) => p.id === 'bundle-5') || catalogue.find((p) => p.id === 'single-video') || catalogue[0];
     }
     // 'regular-ads'
     if (['ad_500k_1m', 'ad_above_1m'].includes(answers.q9) || ['cnt_300k_500k', 'cnt_above_500k'].includes(answers.q10)) {
@@ -932,7 +933,7 @@ export function calculateRecommendations(opts: {
     if (['ad_50k_150k', 'ad_150k_500k'].includes(answers.q9) || ['cnt_50k_150k', 'cnt_150k_300k', 'cnt_flexible'].includes(answers.q10) || answers.q5.includes('chal_ad_fatigue') || answers.q11 === 'goal_test_angles') {
       return catalogue.find((p) => p.id === 'bundle-5') || catalogue[0];
     }
-    return catalogue.find((p) => p.id === 'single-30') || catalogue[0];
+    return catalogue.find((p) => p.id === 'single-video') || catalogue[0];
   };
 
   const primaryPackage = pickPackageForCategory(primaryCategory);

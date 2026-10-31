@@ -85,16 +85,26 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
       {tab === 'Portfolio' && <PortfolioEditor draft={draft} set={set} />}
       {tab === 'Pricing & Offers' && <OffersEditor draft={draft} set={set} />}
       {tab === 'Testimonials' && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {draft.testimonials.map((t, i) => (
             <div key={t.id} className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-5">
-              <div className="grid gap-3 sm:grid-cols-3">
-                <Field label="Name"><input className={inputCls} value={t.name} onChange={(e) => set((d) => { d.testimonials[i].name = e.target.value; })} /></Field>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <Field label="Client Name"><input className={inputCls} value={t.name} onChange={(e) => set((d) => { d.testimonials[i].name = e.target.value; })} /></Field>
+                <Field label="Role / Title"><input className={inputCls} placeholder="e.g. Founder & CEO" value={t.role ?? ''} onChange={(e) => set((d) => { d.testimonials[i].role = e.target.value; })} /></Field>
                 <Field label="Business"><input className={inputCls} value={t.business} onChange={(e) => set((d) => { d.testimonials[i].business = e.target.value; })} /></Field>
                 <Field label="Industry"><input className={inputCls} value={t.industry} onChange={(e) => set((d) => { d.testimonials[i].industry = e.target.value; })} /></Field>
               </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <Field label="ROI Headline"><input className={inputCls} placeholder="e.g. 4.6x Return on Ad Spend in 72 Hours" value={t.roiHeadline ?? ''} onChange={(e) => set((d) => { d.testimonials[i].roiHeadline = e.target.value; })} /></Field>
+                <Field label="ROI Multiplier"><input className={inputCls} placeholder="e.g. 4.6x ROAS" value={t.roiMultiplier ?? ''} onChange={(e) => set((d) => { d.testimonials[i].roiMultiplier = e.target.value; })} /></Field>
+                <Field label="Package Used"><input className={inputCls} placeholder="e.g. 5 Creative Test Pack" value={t.packageUsed ?? ''} onChange={(e) => set((d) => { d.testimonials[i].packageUsed = e.target.value; })} /></Field>
+              </div>
               <Field label="Quote"><textarea className={`${inputCls} min-h-[70px] resize-none`} value={t.quote} onChange={(e) => set((d) => { d.testimonials[i].quote = e.target.value; })} /></Field>
-              <div className="flex items-center justify-between">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <Field label="Before AdVibe (Baseline Challenge)"><textarea className={`${inputCls} min-h-[65px] resize-none`} value={t.beforeSummary ?? ''} onChange={(e) => set((d) => { d.testimonials[i].beforeSummary = e.target.value; })} /></Field>
+                <Field label="After AdVibe (Verified Outcome)"><textarea className={`${inputCls} min-h-[65px] resize-none`} value={t.afterSummary ?? ''} onChange={(e) => set((d) => { d.testimonials[i].afterSummary = e.target.value; })} /></Field>
+              </div>
+              <div className="flex items-center justify-between pt-1">
                 <button onClick={() => set((d) => { d.testimonials[i].visible = !d.testimonials[i].visible; })} className="flex min-h-[40px] items-center gap-2 rounded-lg border border-white/15 px-3 text-xs font-semibold text-white/70">
                   {t.visible ? <Eye className="h-3.5 w-3.5 text-[#f5a524]" /> : <EyeOff className="h-3.5 w-3.5" />} {t.visible ? 'Visible' : 'Hidden'}
                 </button>
@@ -102,7 +112,7 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
               </div>
             </div>
           ))}
-          <AddButton label="Add testimonial" onClick={() => set((d) => { d.testimonials.push({ id: crypto.randomUUID(), name: '', business: '', industry: '', quote: '', featured: false, visible: true }); })} />
+          <AddButton label="Add ROI testimonial" onClick={() => set((d) => { d.testimonials.push({ id: crypto.randomUUID(), name: '', role: '', business: '', industry: '', packageUsed: '', roiHeadline: '', roiMultiplier: '', beforeSummary: '', afterSummary: '', quote: '', featured: false, visible: true }); })} />
         </div>
       )}
 

@@ -124,8 +124,36 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...defaultContent.campaigns.filter((x) => !have.has(x.id)),
     ];
   }
-  // Remove legacy "Monthly Studio" offer & goal from cached localStorage state
-  merged.offers = (merged.offers || []).filter((o) => o.id !== 'monthly-studio' && o.goal !== 'monthly');
+  // Remove legacy "Monthly Studio", "single-30", and "single-60" offers from cached localStorage state
+  // and ensure the unified "single-video" (₦35,000, up to 2 mins 30 secs) and updated 1m 30s durations for bundles are applied.
+  const defOfferMap = new Map(defaultContent.offers.map((o) => [o.id, o]));
+  const filteredOffers = (merged.offers || [])
+    .filter((o) => o.id !== 'monthly-studio' && o.goal !== 'monthly' && o.id !== 'single-30' && o.id !== 'single-60')
+    .map((o) => {
+      const def = defOfferMap.get(o.id);
+      if (!def) return o;
+      // Migrate legacy 30-second durations on 5 & 10 creative packs to 1 minute 30 seconds
+      if ((o.id === 'bundle-5' || o.id === 'bundle-10') && (o.duration === '30 seconds' || o.description?.includes('30-second'))) {
+        return {
+          ...o,
+          duration: def.duration,
+          unitNote: def.unitNote,
+          description: def.description,
+          features: def.features,
+          included: def.included,
+        };
+      }
+      return o;
+    });
+
+  if (!filteredOffers.some((o) => o.id === 'single-video')) {
+    const singleDef = defOfferMap.get('single-video');
+    if (singleDef) {
+      filteredOffers.unshift({ ...singleDef });
+    }
+  }
+  merged.offers = filteredOffers.map((o, idx) => ({ ...o, order: idx + 1 }));
+
   if (merged.pricing?.goals) {
     merged.pricing = {
       ...merged.pricing,
@@ -133,28 +161,42 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
     };
   }
   if (merged.referralSettings?.eligibleServices) {
+    const nextEligible = merged.referralSettings.eligibleServices.filter(
+      (id) => id !== 'monthly-studio' && id !== 'single-30' && id !== 'single-60'
+    );
+    if (!nextEligible.includes('single-video')) {
+      nextEligible.push('single-video');
+    }
     merged.referralSettings = {
       ...merged.referralSettings,
-      eligibleServices: merged.referralSettings.eligibleServices.filter((id) => id !== 'monthly-studio'),
+      eligibleServices: nextEligible,
     };
   }
 
-  // Migrate cached commercialOffers prices: Monthly Retainer -> ₦250,000, AI Mini-Series -> ₦300,000
+  // Migrate cached commercialOffers prices & max durations:
+  // Monthly Retainer -> ₦250,000 (up to 1 min 30 secs), AI Mini-Series -> ₦300,000 (up to 2 mins)
   if (merged.commercialOffers?.['monthly-content']) {
     const mc = merged.commercialOffers['monthly-content'];
+    const defMc = defaultContent.commercialOffers?.['monthly-content'];
     const ngPrice = mc.pricesByCountry?.NG === 200000 ? 250000 : (mc.pricesByCountry?.NG ?? 250000);
     merged.commercialOffers['monthly-content'] = {
       ...mc,
       price: mc.price === 200000 ? 250000 : mc.price,
       pricesByCountry: {
-        ...(defaultContent.commercialOffers?.['monthly-content']?.pricesByCountry || {}),
+        ...(defMc?.pricesByCountry || {}),
         ...(mc.pricesByCountry || {}),
         NG: ngPrice,
       },
+      offerSummary: defMc?.offerSummary ? {
+        ...mc.offerSummary,
+        inclusions: defMc.offerSummary.inclusions,
+      } : mc.offerSummary,
+      faqs: defMc?.faqs || mc.faqs,
     };
   }
   if (merged.commercialOffers?.['promotional-mini-series']) {
     const ms = merged.commercialOffers['promotional-mini-series'];
+    const defMs = defaultContent.commercialOffers?.['promotional-mini-series'];
     const ngPrice = (ms.pricesByCountry?.NG === 200000 || ms.pricesByCountry?.NG === 150000)
       ? 300000
       : (ms.pricesByCountry?.NG ?? 300000);
@@ -162,18 +204,40 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...ms,
       price: (ms.price === 200000 || ms.price === 150000) ? 300000 : ms.price,
       pricesByCountry: {
-        ...(defaultContent.commercialOffers?.['promotional-mini-series']?.pricesByCountry || {}),
+        ...(defMs?.pricesByCountry || {}),
         ...(ms.pricesByCountry || {}),
         NG: ngPrice,
       },
+      whatWeCreate: defMs?.whatWeCreate ? {
+        ...ms.whatWeCreate,
+        categories: defMs.whatWeCreate.categories,
+      } : ms.whatWeCreate,
+      offerSummary: defMs?.offerSummary ? {
+        ...ms.offerSummary,
+        inclusions: defMs.offerSummary.inclusions,
+      } : ms.offerSummary,
+      faqs: defMs?.faqs || ms.faqs,
     };
   }
 
   // countries saved before the cost card existed get the starter "typical cost" estimates
+  // and migrate legacy single-30 / single-60 price keys to single-video (₦35,000 in NG)
   merged.countries = merged.countries.map((k) => {
     const def = defaultCountries.find((x) => x.code === k.code);
     const cleanedPrices = { ...k.prices };
     delete cleanedPrices['monthly-studio'];
+    const fallbackSinglePrice =
+      def?.prices['single-video'] ??
+      cleanedPrices['single-60'] ??
+      (k.code === 'NG' ? 35000 : undefined);
+    if (!cleanedPrices['single-video'] && fallbackSinglePrice) {
+      cleanedPrices['single-video'] = fallbackSinglePrice;
+    }
+    if (k.code === 'NG' && cleanedPrices['single-video'] === 25000) {
+      cleanedPrices['single-video'] = 35000;
+    }
+    delete cleanedPrices['single-30'];
+    delete cleanedPrices['single-60'];
     return {
       ...k,
       prices: cleanedPrices,
@@ -181,6 +245,51 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       tradHigh: typeof k.tradHigh === 'number' ? k.tradHigh : def?.tradHigh ?? 0,
     };
   });
+
+  // Enrich cached testimonials with Grade 6 Before/After & plain-English fields from defaultContent
+  if (Array.isArray(merged.testimonials) && merged.testimonials.length > 0) {
+    const defMap = new Map(defaultContent.testimonials.map((t) => [t.id, t]));
+    const existingIds = new Set(merged.testimonials.map((t) => t.id));
+    merged.testimonials = [
+      ...merged.testimonials.map((t) => {
+        const def = defMap.get(t.id);
+        if (!def) return t;
+        const isLegacyShortName = t.name === 'Chiamaka E.' || t.name === 'Ibrahim M.' || t.name === 'Funke A.';
+        const isLegacyShortQuote = t.quote && t.quote.length < 110;
+        const isLegacy60sLabel = t.packageUsed === 'Single 60s Explainer Video';
+        const isLegacyJargon =
+          Boolean(t.roiMultiplier && (t.roiMultiplier.includes('ROAS') || t.roiMultiplier.includes('ROI'))) ||
+          Boolean(t.roiHeadline && (t.roiHeadline.includes('ROAS') || t.roiHeadline.includes('Messaging Conversations') || t.roiHeadline.includes('Order Volume') || t.roiHeadline.includes('Closed Bookings'))) ||
+          Boolean(t.beforeSummary && (t.beforeSummary.includes('ROAS') || t.beforeSummary.includes('walkthroughs') || t.beforeSummary.includes('drop-off') || t.beforeSummary.includes('script discipline')));
+
+        if (isLegacyJargon || isLegacyShortName || isLegacyShortQuote || isLegacy60sLabel) {
+          return {
+            ...def,
+            visible: typeof t.visible === 'boolean' ? t.visible : def.visible,
+            featured: typeof t.featured === 'boolean' ? t.featured : def.featured,
+          };
+        }
+
+        return {
+          ...def,
+          ...t,
+          role: t.role || def.role,
+          packageUsed: t.packageUsed || def.packageUsed,
+          roiHeadline: t.roiHeadline || def.roiHeadline,
+          roiMultiplier: t.roiMultiplier || def.roiMultiplier,
+          timeframe: t.timeframe || def.timeframe,
+          beforeSummary: t.beforeSummary || def.beforeSummary,
+          afterSummary: t.afterSummary || def.afterSummary,
+          metricComparisons: t.metricComparisons?.length ? t.metricComparisons : def.metricComparisons,
+          highlightStats: t.highlightStats?.length ? t.highlightStats : def.highlightStats,
+        };
+      }),
+      ...defaultContent.testimonials.filter((t) => !existingIds.has(t.id)),
+    ];
+  } else {
+    merged.testimonials = defaultContent.testimonials;
+  }
+
   merged.defaultCountry = c.defaultCountry || 'NG';
   return merged;
 }

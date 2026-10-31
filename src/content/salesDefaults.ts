@@ -120,7 +120,7 @@ export const defaultSalesPages: SalesPages = {
         paragraphs: ['Compare the true operational cost of maintaining a traditional in-house team vs. AdVibe.'],
         listIntro: 'What is included in every monthly cycle:',
         bullets: [
-          '15 custom-scripted and produced videos',
+          '15 custom-scripted and produced videos (up to 1 min 30 secs each)',
           'Vertical 9:16 optimized for Reels, TikTok, and Status',
           'Commercial audio, sound design, and custom voiceovers',
           'Consolidated monthly creative planning sessions',
@@ -180,7 +180,7 @@ export const defaultSalesPages: SalesPages = {
       offer: {
         heading: 'Monthly Content Retainer Package',
         included: [
-          '15 High-definition video ads per month',
+          '15 High-definition video ads per month (up to 1 min 30 secs each)',
           'Full concept development & persuasive copy scripts',
           'AI-generated cinematic visuals & photo enhancement',
           'Human-directed editing, kinetic captions, & sound design',
@@ -285,7 +285,7 @@ export const defaultSalesPages: SalesPages = {
         paragraphs: ['A traditional live-action 15-episode mini-series requires location permits, actors, camera crews, and months of shooting.'],
         listIntro: 'What your mini-series package delivers:',
         bullets: [
-          '15 full episodic videos (30–60s each) with complete soundscapes',
+          '15 full episodic videos (up to 2 minutes each) with complete soundscapes',
           'Consistent character models and bespoke visual worlds',
           'Episodic hooks, titles, and cinematic end-cards',
           'Full commercial rights and owned story assets',
@@ -345,7 +345,7 @@ export const defaultSalesPages: SalesPages = {
       offer: {
         heading: 'Complete 15-Episode Mini Series Package',
         included: [
-          '15 Custom cinematic AI episodes (30–60s each)',
+          '15 Custom cinematic AI episodes (up to 2 minutes each)',
           'Complete story bible, character design, & scriptwriting',
           'Cinema-grade lighting, camera motion, & visual effects',
           'Character voices, original sound design, & background score',

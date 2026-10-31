@@ -109,7 +109,7 @@ function Page() {
         {sec.aiCompare && <CostCompare />}
         {sec.whyUs && <WhyUs />}
         {sec.process && <Process />}
-        {sec.testimonials && <Testimonials />}
+        {sec.testimonials && <Testimonials onStrategy={() => openStrategy()} />}
         {sec.faq && <Faq />}
         {sec.finalCta && <FinalCta onStrategy={() => openStrategy()} />}
       </main>
