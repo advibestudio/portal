@@ -339,6 +339,59 @@
         }
       },
       "required": ["id", "at", "user", "action"]
+    },
+    "CustomerAccount": {
+      "title": "CustomerAccount",
+      "description": "Customer account provisioned upon booking or registration for the Client Portal WebApp.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "phone": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 200 },
+        "business": { "type": "string", "maxLength": 200 },
+        "passwordSet": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name", "createdAt"]
+    },
+    "CustomerProject": {
+      "title": "CustomerProject",
+      "description": "Client project with tiered payment percentage, script approval items, and Google Drive video deliverables.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "ref": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerEmail": { "type": "string", "maxLength": 256 },
+        "customerPhone": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 200 },
+        "packageType": { "type": "string", "enum": ["single", "pack_5", "pack_10", "retainer_15"] },
+        "packageName": { "type": "string", "maxLength": 256 },
+        "totalVideos": { "type": "number" },
+        "totalPrice": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 16 },
+        "paidPercent": { "type": "number" },
+        "status": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "ref", "customerId", "customerName", "packageType", "packageName", "totalVideos", "paidPercent", "status", "createdAt"]
+    },
+    "SectionHeatmapDoc": {
+      "title": "SectionHeatmapDoc",
+      "description": "Aggregated page view and section dwell-time heatmap metrics.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "page": { "type": "string", "maxLength": 128 },
+        "sectionId": { "type": "string", "maxLength": 128 },
+        "label": { "type": "string", "maxLength": 200 },
+        "views": { "type": "number" },
+        "totalDwellSeconds": { "type": "number" },
+        "clicks": { "type": "number" },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "page", "sectionId", "label", "views", "totalDwellSeconds"]
     }
   },
   "firestore": {
@@ -373,6 +426,18 @@
     "/audit_log/{entryId}": {
       "schema": { "$ref": "#/entities/AuditEntry" },
       "description": "Audit log of admin actions."
+    },
+    "/customer_accounts/{customerId}": {
+      "schema": { "$ref": "#/entities/CustomerAccount" },
+      "description": "Customer portal accounts provisioned on booking or sign-up."
+    },
+    "/customer_projects/{projectId}": {
+      "schema": { "$ref": "#/entities/CustomerProject" },
+      "description": "Customer projects with tiered payment gating, scripts, client asset links, and Google Drive video deliverables."
+    },
+    "/section_heatmap/{sectionId}": {
+      "schema": { "$ref": "#/entities/SectionHeatmapDoc" },
+      "description": "Section dwell-time and page view heatmap telemetry."
     }
   }
 }

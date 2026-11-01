@@ -97,7 +97,8 @@ export function Wall({ items, onPlay }: { items: PortfolioItem[]; onPlay: (i: Po
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - prev) / 1000);
       prev = now;
-      if (visible) {
+      const modalOpen = document.body.classList.contains('is-modal-open');
+      if (visible && !modalOpen) {
         if (!dragging) {
           if (target !== null) {
             const d = target - rot;

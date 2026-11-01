@@ -38,6 +38,7 @@ import { useStore, waLink } from '@/lib/store';
 import { fmtMoney } from '@/lib/money';
 import { loadAssessments, saveAssessments } from '@/lib/googleSheetsSync';
 import type { BusinessAssessment, Lead, TrainingStudent } from '@/content/types';
+import { triggerAdminBrowserNotification } from '@/lib/pwa';
 
 interface Props {
   onNavigatePipeline: () => void;
@@ -74,6 +75,9 @@ export function RealtimeFirestoreSummaryWidget({
     let unsubLeads: (() => void) | undefined;
     let unsubAssessments: (() => void) | undefined;
     let unsubStudents: (() => void) | undefined;
+    let initialLeadsLoaded = false;
+    let initialAssessmentsLoaded = false;
+    let initialStudentsLoaded = false;
 
     try {
       const leadsQuery = query(collection(db, 'leads'), limit(250));
@@ -81,6 +85,18 @@ export function RealtimeFirestoreSummaryWidget({
         leadsQuery,
         (snapshot) => {
           trackFirestoreRead(Math.max(1, snapshot.docChanges().length));
+          if (initialLeadsLoaded) {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                const newLead = change.doc.data() as Lead;
+                triggerAdminBrowserNotification(
+                  `New Order / Lead: ${newLead.name || 'Client'}`,
+                  `${newLead.offerName || 'Package'} · Ref ${newLead.ref || newLead.id}`
+                );
+              }
+            });
+          }
+          initialLeadsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as Lead);
           if (docs.length > 0) {
             setLiveLeads(
@@ -106,6 +122,18 @@ export function RealtimeFirestoreSummaryWidget({
         assessmentsQuery,
         (snapshot) => {
           trackFirestoreRead(Math.max(1, snapshot.docChanges().length));
+          if (initialAssessmentsLoaded) {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                const newAss = change.doc.data() as BusinessAssessment;
+                triggerAdminBrowserNotification(
+                  `New Strategy Assessment: ${newAss.businessName || newAss.fullName}`,
+                  `Recommended: ${newAss.primaryRecommendedPackageName || 'Strategy Call'}`
+                );
+              }
+            });
+          }
+          initialAssessmentsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as BusinessAssessment);
           if (docs.length > 0) {
             const sorted = docs.sort((a, b) =>
@@ -131,6 +159,18 @@ export function RealtimeFirestoreSummaryWidget({
         studentsQuery,
         (snapshot) => {
           trackFirestoreRead(Math.max(1, snapshot.docChanges().length));
+          if (initialStudentsLoaded) {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                const newStudent = change.doc.data() as TrainingStudent;
+                triggerAdminBrowserNotification(
+                  `New Cohort Student: ${newStudent.fullName}`,
+                  `Track: ${newStudent.track} · Status: ${newStudent.status}`
+                );
+              }
+            });
+          }
+          initialStudentsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as TrainingStudent);
           if (docs.length > 0) {
             setLiveStudents(docs);

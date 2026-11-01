@@ -93,12 +93,15 @@ export function ClientSpotlight({ onPlay }: { onPlay: (i: PortfolioItem) => void
             )}
           </Reveal>
           {vids.length > 0 && (
-            <div className="spot-videos">
-              {vids.map((v) => (
-                <div key={v.id} style={{ width: v.orientation === 'vertical' ? 'min(200px, 44vw)' : 'min(340px, 80vw)' }}>
-                  <VideoCard item={v} onPlay={onPlay} />
-                </div>
-              ))}
+            <div className="spot-videos-wrap" style={{ gridColumn: '1 / -1', width: '100%' }}>
+              <div className="spot-videos" role="region" aria-label={`${k.name} campaign reels`}>
+                {vids.map((v) => (
+                  <div key={v.id} className="spot-video-item">
+                    <VideoCard item={v} onPlay={onPlay} />
+                  </div>
+                ))}
+              </div>
+              <p className="spot-swipe-hint">Swipe sideways to explore all {vids.length} {k.name} reels →</p>
             </div>
           )}
         </div>
@@ -238,10 +241,10 @@ export function Pricing({ onChoose }: { onChoose: (o: Offer) => void }) {
             </div>
 
             {/* Dedicated Monthly Retainer Bridge Callout */}
-            <div style={{ marginTop: 24, padding: '18px 22px', borderRadius: 20, background: 'linear-gradient(135deg, rgba(245,165,36,0.08), rgba(17,20,18,0.03))', border: '1px solid rgba(245,165,36,0.3)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 20 }}>⚡</span>
-                <div>
+            <div className="retainer-callout">
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, minWidth: 0 }}>
+                <span style={{ fontSize: 20, flexShrink: 0, lineHeight: 1.2 }}>⚡</span>
+                <div style={{ minWidth: 0 }}>
                   <p style={{ margin: 0, fontSize: 14.5, color: 'rgb(var(--ink))', fontWeight: 700 }}>
                     Need consistent high-volume video production every month?
                   </p>

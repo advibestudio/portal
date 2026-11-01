@@ -246,5 +246,76 @@ service cloud.firestore {
       allow create: if isValidId(entryId) && isAdmin() && isValidAuditEntry(incoming());
       allow update, delete: if isValidId(entryId) && isSuperAdmin();
     }
+
+    // ---------------------------------------------------------
+    // 9. Customer Portal Accounts (/customer_accounts/{customerId})
+    // Provisioned on booking/registration; customers can set password / log in.
+    // ---------------------------------------------------------
+    function isValidCustomerAccount(data) {
+      return data.keys().hasAll(['id', 'name', 'createdAt']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 200 &&
+        data.createdAt is string && data.createdAt.size() >= 1 && data.createdAt.size() <= 64;
+    }
+
+    match /customer_accounts/{customerId} {
+      allow get, list: if true;
+      allow create: if isValidId(customerId) && isValidCustomerAccount(incoming()) && incoming().id == customerId;
+      allow update: if isValidId(customerId) && isValidCustomerAccount(incoming()) && incoming().id == resource.data.id;
+      allow delete: if isValidId(customerId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 10. Customer Projects & Tiered Deliverables (/customer_projects/{projectId})
+    // Customers can view their projects, request new projects, and submit script approvals/assets.
+    // Admins manage payment milestones, scripts, and Google Drive video links.
+    // ---------------------------------------------------------
+    function isValidCustomerProject(data) {
+      return data.keys().hasAll(['id', 'ref', 'customerId', 'customerName', 'packageType', 'packageName', 'totalVideos', 'paidPercent', 'status', 'createdAt']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.ref is string && data.ref.size() >= 1 && data.ref.size() <= 64 &&
+        data.customerId is string && data.customerId.size() >= 1 && data.customerId.size() <= 128 &&
+        data.customerName is string && data.customerName.size() >= 1 && data.customerName.size() <= 200 &&
+        data.packageType in ['single', 'pack_5', 'pack_10', 'retainer_15'] &&
+        data.packageName is string && data.packageName.size() >= 1 && data.packageName.size() <= 256 &&
+        data.totalVideos is number && data.totalVideos >= 1 && data.totalVideos <= 100 &&
+        data.paidPercent is number && data.paidPercent >= 0 && data.paidPercent <= 100 &&
+        data.status is string && data.status.size() >= 1 && data.status.size() <= 64 &&
+        data.createdAt is string && data.createdAt.size() >= 1 && data.createdAt.size() <= 64;
+    }
+
+    match /customer_projects/{projectId} {
+      allow get, list: if true;
+      allow create: if isValidId(projectId) && isValidCustomerProject(incoming()) && incoming().id == projectId;
+      allow update: if isValidId(projectId) && isValidCustomerProject(incoming()) && (
+        isAdmin() ||
+        (
+          incoming().id == resource.data.id &&
+          incoming().paidPercent == resource.data.paidPercent &&
+          incoming().packageType == resource.data.packageType &&
+          incoming().totalVideos == resource.data.totalVideos
+        )
+      );
+      allow delete: if isValidId(projectId) && isSuperAdmin();
+    }
+
+    // ---------------------------------------------------------
+    // 11. Page View & Section Dwell-Time Heatmap (/section_heatmap/{sectionId})
+    // ---------------------------------------------------------
+    function isValidSectionHeatmap(data) {
+      return data.keys().hasAll(['id', 'page', 'sectionId', 'label', 'views', 'totalDwellSeconds']) &&
+        data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+        data.page is string && data.page.size() >= 1 && data.page.size() <= 128 &&
+        data.sectionId is string && data.sectionId.size() >= 1 && data.sectionId.size() <= 128 &&
+        data.label is string && data.label.size() >= 1 && data.label.size() <= 200 &&
+        data.views is number && data.views >= 0 &&
+        data.totalDwellSeconds is number && data.totalDwellSeconds >= 0;
+    }
+
+    match /section_heatmap/{sectionId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(sectionId) && isValidSectionHeatmap(incoming()) && incoming().id == sectionId;
+      allow delete: if isValidId(sectionId) && isSuperAdmin();
+    }
   }
 }

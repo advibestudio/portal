@@ -82,6 +82,11 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
       on: true,
       pill: isCohortActive ? 'Founding Cohort' : undefined
     },
+    {
+      label: 'Client Portal',
+      href: '#/portal',
+      on: true,
+    },
   ].filter((l) => l.on);
 
   const handlePrimaryCta = () => {

@@ -11,6 +11,13 @@ import {
   HOW_HEARD_OPTIONS,
   type StoredAttribution,
 } from '@/lib/referral';
+import {
+  provisionCustomerFromBooking,
+  syncCustomerAccountToFirestore,
+  setActiveCustomerSession,
+  type CustomerAccount,
+} from '@/lib/customerPortalStore';
+import { PWAInstallButton } from '@/lib/pwa';
 
 interface Props {
   offer: Offer | null;
@@ -30,6 +37,9 @@ export function OrderModal({ offer, eventName, onClose, onPickOffer }: Props) {
   const unavailable = Boolean(offer) && rawPrice === undefined; // chosen country doesn't sell this package
   const [step, setStep] = useState(0);
   const [done, setDone] = useState<Lead | null>(null);
+  const [provisionedAccount, setProvisionedAccount] = useState<CustomerAccount | null>(null);
+  const [portalPassword, setPortalPassword] = useState('');
+  const [passwordSaved, setPasswordSaved] = useState(false);
   const [sending, setSending] = useState(false);
   const [copied, setCopied] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -156,10 +166,38 @@ export function OrderModal({ offer, eventName, onClose, onPickOffer }: Props) {
         howDidYouHear: form.howDidYouHear,
         isFirstTimeCustomer: true,
       }, country.name);
+
+      // Automatically provision Customer Account + Project for the Client Portal WebApp
+      const provisioned = provisionCustomerFromBooking({
+        name: lead.name,
+        email: lead.email,
+        phone: lead.whatsapp,
+        business: lead.business,
+        country: country.code,
+        offerId: offer.id,
+        offerName: offer.name,
+        price: finalPrice ?? rawPrice,
+        currency: country.currency,
+        ref: lead.ref,
+      });
+      setProvisionedAccount(provisioned.account);
       setDone(lead);
     } finally {
       setSending(false);
     }
+  };
+
+  const handleSavePortalPassword = async () => {
+    if (!provisionedAccount || portalPassword.trim().length < 4) return;
+    const updated: CustomerAccount = {
+      ...provisionedAccount,
+      password: portalPassword.trim(),
+      passwordSet: true,
+    };
+    await syncCustomerAccountToFirestore(updated);
+    setActiveCustomerSession(updated);
+    setProvisionedAccount(updated);
+    setPasswordSaved(true);
   };
 
   const waMsg = useMemo(() => {
@@ -234,6 +272,91 @@ export function OrderModal({ offer, eventName, onClose, onPickOffer }: Props) {
                 {copied ? <Check size={16} /> : <Copy size={16} />} Copy reference {done.ref}
               </button>
             </div>
+
+            {/* CUSTOMER PORTAL ACCOUNT & PASSWORD SETUP */}
+            {provisionedAccount && (
+              <div
+                style={{
+                  background: '#111412',
+                  color: '#fff',
+                  borderRadius: 16,
+                  padding: '16px 18px',
+                  border: '1px solid rgba(245,165,36,0.45)',
+                }}
+              >
+                <p style={{ fontSize: 11, fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#f5a524', fontWeight: 700, margin: 0 }}>
+                  Client Project Portal Account Created
+                </p>
+                <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.85)', margin: '6px 0 12px' }}>
+                  Track your video production progress, review scripts, attach brand assets, and download finished videos inside the Client WebApp.
+                </p>
+
+                {!provisionedAccount.passwordSet && !passwordSaved ? (
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                    <input
+                      type="password"
+                      value={portalPassword}
+                      onChange={(e) => setPortalPassword(e.target.value)}
+                      placeholder="Set a password for your account (min 4 chars)"
+                      style={{
+                        flex: 1,
+                        minWidth: 190,
+                        borderRadius: 10,
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        background: 'rgba(255,255,255,0.08)',
+                        color: '#fff',
+                        padding: '10px 12px',
+                        fontSize: 13,
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSavePortalPassword}
+                      disabled={portalPassword.trim().length < 4}
+                      style={{
+                        borderRadius: 10,
+                        background: '#f5a524',
+                        color: '#111412',
+                        fontWeight: 800,
+                        fontSize: 12,
+                        padding: '10px 16px',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Save Password
+                    </button>
+                  </div>
+                ) : (
+                  <p style={{ fontSize: 12, color: '#34d399', marginBottom: 12, fontWeight: 600 }}>
+                    ✓ Password saved! You can log in anytime with {provisionedAccount.email || provisionedAccount.phone}.
+                  </p>
+                )}
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center' }}>
+                  <a
+                    href="#/portal"
+                    onClick={onClose}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      borderRadius: 10,
+                      background: 'rgba(255,255,255,0.12)',
+                      color: '#fff',
+                      padding: '10px 14px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Lock size={14} /> Open Client Portal WebApp →
+                  </a>
+                  <PWAInstallButton variant="portal" />
+                </div>
+              </div>
+            )}
+
             <a className="btn-studio is-brand" style={{ justifyContent: 'center', padding: '0 26px' }}
               href={waLink(waNumberFor(content.settings.whatsappNumber, country), waMsg)} target="_blank" rel="noreferrer" onClick={() => track('Contact')}>
               <MessageCircle size={20} /> <span>Continue on WhatsApp</span>

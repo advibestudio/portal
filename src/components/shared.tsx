@@ -82,39 +82,235 @@ export function VideoCard({ item, onPlay }: { item: PortfolioItem; onPlay: (item
 }
 
 export function Lightbox({ item, onClose }: { item: PortfolioItem | null; onClose: () => void }) {
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+
   useEffect(() => {
+    setIframeLoaded(false);
     if (!item) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+    document.body.classList.add('is-modal-open');
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+      document.body.classList.remove('is-modal-open');
+    };
   }, [item, onClose]);
+
   if (!item) return null;
   const vertical = item.orientation === 'vertical';
   return (
-    <div className="lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Video: ${item.title}`}>
-      <button onClick={onClose} className="lightbox-close" aria-label="Close video"><X size={22} /></button>
+    <div
+      className="lightbox"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Video: ${item.title}`}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 120,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        background: 'rgba(11, 14, 18, 0.92)',
+        backdropFilter: 'blur(10px)',
+      }}
+    >
+      {/* Floating top-right corner close button (always above player) */}
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close video"
+        style={{
+          position: 'fixed',
+          top: 14,
+          right: 14,
+          zIndex: 130,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '10px 16px',
+          borderRadius: 999,
+          background: '#f5a524',
+          color: '#111412',
+          fontWeight: 800,
+          fontSize: 13,
+          border: '2px solid #ffffff',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+          cursor: 'pointer',
+        }}
+      >
+        <X size={18} strokeWidth={2.8} />
+        <span>Exit Video</span>
+      </button>
+
       <div
         className="lightbox-box anim-pop"
-        style={{ maxWidth: vertical ? 380 : 900 }}
+        style={{
+          width: '100%',
+          maxWidth: vertical ? 380 : 900,
+          overflow: 'hidden',
+          borderRadius: 24,
+          background: '#000',
+          border: '1px solid rgba(255,255,255,0.18)',
+          boxShadow: '0 30px 80px -20px rgba(0,0,0,0.9)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ aspectRatio: vertical ? '9 / 16' : '16 / 9', maxHeight: '78dvh', margin: '0 auto' }}>
+        {/* Unmistakable Top Header Bar directly attached to player */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 10,
+            padding: '10px 14px',
+            background: '#16191e',
+            borderBottom: '1px solid rgba(255,255,255,0.12)',
+            color: '#fff',
+          }}
+        >
+          <div style={{ minWidth: 0, textAlign: 'left' }}>
+            <p style={{ margin: 0, fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {item.title}
+            </p>
+            <p style={{ margin: 0, fontSize: 11, color: 'rgba(255,255,255,0.6)' }}>
+              {item.client} · {item.category}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              flex: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '6px 12px',
+              borderRadius: 999,
+              background: 'rgba(255,255,255,0.14)',
+              color: '#fff',
+              fontSize: 12,
+              fontWeight: 700,
+              border: '1px solid rgba(255,255,255,0.2)',
+              cursor: 'pointer',
+            }}
+          >
+            <X size={15} />
+            <span>Close</span>
+          </button>
+        </div>
+
+        {/* Video Container with Instant Cached Thumbnail until Iframe finishes loading */}
+        <div
+          style={{
+            position: 'relative',
+            aspectRatio: vertical ? '9 / 16' : '16 / 9',
+            maxHeight: '72dvh',
+            margin: '0 auto',
+            background: '#000',
+          }}
+        >
+          {!iframeLoaded && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 1,
+                display: 'grid',
+                placeItems: 'center',
+                background: '#000',
+              }}
+            >
+              <img
+                src={ytThumb(item.youtubeId)}
+                alt=""
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.55 }}
+              />
+              <div
+                style={{
+                  position: 'relative',
+                  zIndex: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '12px 18px',
+                  borderRadius: 16,
+                  background: 'rgba(11,14,18,0.82)',
+                  color: '#f5a524',
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
+              >
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    border: '3px solid rgba(245,165,36,0.25)',
+                    borderTopColor: '#f5a524',
+                    animation: 'spin 0.7s linear infinite',
+                  }}
+                />
+                <span>Loading Studio Reel…</span>
+              </div>
+            </div>
+          )}
           <iframe
-            src={`https://www.youtube.com/embed/${item.youtubeId}?autoplay=1&rel=0&playsinline=1`}
+            src={`https://www.youtube-nocookie.com/embed/${item.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
             title={item.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            style={{ width: '100%', height: '100%', border: 0 }}
+            onLoad={() => setIframeLoaded(true)}
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              width: '100%',
+              height: '100%',
+              border: 0,
+              opacity: iframeLoaded ? 1 : 0,
+              transition: 'opacity 0.2s ease',
+            }}
           />
         </div>
-        <div className="lightbox-cap">
-          <div>
-            <p style={{ font: '700 18px var(--font-display)', letterSpacing: '-.02em' }}>{item.title}</p>
-            <p style={{ fontSize: 14, opacity: 0.6 }}>{item.client} · {item.category}</p>
-          </div>
-          {item.result && <span style={{ flex: 'none', padding: '6px 12px', borderRadius: 999, background: 'rgb(var(--brand))', color: 'rgb(var(--ink))', fontSize: 13, fontWeight: 700 }}>{item.result}</span>}
+
+        <div
+          className="lightbox-cap"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+            padding: '12px 16px',
+            color: '#fff',
+            background: '#16191e',
+          }}
+        >
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)' }}>
+            {item.result || `${item.client} Verified Production`}
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              padding: '6px 14px',
+              borderRadius: 999,
+              background: '#f5a524',
+              color: '#111412',
+              fontSize: 12,
+              fontWeight: 800,
+              border: 0,
+              cursor: 'pointer',
+            }}
+          >
+            Done Watching
+          </button>
         </div>
       </div>
     </div>

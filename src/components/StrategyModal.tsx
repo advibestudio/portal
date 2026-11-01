@@ -45,6 +45,13 @@ import {
   markAssessmentWhatsAppClicked,
   recordCompletedAssessment,
 } from '@/lib/googleSheetsSync';
+import {
+  provisionCustomerFromBooking,
+  syncCustomerAccountToFirestore,
+  setActiveCustomerSession,
+  type CustomerAccount,
+} from '@/lib/customerPortalStore';
+import { PWAInstallButton } from '@/lib/pwa';
 
 export interface StrategyModalProps {
   onClose: () => void;
@@ -170,6 +177,9 @@ export function StrategyModal({
   const [submitting, setSubmitting] = useState(false);
   const [completedAssessment, setCompletedAssessment] = useState<BusinessAssessment | null>(null);
   const [savedLeadId, setSavedLeadId] = useState<string | null>(null);
+  const [provisionedAccount, setProvisionedAccount] = useState<CustomerAccount | null>(null);
+  const [portalPassword, setPortalPassword] = useState('');
+  const [passwordSaved, setPasswordSaved] = useState(false);
   const [whatsappClicked, setWhatsappClicked] = useState(false);
   const [targetPostsPerWeek, setTargetPostsPerWeek] = useState<number>(5);
   const [playingInterludeVideo, setPlayingInterludeVideo] = useState(false);
@@ -690,6 +700,22 @@ export function StrategyModal({
 
       setSavedLeadId(createdLead.id);
       setCompletedAssessment(savedAssessment);
+
+      // Provision Customer Account & Project for the Client Portal WebApp (#/portal)
+      const provisioned = provisionCustomerFromBooking({
+        name: assessmentRecord.fullName,
+        email: assessmentRecord.email,
+        phone: assessmentRecord.whatsappNumber,
+        business: assessmentRecord.businessName,
+        country: country.code,
+        offerId: chosenPkg.id,
+        offerName: chosenPkg.name,
+        price: finalPrice,
+        currency: country.currency,
+        configuredQty: chosenPkg.quantity,
+        ref: createdLead.ref || assessmentId,
+      });
+      setProvisionedAccount(provisioned.account);
 
       logQuizFunnelEvent({
         type: 'quiz_completed',
@@ -2174,6 +2200,75 @@ export function StrategyModal({
                 </p>
               )}
             </div>
+
+            {/* CUSTOMER PORTAL ACCOUNT & WEBAPP DOWNLOAD CARD */}
+            {provisionedAccount && (
+              <div className="rounded-3xl border border-[#f5a524]/45 bg-gradient-to-br from-[#161b24] to-[#0b0e12] p-6 sm:p-8 space-y-4 shadow-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#f5a524]/20 border border-[#f5a524]/40 px-3.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#f5a524]">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    <span>Your Client Portal Account Is Ready</span>
+                  </span>
+                  <span className="font-mono text-xs text-white/55">
+                    Login ID: <strong className="text-white">{provisionedAccount.email || provisionedAccount.phone}</strong>
+                  </span>
+                </div>
+
+                <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white">
+                  Set Your Password & Download the Advibe Client WebApp
+                </h3>
+                <p className="text-xs sm:text-sm text-white/75 leading-relaxed">
+                  We have created your Advibe Client Portal account from your strategy registration. Set your password below so you can track production progress, approve scripts, submit Google Drive brand assets, request additional projects, and download your finished videos.
+                </p>
+
+                {!provisionedAccount.passwordSet && !passwordSaved ? (
+                  <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+                    <input
+                      type="password"
+                      value={portalPassword}
+                      onChange={(e) => setPortalPassword(e.target.value)}
+                      placeholder="Create your portal password (min 4 characters)"
+                      className="flex-1 rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-[#f5a524] focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      disabled={portalPassword.trim().length < 4}
+                      onClick={async () => {
+                        if (!provisionedAccount || portalPassword.trim().length < 4) return;
+                        const updated: CustomerAccount = {
+                          ...provisionedAccount,
+                          password: portalPassword.trim(),
+                          passwordSet: true,
+                        };
+                        await syncCustomerAccountToFirestore(updated);
+                        setActiveCustomerSession(updated);
+                        setProvisionedAccount(updated);
+                        setPasswordSaved(true);
+                      }}
+                      className="min-h-[46px] rounded-xl bg-[#f5a524] px-6 font-display text-xs font-extrabold uppercase tracking-wider text-black hover:brightness-110 disabled:opacity-50 transition cursor-pointer"
+                    >
+                      Save Password
+                    </button>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-4 py-3 text-xs font-semibold text-emerald-200">
+                    ✓ Password saved! Your account ({provisionedAccount.email || provisionedAccount.phone}) is ready for instant sign-in.
+                  </div>
+                )}
+
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <a
+                    href="#/portal"
+                    onClick={onClose}
+                    className="inline-flex min-h-[46px] items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 font-display text-xs font-bold uppercase tracking-wider text-white hover:bg-white/15 transition"
+                  >
+                    <span>Open Client Portal Dashboard →</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </a>
+                  <PWAInstallButton variant="portal" />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

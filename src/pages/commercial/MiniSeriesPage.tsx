@@ -219,25 +219,28 @@ export default function MiniSeriesPage() {
               MESSAGES.
             </h1>
 
+            {/* Second-Hook Funnel Subheadline (Always visible above CTAs; shows Watch First kicker only when VSL is set) */}
+            <div className="pt-2 max-w-3xl mx-auto">
+              <div className="rounded-2xl border border-white/15 bg-white/[0.06] p-5 sm:p-6 backdrop-blur-md shadow-lg text-center space-y-2.5">
+                {vslYoutubeId && (
+                  <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
+                    <Play className="h-3 w-3 fill-[#f5a524] text-[#f5a524]" />
+                    <span>WATCH THIS FIRST · 2-MINUTE CINEMA TRAILER</span>
+                  </div>
+                )}
+                <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-[#f5a524] leading-snug text-balance">
+                  Here is how to get their attention:
+                  <span className="block font-sans text-sm sm:text-base md:text-lg text-white/90 font-normal mt-2 leading-relaxed">
+                    {offerData.hero.subheadline ||
+                      'Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions.'}
+                  </span>
+                </h2>
+              </div>
+            </div>
 
-            {/* Watch First Narrative Pivot Banner & Top VSL Player (Hidden until dedicated VSL link is provided) */}
+            {/* Top VSL Player (Hidden until dedicated VSL link is provided) */}
             {vslYoutubeId && (
               <>
-                <div className="pt-3 max-w-3xl mx-auto">
-                  <div className="rounded-2xl border border-white/15 bg-white/5 p-4 sm:p-5 backdrop-blur-md shadow-lg text-left sm:text-center space-y-2">
-                    <div className="flex items-center justify-start sm:justify-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
-                      <Play className="h-3 w-3 fill-[#f5a524] text-[#f5a524]" />
-                      <span>WATCH THIS FIRST · 2-MINUTE CINEMA TRAILER</span>
-                    </div>
-                    <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug text-balance">
-                      Here is how to get their attention:
-                      <span className="block font-sans text-sm sm:text-base text-white/80 font-normal mt-1 leading-relaxed">
-                        Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions.
-                      </span>
-                    </h2>
-                  </div>
-                </div>
-
                 {/* VSL CINEMA LETTERBOX PLAYER CONTAINER */}
                 <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-black shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9),0_0_35px_rgba(245,165,36,0.25)] group">
                   <div className="relative aspect-video sm:aspect-[2.39/1] w-full overflow-hidden flex items-center justify-center">

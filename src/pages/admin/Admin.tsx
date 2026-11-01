@@ -19,9 +19,13 @@ import { PromotionsAdmin } from './PromotionsAdmin';
 import { QuizFunnelAdmin } from './QuizFunnelAdmin';
 import { TeamAndSyncAdmin } from './TeamAndSyncAdmin';
 import { RealtimeFirestoreSummaryWidget } from '@/components/admin/RealtimeFirestoreSummaryWidget';
+import { SectionHeatmapWidget } from '@/components/admin/SectionHeatmapWidget';
+import { ClientProjectsAdminView } from '@/components/admin/ClientProjectsAdminView';
+import { PWAInstallButton, AdminNotificationToggle } from '@/lib/pwa';
 
 export type PrimaryAdminTab =
   | 'analytics'
+  | 'portal'
   | 'quiz'
   | 'cohorts'
   | 'content'
@@ -257,7 +261,9 @@ function AnalyticsView({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <AdminNotificationToggle />
+          <PWAInstallButton variant="admin" />
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-mono font-semibold text-emerald-400">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             Live Store Synced
@@ -272,6 +278,9 @@ function AnalyticsView({
         onNavigateAffiliates={goAffiliates}
         onNavigateStudents={goStudents}
       />
+
+      {/* PAGE VIEW & SECTION DWELL-TIME HEATMAP ANALYTICS */}
+      <SectionHeatmapWidget />
 
       {/* URGENT NEEDS ATTENTION QUEUE */}
       {pendingStudents.length > 0 && (
@@ -644,6 +653,24 @@ export default function Admin() {
             </span>
           </button>
 
+          {/* Client Portal & Payment Approval */}
+          <button
+            onClick={() => handleTabSwitch('portal')}
+            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
+              tab === 'portal'
+                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <FolderKanban className="h-4 w-4 text-[#f5a524]" />
+              <span>Client Portal & Videos</span>
+            </div>
+            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
+              GATE
+            </span>
+          </button>
+
           {/* Service Discovery Quiz & Funnel */}
           <button
             onClick={() => handleTabSwitch('quiz')}
@@ -749,6 +776,18 @@ export default function Admin() {
           >
             <ExternalLink className="h-4 w-4" />
             <span>View Public Site</span>
+          </a>
+
+          <div className="pb-1">
+            <PWAInstallButton variant="admin" className="w-full justify-center" />
+          </div>
+
+          <a
+            href="#/portal"
+            className="flex min-h-[40px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs text-white/60 transition hover:text-white"
+          >
+            <FolderKanban className="h-4 w-4 text-[#f5a524]" />
+            <span>Client Portal WebApp</span>
           </a>
 
           <a
@@ -971,9 +1010,17 @@ export default function Admin() {
               </div>
 
               {pipelineSubTab === 'leads' && <LeadsView />}
-              {pipelineSubTab === 'projects' && <ProjectsView />}
+              {pipelineSubTab === 'projects' && (
+                <div className="space-y-8">
+                  <ClientProjectsAdminView />
+                  <ProjectsView />
+                </div>
+              )}
             </div>
           )}
+
+          {/* 4.2 CLIENT PORTAL, PAYMENT GATES & GOOGLE DRIVE DELIVERABLES */}
+          {tab === 'portal' && <ClientProjectsAdminView />}
 
           {/* 4.5 SERVICE DISCOVERY QUIZ, RECOMMENDATIONS & GOOGLE SHEETS HUB */}
           {tab === 'quiz' && <QuizFunnelAdmin />}
@@ -1164,6 +1211,17 @@ export default function Admin() {
         >
           <Users className="h-4 w-4" />
           <span>Pipeline</span>
+        </button>
+
+        {/* 4.2 Client Portal & Payments */}
+        <button
+          onClick={() => handleTabSwitch('portal')}
+          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
+            tab === 'portal' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          }`}
+        >
+          <FolderKanban className="h-4 w-4" />
+          <span>Portal</span>
         </button>
 
         {/* 4.5 Quiz & Funnel */}

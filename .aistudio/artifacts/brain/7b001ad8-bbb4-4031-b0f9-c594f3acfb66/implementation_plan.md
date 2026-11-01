@@ -1,94 +1,96 @@
-# Mini-Series Hero Hook, Mobile Spotlight Carousel & Zero-Lag Video Lightbox Plan
+# Mobile Layout & Button Overflow Fixes Plan
 
-This update adds the second-hook narrative subheadline to the AI Promotional Mini-Series hero while the VSL video is hidden, replaces the awkward mobile stacking of the CirclesFundMe spotlight reels with a smooth horizontal swipe carousel (3-across on desktop), eliminates YouTube player boot-up lag, and adds a clear, high-contrast Exit/Close button whenever a visitor watches a video from the 3D cylinder.
+This update resolves the three mobile viewport overflow and clipping issues shown in your screenshots: the **CirclesFundMe Client Spotlight** section expanding wider than the mobile screen (clipping the bullet text and video carousel), the **"Create my campaign videos"** button overflowing the Sales Seasons card, and the **"Explore Monthly Retainer (15 videos)"** button overflowing the Monthly Retainer callout card in the Packages section.
 
 ## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> Summary of choices confirmed during clarification:
+> All three issues stem from CSS Grid intrinsic minimum-width sizing and fixed `nowrap` button widths on narrow mobile viewports (`320px–430px`). No functional logic or copy is removed—every section and button will fit cleanly inside its card boundaries on mobile while preserving the desktop layout.
 
-- **Confirmed Decision 1 — Mini-Series Hero Second Hook (No VSL Prompt)**: Display the second hook from the VSL narrative directly below the main headline (*"Here is how to get their attention: Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions."*) without the "Watch This Video" label while the VSL link is not yet set.
-- **Confirmed Decision 2 — CirclesFundMe Spotlight Mobile Layout**: Arrange the 3 CirclesFundMe vertical reels in a smooth horizontal swipe carousel on mobile viewports and a clean 3-across row on desktop so cards never stack 2-over-1 on phones.
-- **Confirmed Decision 3 — Click-to-Play with Instant Boot-Up**: Do not autoplay videos in the background; instead, eliminate click-to-play boot-up lag using early TLS preconnects to YouTube embed servers, instant thumbnail placeholders during iframe initialization, and pausing the 3D cylinder animation loop while the player modal is open.
-- **Confirmed Decision 4 — Unmistakable Video Lightbox Exit Button**: Add a prominent, high-contrast **"✕ Close Video"** button bar directly on the video player header and top-right corner, and automatically hide floating navigation/sticky bars while the video lightbox is open.
+- **Fix 1 — CirclesFundMe Client Spotlight Container & Carousel (`Screenshot 1`)**: Enforce `min-width: 0` and `max-width: 100%` on the Spotlight grid and its child columns so the horizontal video reel carousel scrolls *inside* the mint card rather than stretching the entire card off the right edge of the phone screen. Also refine card caption spacing so the two-line client subtitle sits comfortably above the bottom edge.
+- **Fix 2 — Sales Seasons CTA Button (`Screenshot 2`)**: Make `.btn-studio` responsive on mobile screens (`max-width: 100%`, balanced mobile horizontal padding and font size, and text wrapping support when a label exceeds the card width) so **"Create my campaign videos"** stays completely inside the warm seasonal card.
+- **Fix 3 — Monthly Retainer Bridge Callout Button (`Screenshot 3`)**: Stack the Monthly Retainer callout banner cleanly on mobile viewports and allow **"Explore Monthly Retainer (15 videos)"** to span full card width with proper inner padding so the arrow icon never clips past the card border.
 
 ---
 
 ## 1. Overview & Core Concept
 
 - **What It Does**:
-  1. **Mini-Series Hero Subheadline**: Bridges the bold Chapter 1 headline (*"Your customers are tired of your boring 'buy now' messages"*) directly into the core value proposition with the second hook so the hero reads as a complete, persuasive funnel statement without needing a VSL box.
-  2. **Mobile-First Spotlight Carousel**: Transforms the CirclesFundMe client spotlight section from a wrapping flex grid into a touch-friendly horizontal snap carousel on mobile while keeping the balanced 3-across presentation on desktop.
-  3. **Fast YouTube Player Boot-Up**: Warms up YouTube embed connections ahead of time and pauses background 3D animations while a video is open so clicking any video launches smoothly without lag.
-  4. **Clear Exit Button on Cylinder Video Player**: Ensures every video opened from the 3D cylinder or showcase has an immediately visible, accessible **"Close / Exit Video"** button on both mobile and desktop.
-- **Target Audience / Persona**: Mobile and desktop prospects exploring AdVibe Studios' portfolio reels and the AI Promotional Mini-Series funnel.
-- **Key Value**: Smoother mobile browsing, stronger funnel continuity above the fold, faster video playback initialization, and friction-free navigation back to the page after watching a reel.
+  1. **Constrains the Client Spotlight Grid on Mobile**: Fixes the CSS Grid blowout where the 3-card horizontal video carousel forced `.spotlight` wider than `100vw`, which cut off *"A repeat client — they keep coming back"* and pushed the mint card border to the left of the second reel.
+  2. **Responsive Pill CTA Buttons**: Ensures all primary pill buttons (`.btn-studio` and `.btn-studio.is-sm`) respect their parent card's width (`max-width: 100%`, `box-sizing: border-box`) on mobile viewports (`< 640px`), scaling font size and padding gracefully so long labels never protrude outside rounded cards.
+  3. **Refined Vertical Video Card Footer Spacing**: Adjusts the bottom gradient and metadata padding inside 9:16 vertical video cards on mobile so subtitles like *"CirclesFundMe · Verified Client Campaign"* have breathing room above the bottom border.
+- **Target Audience / Persona**: Mobile visitors browsing AdVibe Studios on iOS and Android phones (`360px–430px` viewport widths).
+- **Key Value**: Zero horizontal overflow, crisp card borders, readable bullet points, and properly aligned CTA buttons across all mobile sections.
 
 ---
 
 ## 2. User Experience & Visual Design
 
 - **Key User Flows**:
-  1. **Mini-Series Hero Flow**: Visitors land on the AI Promotional Mini-Series page, read the primary headline, and immediately see the highlighted second-hook subheadline (*"Here is how to get their attention..."*) leading directly into the *"Book Your Free Strategy Call"* and *"Chat on WhatsApp"* CTAs.
-  2. **CirclesFundMe Spotlight Mobile Swipe Flow**: On mobile screens, visitors see the first vertical reel framed cleanly with a peek of the next card and can swipe horizontally with scroll-snap precision through all 3 CirclesFundMe reels. On tablet and desktop screens, all 3 vertical reels sit side-by-side in a single balanced row.
-  3. **Cylinder Video Watch & Exit Flow**: When a visitor clicks any card in the 3D rotating cylinder (or any portfolio grid), the floating navigation bar hides, the 9:16 vertical player opens immediately with its cached thumbnail while the stream connects, and a prominent **"✕ Close Video"** button at the top of the player frame (plus backdrop tap and Escape key support) lets them exit in one tap.
+  - **Client Spotlight Flow**: On mobile, the mint-tinted CirclesFundMe card stays 100% contained within the page margins. All check-list bullets wrap cleanly inside the card, and swiping the 3 vertical reels scrolls smoothly inside the card boundary with a clear peek of the next reel.
+  - **Sales Seasons & Package Callout Flow**: Both **"Create my campaign videos"** and **"Explore Monthly Retainer (15 videos)"** sit centered and fully contained inside their parent cards with the gold circular arrow badge (`→`) aligned inside the right edge of the button.
 - **Visual Identity & Theme**:
-  - *Aesthetic Direction*: Editorial studio craft matching each section's native surface (obsidian `#0b0e12` with warm gold `#f5a524` accents in the Mini-Series hero; mint-tinted editorial card in the Homepage Client Spotlight).
-  - *Typography & Hierarchy*: `Bricolage Grotesque` display lead-in (*"Here is how to get their attention:"*) paired with readable `Figtree` body prose (*"Turn them into brand ambassadors..."*), constrained with `text-wrap: balance` and comfortable line lengths.
-- **Interactive Feedback & Motion**:
-  - Native CSS `scroll-snap-type: x mandatory` for zero-jitter mobile swiping.
-  - Compositor-only fade transition (`opacity`) when the YouTube iframe finishes loading over its instant poster frame.
+  - *Aesthetic Direction*: Warm editorial studio aesthetic (`--bg: 250 250 246`, `--ink: 17 20 18`, `--brand: 245 165 36`, `--mint: 200 245 222`, `--butter: 255 238 166`).
+  - *Spatial & Typographic Math*:
+    - Outer container padding (`20px–24px` on mobile) $\ge$ inner element gap (`12px–14px`).
+    - Buttons on mobile use `width: 100%` or `max-width: 100%` with `padding: 6px 6px 6px 18px` and `font-size: clamp(13.5px, 3.8vw, 16px)` so single-line CTA labels fit comfortably alongside the `36px` circular arrow icon.
 
 ---
 
 ## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Always-Visible Second Hook Subheadline vs. VSL-Only Banner**
-  - *Chosen Approach*: Decouple the second-hook subheadline from the VSL player conditional so the narrative hook always renders below the H1, and only show the *"Watch This First · 2-Minute Cinema Trailer"* kicker and video box when a VSL YouTube ID is configured.
-  - *Why*: Keeps the funnel persuasive and complete right now while remaining ready for the VSL video later.
-- **Decision 2: Preconnect + Cylinder RAF Pause vs. Background Iframe Preloading**
-  - *Chosen Approach*: Use `<link rel="preconnect">` for YouTube's embed origins, display an instant cached thumbnail frame until the iframe fires `onLoad`, and pause the 3D cylinder's `requestAnimationFrame` loop when `body.is-modal-open` is active.
-  - *Why*: Preloading hidden iframes in the background slows down initial page load and wastes mobile data, whereas preconnecting + pausing background 3D rendering makes both the site and video startup fast.
-- **Decision 3: Self-Contained Lightbox Header Close Button**
-  - *Chosen Approach*: Render an explicit top control bar on the `Lightbox` player frame with a high-contrast **"✕ Close"** pill button in addition to the corner close button, and toggle `body.is-modal-open` whenever the lightbox is active.
-  - *Why*: Guarantees the close button is never covered by floating headers or pushed off-screen on tall 9:16 mobile reels, and works across all pages (Homepage, Mini-Series, Retainer, and Training pages).
+- **Decision 1: Fixing Grid Track Blowout in Client Spotlight**
+  - *Chosen Approach*: Apply `grid-template-columns: minmax(0, 1fr)` on mobile (`<= 899px`), set `min-width: 0; max-width: 100%; overflow: hidden;` on `.spotlight` and `.spot-videos-wrap`, and size mobile carousel items to `flex: 0 0 min(220px, 72%)` with scroll-snap alignment.
+  - *Why*: In CSS Grid, a grid item containing a flex scroller defaults to `min-width: auto`, expanding the grid column to the sum of the flex items' widths unless `minmax(0, 1fr)` and `min-width: 0` are explicitly set on the grid track and wrapper.
+- **Decision 2: Responsive `.btn-studio` Sizing on Narrow Viewports**
+  - *Chosen Approach*: Add mobile-specific rules (`@media (max-width: 639px)`) to `.btn-studio` and `.btn-studio.is-sm` setting `max-width: 100%`, reducing left padding from `26px` to `18px`, scaling font size with `clamp(13.5px, 3.7vw, 15.5px)`, allowing text to wrap cleanly if needed (`white-space: normal; text-align: left; line-height: 1.2`), and keeping `.btn-arrow` `flex-shrink: 0`.
+  - *Why*: Prevents any long CTA label across the entire site from ever poking out of its parent card on narrow phones (`360px–390px` wide).
 
 ---
 
 ## 4. Technical Architecture & Data Strategy *(Technical Reference)*
 
-### Architecture & Component Diagram
+- **Mobile Container & Button Containment Diagram**:
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                        Document Head Preconnects                         │
-│     i.ytimg.com · www.youtube.com · www.youtube-nocookie.com · s.ytimg   │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-         ┌───────────────────────────┼───────────────────────────┐
-         ▼                           ▼                           ▼
-┌─────────────────────┐   ┌──────────────────────┐   ┌─────────────────────┐
-│  Mini-Series Hero   │   │  Client Spotlight    │   │  3D Cylinder Wall   │
-│  ─────────────────  │   │  ──────────────────  │   │  ─────────────────  │
-│  H1 + Second-Hook   │   │  Mobile: Horizontal  │   │  Pauses RAF loop    │
-│  Subheadline Block  │   │  Snap Carousel       │   │  when modal is open │
-│  (VSL box hidden    │   │  Desktop: 3-Across   │   │  Opens Lightbox on  │
-│   until ID is set)  │   │  Balanced Row        │   │  card tap           │
-└─────────────────────┘   └──────────┬───────────┘   └──────────┬──────────┘
-                                     │                          │
-                                     └────────────┬─────────────┘
-                                                  ▼
-                                  ┌───────────────────────────────┐
-                                  │   Zero-Lag Video Lightbox     │
-                                  │   ─────────────────────────   │
-                                  │   • Sets body.is-modal-open   │
-                                  │   • Top "✕ Close Video" Bar   │
-                                  │   • Instant Thumbnail Poster  │
-                                  │     + Smooth Iframe Reveal    │
-                                  └───────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│ Mobile Viewport (360px - 430px) — .wrap (padding-inline: 16px)  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─ 1. Client Spotlight (.spotlight) ────────────────────────┐  │
+│  │  grid-template-columns: minmax(0, 1fr); overflow: hidden; │  │
+│  │  • Copy Column (.spot-copy, min-width: 0)                 │  │
+│  │    ✓ Many campaigns delivered                             │  │
+│  │    ✓ A repeat client — they keep coming back  (wraps!)    │  │
+│  │  • Carousel Wrapper (.spot-videos-wrap, min-width: 0)     │  │
+│  │    ┌───────────────────┐ ┌──────────                      │  │
+│  │    │ Reel 01 (72% w)   │ │ Reel 02  (scrolls inside card) │  │
+│  │    └───────────────────┘ └──────────                      │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  ┌─ 2. Sales Seasons (.seasons) ─────────────────────────────┐  │
+│  │  padding: 24px 20px (mobile)                              │  │
+│  │  ┌─────────────────────────────────────────────────────┐  │  │
+│  │  │ Create my campaign videos                       (→) │  │  │
+│  │  └─────────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  ┌─ 3. Monthly Retainer Bridge Callout ──────────────────────┐  │
+│  │  flex-direction: column (mobile); padding: 18px 16px      │  │
+│  │  ┌─────────────────────────────────────────────────────┐  │  │
+│  │  │ Explore Monthly Retainer (15 videos)            (→) │  │  │
+│  │  └─────────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Interactive Component & State Mapping
-- **Mini-Series Hero Subheadline**: Renders unconditionally below the H1; if `vslYoutubeId` is empty, omits the `"WATCH THIS FIRST"` badge and player frame; if `vslYoutubeId` is populated later in Admin, displays the badge and cinema trailer player below the subheadline.
-- **Client Spotlight Carousel**: Uses horizontal scroll-snap (`scroll-snap-type: x mandatory`, `overflow-x: auto`) on viewports `< 768px` with `72vw` max-width 9:16 cards so cards never wrap 2-over-1, switching to a 3-column centered row on `>= 768px`.
-- **3D Cylinder & Lightbox Synchronization**: Opening `Lightbox` sets `body.is-modal-open`, hiding floating nav/sticky bars and signaling `Wall` to pause its rotation tick until the user clicks **"✕ Close Video"**, taps the backdrop, or presses `Escape`.
+- **Interactive Component & Layout Mapping**:
+  - **Client Spotlight (`.spotlight`, `.spot-copy`, `.spot-videos-wrap`, `.spot-videos`)**:
+    - Ensure `.spotlight` has `overflow: hidden` and `grid-template-columns: minmax(0, 1fr)` on viewports `<= 899px`.
+    - Ensure `.spot-copy` and `.spot-videos-wrap` have `min-width: 0; width: 100%; max-width: 100%;` so long bullet points wrap cleanly and `.spot-videos` scrolls horizontally within the card's inner width.
+    - Adjust `.vcard-info` bottom padding and line-height on mobile so multi-line video titles and client metadata never clip at the bottom of the 9:16 frame.
+  - **Sales Seasons Card (`.seasons`) & Global `.btn-studio`**:
+    - Reduce `.seasons` mobile padding (`padding: 28px 20px`) to maximize inner content width on phones.
+    - Update `.btn-studio` and `.btn-studio.is-sm` on mobile (`max-width: 100%`, responsive font size and padding, `flex-shrink: 0` on `.btn-arrow`) so buttons never overflow their container.
+  - **Monthly Retainer Callout in Packages (`Pricing`)**:
+    - Make the callout container and its `.btn-studio.is-sm` button full-width (`width: 100%`, `max-width: 100%`, `justify-content: space-between`) on mobile so `"Explore Monthly Retainer (15 videos)"` fits with zero right-edge overflow.

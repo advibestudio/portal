@@ -13,7 +13,10 @@ const CreatorSalesPage = lazy(() => import('@/pages/training/CreatorSalesPage'))
 const TrainingThankYou = lazy(() => import('@/pages/training/TrainingThankYou'));
 const MonthlyRetainerPage = lazy(() => import('@/pages/commercial/MonthlyRetainerPage'));
 const MiniSeriesPage = lazy(() => import('@/pages/commercial/MiniSeriesPage'));
+const CustomerPortalPage = lazy(() => import('@/pages/CustomerPortalPage'));
 import { TapRipple } from '@/components/animations/TapRipple';
+import { usePageHeatmapTracker } from '@/lib/heatmapAnalytics';
+import { OfflineBanner } from '@/lib/pwa';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -103,9 +106,17 @@ function useAppRoute() {
 export default function App() {
   const route = useAppRoute();
 
+  // Track page views and section dwell-time heatmaps across routes
+  usePageHeatmapTracker(route);
+
   const isMonthlyContent = route.startsWith('/monthly-content') || route.startsWith('monthly-content');
   const isMiniSeries = route.startsWith('/promotional-mini-series') || route.startsWith('promotional-mini-series');
   const isAdmin = route.startsWith('/admin') || route.startsWith('admin');
+  const isCustomerPortal =
+    route.startsWith('/portal') ||
+    route.startsWith('portal') ||
+    route.startsWith('/client-portal') ||
+    route.startsWith('client-portal');
   const isCase = route.startsWith('/ai-video') || route.startsWith('ai-video');
   const isTrainingBusiness = route.startsWith('/training/business') || route.startsWith('training/business');
   const isTrainingCreators = route.startsWith('/training/creators') || route.startsWith('training/creators');
@@ -120,6 +131,8 @@ export default function App() {
   useEffect(() => {
     if (isAdmin) {
       document.title = 'Admin Portal — AdVibe Studios';
+    } else if (isCustomerPortal) {
+      document.title = 'Client Project Portal — AdVibe Studios';
     } else if (isBookStrategy) {
       document.title = 'Book Free Strategy Session — AdVibe Studios';
     } else if (isMonthlyContent) {
@@ -139,12 +152,13 @@ export default function App() {
     } else {
       document.title = 'AdVibe Studio — AI Video Ads That Turn Attention Into Orders';
     }
-  }, [isAdmin, isBookStrategy, isCase, isMonthlyContent, isMiniSeries, isTrainingBusiness, isTrainingCreators, isTrainingSelector, isTrainingThankYou]);
+  }, [isAdmin, isCustomerPortal, isBookStrategy, isCase, isMonthlyContent, isMiniSeries, isTrainingBusiness, isTrainingCreators, isTrainingSelector, isTrainingThankYou]);
 
   return (
     <StoreProvider>
       <ReferralProvider>
         <CountryProvider>
+          <OfflineBanner />
           <TapRipple />
           <ErrorBoundary>
           {isAdmin ? (
@@ -156,6 +170,16 @@ export default function App() {
               }
             >
               <Admin />
+            </Suspense>
+          ) : isCustomerPortal ? (
+            <Suspense
+              fallback={
+                <div className="grid min-h-dvh place-items-center bg-[#0b0e12] text-white/60 font-mono text-xs">
+                  Loading Client Portal…
+                </div>
+              }
+            >
+              <CustomerPortalPage />
             </Suspense>
           ) : isMonthlyContent ? (
             <Suspense

@@ -1,6 +1,15 @@
 import type { BusinessAssessment, Lead, TrainingStudent } from '@/content/types';
 import { doc, setDoc } from 'firebase/firestore';
-import { db, isFirebaseConfigured, trackFirestoreWrite, firebaseProjectInfo } from '@/firebase';
+import {
+  db,
+  isFirebaseConfigured,
+  trackFirestoreRead,
+  trackFirestoreWrite,
+  getFirestoreQuotaStats,
+  SPARK_DAILY_READ_LIMIT,
+  SPARK_DAILY_WRITE_LIMIT,
+  firebaseProjectInfo,
+} from '@/firebase';
 import {
   getSavedSheetsWebhookUrl,
   loadAssessments,
@@ -676,3 +685,41 @@ export const backupAssessmentToGoogleSheets = onDocumentWritten(
   }
 );
 `;
+
+export function canUseFirestoreQuota(type: 'reads' | 'writes', count = 1): boolean {
+  if (!isFirebaseConfigured) return false;
+  const stats = getFirestoreQuotaStats();
+  if (type === 'reads') {
+    return stats.readsToday + count < SPARK_DAILY_READ_LIMIT * 0.9;
+  }
+  return stats.writesToday + count < SPARK_DAILY_WRITE_LIMIT * 0.9;
+}
+
+export function recordFirestoreQuotaOp(type: 'reads' | 'writes', count = 1): void {
+  if (type === 'reads') {
+    trackFirestoreRead(count);
+  } else {
+    trackFirestoreWrite(count);
+  }
+}
+
+export async function backupSubmissionToGoogleSheet(
+  kind: 'lead' | 'assessment' | 'student',
+  payload: Record<string, unknown>,
+): Promise<boolean> {
+  const webhookUrl = getSavedSheetsWebhookUrl();
+  if (!webhookUrl) return false;
+  try {
+    if (kind === 'lead') {
+      await syncLeadToGoogleSheets(payload as unknown as Lead, webhookUrl);
+    } else if (kind === 'assessment') {
+      await syncAssessmentToGoogleSheets(payload as unknown as BusinessAssessment, webhookUrl);
+    } else if (kind === 'student') {
+      await syncStudentToGoogleSheets(payload as unknown as TrainingStudent, webhookUrl);
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
