@@ -68,32 +68,46 @@ const LS = {
 };
 
 const PRIMARY_OWNER_EMAIL = 'shittu.cfm@gmail.com';
+const COMPANY_GMAIL = 'advibestudios.global@gmail.com';
+const SECOND_COFOUNDER_EMAIL = COMPANY_GMAIL;
 const CONTENT_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes local cache TTL to protect Firebase free tier
+
+const FAKE_LEAD_IDS = new Set(['l1', 'l2', 'l3', 'l4', 'l5', 'l6', 'l7']);
+const FAKE_LEAD_REFS = new Set(['AV-1041', 'AV-1042', 'AV-1043', 'AV-1044', 'AV-1045', 'AV-1046', 'AV-1047']);
+const FAKE_PROJECT_IDS = new Set(['pr1', 'pr2', 'pr3', 'pr4']);
+const FAKE_STUDENT_IDS = new Set(['stud-1', 'stud-2', 'stud-3', 'stud-4', 'stud-5']);
+const FAKE_AFFILIATE_IDS = new Set(['aff-john', 'aff-sarah', 'aff-michael', 'aff-inactive']);
+const FAKE_AFFILIATE_CODES = new Set(['ADV-JOHN', 'ADV-SARAH', 'ADV-MICHAEL', 'ADV-EXPIRED']);
 
 export const DEFAULT_ADMINS: AdminAccount[] = [
   {
     id: PRIMARY_OWNER_EMAIL,
+    username: 'enoch',
     email: PRIMARY_OWNER_EMAIL,
-    name: 'Shittu (Primary Super Admin)',
+    name: 'Enoch Shittu-Abraham (Co-Founder & Super Admin)',
     role: 'owner',
-    backupPassword: 'advibe-owner-2026',
-    addedBy: 'System Bootstrap',
+    backupPassword: 'advibe-enoch-2026',
+    addedBy: 'Co-Founder Bootstrap',
     createdAt: '2026-01-01T00:00:00.000Z',
     active: true,
     isPrimaryOwner: true,
+    isCoFounder: true,
   },
   {
-    id: 'owner@advibestudio.com',
-    email: 'owner@advibestudio.com',
-    name: 'AdVibe Backup Super Admin',
+    id: SECOND_COFOUNDER_EMAIL,
+    username: 'esther',
+    email: SECOND_COFOUNDER_EMAIL,
+    name: 'Esther Ayankoya (Co-Founder & Super Admin)',
     role: 'owner',
-    backupPassword: 'advibe-owner-2026',
-    addedBy: PRIMARY_OWNER_EMAIL,
+    backupPassword: 'advibe-esther-2026',
+    addedBy: 'Co-Founder Bootstrap',
     createdAt: '2026-01-01T00:00:00.000Z',
     active: true,
+    isCoFounder: true,
   },
   {
     id: 'ops@advibestudio.com',
+    username: 'ops',
     email: 'ops@advibestudio.com',
     name: 'AdVibe Regular Admin (Ops)',
     role: 'ops',
@@ -140,29 +154,76 @@ function stripUndefined<T>(val: T): T {
 
 function normalizeAdminsList(list: AdminAccount[] | null | undefined): AdminAccount[] {
   const base = Array.isArray(list) && list.length > 0 ? [...list] : [...DEFAULT_ADMINS];
-  const hasPrimary = base.some((a) => a.email.toLowerCase() === PRIMARY_OWNER_EMAIL);
+  // Remove legacy placeholder owner@advibestudio.com
+  const cleaned = base.filter((a) => a.email.toLowerCase() !== 'owner@advibestudio.com');
+
+  const hasPrimary = cleaned.some((a) => a.email.toLowerCase() === PRIMARY_OWNER_EMAIL);
   if (!hasPrimary) {
-    base.unshift(DEFAULT_ADMINS[0]);
+    cleaned.unshift(DEFAULT_ADMINS[0]);
   } else {
-    for (let i = 0; i < base.length; i++) {
-      if (base[i].email.toLowerCase() === PRIMARY_OWNER_EMAIL) {
-        base[i] = {
-          ...base[i],
+    for (let i = 0; i < cleaned.length; i++) {
+      if (cleaned[i].email.toLowerCase() === PRIMARY_OWNER_EMAIL) {
+        cleaned[i] = {
+          ...cleaned[i],
           id: PRIMARY_OWNER_EMAIL,
+          username: cleaned[i].username || 'enoch',
           email: PRIMARY_OWNER_EMAIL,
+          name:
+            cleaned[i].name === 'Shittu (Primary Super Admin)'
+              ? DEFAULT_ADMINS[0].name
+              : cleaned[i].name || DEFAULT_ADMINS[0].name,
           role: 'owner',
           active: true,
           isPrimaryOwner: true,
-          backupPassword: base[i].backupPassword || 'advibe-owner-2026',
+          isCoFounder: true,
+          backupPassword:
+            !cleaned[i].backupPassword || cleaned[i].backupPassword === 'advibe-owner-2026'
+              ? 'advibe-enoch-2026'
+              : cleaned[i].backupPassword,
         };
       }
     }
   }
-  return base;
+
+  const hasSecondCoFounder = cleaned.some(
+    (a) =>
+      a.email.toLowerCase() === SECOND_COFOUNDER_EMAIL ||
+      a.email.toLowerCase() === 'esther@advibestudio.com' ||
+      a.username?.toLowerCase() === 'esther'
+  );
+  if (!hasSecondCoFounder) {
+    cleaned.splice(1, 0, DEFAULT_ADMINS[1]);
+  } else {
+    for (let i = 0; i < cleaned.length; i++) {
+      if (
+        cleaned[i].email.toLowerCase() === SECOND_COFOUNDER_EMAIL ||
+        cleaned[i].email.toLowerCase() === 'esther@advibestudio.com' ||
+        cleaned[i].username?.toLowerCase() === 'esther'
+      ) {
+        cleaned[i] = {
+          ...cleaned[i],
+          id: SECOND_COFOUNDER_EMAIL,
+          email: SECOND_COFOUNDER_EMAIL,
+          username: cleaned[i].username || 'esther',
+          role: 'owner',
+          active: true,
+          isCoFounder: true,
+          backupPassword: cleaned[i].backupPassword || 'advibe-esther-2026',
+        };
+      }
+    }
+  }
+
+  return cleaned;
 }
 
 function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
   if (!c) return defaultContent;
+  const cleanedAffiliates = Array.isArray(c.affiliates)
+    ? c.affiliates.filter(
+        (a) => !FAKE_AFFILIATE_IDS.has(a.id) && !FAKE_AFFILIATE_CODES.has((a.code || '').toUpperCase())
+      )
+    : [];
   const merged = {
     ...defaultContent,
     ...c,
@@ -183,7 +244,7 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
       ...defaultContent.referralSettings,
       ...(c.referralSettings ?? {}),
     },
-    affiliates: Array.isArray(c.affiliates) && c.affiliates.length > 0 ? c.affiliates : defaultContent.affiliates,
+    affiliates: cleanedAffiliates,
     quizConfig: {
       ...defaultContent.quizConfig,
       ...(c.quizConfig ?? {}),
@@ -200,6 +261,9 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
 
   if (!merged.settings.bookingUrl) {
     merged.settings.bookingUrl = defaultContent.settings.bookingUrl;
+  }
+  if (!merged.settings.email || merged.settings.email === 'hello@advibe.studio') {
+    merged.settings.email = defaultContent.settings.email;
   }
 
   if (
@@ -542,12 +606,16 @@ interface Store {
   admins: AdminAccount[];
   addOrUpdateAdmin: (input: {
     email: string;
+    username?: string;
     name: string;
     role: 'owner' | 'ops';
     backupPassword?: string;
     active?: boolean;
   }) => Promise<string | null>;
   removeAdmin: (email: string) => Promise<string | null>;
+
+  /* Clear Fake / Demo Backend Data */
+  purgeFakeBackendData: () => Promise<string>;
 
   /* Firebase Free-Tier Quota Saver & Google Sheets Sync */
   pruneSyncedRecordsFromFirestore: () => Promise<{ leadsPruned: number; assessmentsPruned: number; message: string }>;
@@ -577,8 +645,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [content, setContent] = useState<SiteContent>(() =>
     withDefaults(load(LS.content, load(LS.contentCache, null)))
   );
-  const [leads, setLeads] = useState<Lead[]>(() => load(LS.leads, seedLeads));
-  const [projects, setProjects] = useState<Project[]>(() => load(LS.projects, seedProjects));
+  const [leads, setLeads] = useState<Lead[]>(() =>
+    load<Lead[]>(LS.leads, []).filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref))
+  );
+  const [projects, setProjects] = useState<Project[]>(() =>
+    load<Project[]>(LS.projects, []).filter((p) => !FAKE_PROJECT_IDS.has(p.id))
+  );
   const [audit, setAudit] = useState<AuditEntry[]>(() => load(LS.audit, []));
   const [session, setSession] = useState<SessionUser | null>(() => load(LS.session, null));
   const [admins, setAdmins] = useState<AdminAccount[]>(() =>
@@ -590,7 +662,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return raw.map((c) => withCohortDefaults(c));
   });
   const [activeCohortId, setActiveCohortId] = useState<string>(() => load(LS.activeCohortId, defaultCohort.id));
-  const [students, setStudents] = useState<TrainingStudent[]>(() => load(LS.students, sampleStudents));
+  const [students, setStudents] = useState<TrainingStudent[]>(() =>
+    load<TrainingStudent[]>(LS.students, []).filter((s) => !FAKE_STUDENT_IDS.has(s.id))
+  );
   const [ready, setReady] = useState(true);
   const [staffReady, setStaffReady] = useState(true);
   const staffStarted = useRef(false);
@@ -716,30 +790,36 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       );
 
       if (!leadsSnap.empty) {
-        const remoteLeads = leadsSnap.docs.map((d) => d.data() as Lead);
+        const remoteLeads = leadsSnap.docs
+          .map((d) => d.data() as Lead)
+          .filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref));
         setLeads((prev) => {
           const map = new Map<string, Lead>();
-          prev.forEach((l) => map.set(l.id, l));
+          prev.filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref)).forEach((l) => map.set(l.id, l));
           remoteLeads.forEach((l) => map.set(l.id, l));
           return Array.from(map.values()).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
         });
       }
 
       if (!projectsSnap.empty) {
-        const remoteProjects = projectsSnap.docs.map((d) => d.data() as Project);
+        const remoteProjects = projectsSnap.docs
+          .map((d) => d.data() as Project)
+          .filter((p) => !FAKE_PROJECT_IDS.has(p.id));
         setProjects((prev) => {
           const map = new Map<string, Project>();
-          prev.forEach((p) => map.set(p.id, p));
+          prev.filter((p) => !FAKE_PROJECT_IDS.has(p.id)).forEach((p) => map.set(p.id, p));
           remoteProjects.forEach((p) => map.set(p.id, p));
           return Array.from(map.values());
         });
       }
 
       if (!studentsSnap.empty) {
-        const remoteStudents = studentsSnap.docs.map((d) => d.data() as TrainingStudent);
+        const remoteStudents = studentsSnap.docs
+          .map((d) => d.data() as TrainingStudent)
+          .filter((s) => !FAKE_STUDENT_IDS.has(s.id));
         setStudents((prev) => {
           const map = new Map<string, TrainingStudent>();
-          prev.forEach((s) => map.set(s.id, s));
+          prev.filter((s) => !FAKE_STUDENT_IDS.has(s.id)).forEach((s) => map.set(s.id, s));
           remoteStudents.forEach((s) => map.set(s.id, s));
           return Array.from(map.values());
         });
@@ -807,20 +887,23 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             if (remoteData.active) {
               matchedAdmin = remoteData;
             }
-          } else if (mail === PRIMARY_OWNER_EMAIL) {
-            // Auto-bootstrap primary owner document in Firestore
+          } else if (mail === PRIMARY_OWNER_EMAIL || mail === COMPANY_GMAIL) {
+            // Auto-bootstrap primary owner or official company Gmail in Firestore
+            const isEnoch = mail === PRIMARY_OWNER_EMAIL;
             const ownerDoc: AdminAccount = {
-              id: PRIMARY_OWNER_EMAIL,
-              email: PRIMARY_OWNER_EMAIL,
-              name: fbUser.displayName || 'Shittu (Primary Super Admin)',
+              id: mail,
+              username: isEnoch ? 'enoch' : 'esther',
+              email: mail,
+              name: fbUser.displayName || (isEnoch ? DEFAULT_ADMINS[0].name : DEFAULT_ADMINS[1].name),
               role: 'owner',
-              backupPassword: 'advibe-owner-2026',
+              backupPassword: isEnoch ? 'advibe-enoch-2026' : 'advibe-esther-2026',
               addedBy: 'System Bootstrap',
               createdAt: new Date().toISOString(),
               active: true,
-              isPrimaryOwner: true,
+              isPrimaryOwner: isEnoch,
+              isCoFounder: true,
             };
-            await setDoc(doc(db, 'admins', PRIMARY_OWNER_EMAIL), stripUndefined(ownerDoc), { merge: true });
+            await setDoc(doc(db, 'admins', mail), stripUndefined(ownerDoc), { merge: true });
             trackFirestoreWrite(1);
             matchedAdmin = ownerDoc;
           }
@@ -828,15 +911,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           // Fallback to local admins list if offline
         }
 
-        if (mail === PRIMARY_OWNER_EMAIL && !matchedAdmin) {
-          matchedAdmin = DEFAULT_ADMINS[0];
+        if ((mail === PRIMARY_OWNER_EMAIL || mail === COMPANY_GMAIL) && !matchedAdmin) {
+          matchedAdmin = mail === PRIMARY_OWNER_EMAIL ? DEFAULT_ADMINS[0] : DEFAULT_ADMINS[1];
         }
 
         if (matchedAdmin && matchedAdmin.active) {
           setSession({
             email: mail,
+            username: matchedAdmin.username,
             name: fbUser.displayName || matchedAdmin.name,
-            role: mail === PRIMARY_OWNER_EMAIL ? 'owner' : matchedAdmin.role,
+            role: mail === PRIMARY_OWNER_EMAIL || mail === COMPANY_GMAIL ? 'owner' : matchedAdmin.role,
             authMethod: 'google',
             photoURL: fbUser.photoURL || undefined,
           });
@@ -1082,21 +1166,24 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         /* fallback to local list */
       }
 
-      // Always allow bootstrapped primary owner shittu.cfm@gmail.com
-      if (mail === PRIMARY_OWNER_EMAIL) {
+      // Always allow bootstrapped primary owner shittu.cfm@gmail.com and company Gmail advibestudios.global@gmail.com
+      if (mail === PRIMARY_OWNER_EMAIL || mail === COMPANY_GMAIL) {
+        const isEnoch = mail === PRIMARY_OWNER_EMAIL;
         const ownerRecord: AdminAccount = {
-          id: PRIMARY_OWNER_EMAIL,
-          email: PRIMARY_OWNER_EMAIL,
-          name: fbUser.displayName || matchedAdmin?.name || 'Shittu (Primary Super Admin)',
+          id: mail,
+          username: matchedAdmin?.username || (isEnoch ? 'enoch' : 'esther'),
+          email: mail,
+          name: fbUser.displayName || matchedAdmin?.name || (isEnoch ? DEFAULT_ADMINS[0].name : DEFAULT_ADMINS[1].name),
           role: 'owner',
-          backupPassword: matchedAdmin?.backupPassword || 'advibe-owner-2026',
+          backupPassword: matchedAdmin?.backupPassword || (isEnoch ? 'advibe-enoch-2026' : 'advibe-esther-2026'),
           addedBy: 'System Bootstrap',
           createdAt: matchedAdmin?.createdAt || new Date().toISOString(),
           active: true,
-          isPrimaryOwner: true,
+          isPrimaryOwner: isEnoch,
+          isCoFounder: true,
         };
         try {
-          await setDoc(doc(db, 'admins', PRIMARY_OWNER_EMAIL), stripUndefined(ownerRecord), { merge: true });
+          await setDoc(doc(db, 'admins', mail), stripUndefined(ownerRecord), { merge: true });
           trackFirestoreWrite(1);
         } catch {
           /* ignore */
@@ -1106,13 +1193,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       if (!matchedAdmin || !matchedAdmin.active) {
         await fbSignOut(auth);
-        return `Access denied for "${mail}". Sign in with an authorized admin Gmail (such as ${PRIMARY_OWNER_EMAIL}), or sign in with your backup password first and add "${mail}" as a Super Admin or Regular Admin in Team & Access.`;
+        return `Access denied for "${mail}". Sign in with an authorized admin Gmail (such as ${COMPANY_GMAIL} or ${PRIMARY_OWNER_EMAIL}), or sign in with your Co-Founder username & password below.`;
       }
 
       const nextSession: SessionUser = {
         email: mail,
+        username: matchedAdmin.username,
         name: fbUser.displayName || matchedAdmin.name,
-        role: mail === PRIMARY_OWNER_EMAIL ? 'owner' : matchedAdmin.role,
+        role: mail === PRIMARY_OWNER_EMAIL || mail === COMPANY_GMAIL ? 'owner' : matchedAdmin.role,
         authMethod: 'google',
         photoURL: fbUser.photoURL || undefined,
       };
@@ -1133,36 +1221,53 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, [log, refresh]);
 
   const signIn = useCallback(
-    async (email: string, password: string): Promise<string | null> => {
-      const mail = email.trim().toLowerCase();
+    async (identifier: string, password: string): Promise<string | null> => {
+      const cleanId = identifier.trim().toLowerCase();
       const pass = password.trim();
 
-      // Check managed admins list (includes shittu.cfm@gmail.com + any new Super/Regular Admins + default accounts)
-      const matched = adminsRef.current.find(
-        (a) => a.email.toLowerCase() === mail && a.active && a.backupPassword === pass
-      );
+      // Check managed admins list by username OR email (supports Co-Founder 1 'enoch' & Co-Founder 2 'esther')
+      const matched = adminsRef.current.find((a) => {
+        if (!a.active) return false;
+        const emailMatch = a.email.toLowerCase() === cleanId;
+        const usernameMatch = Boolean(a.username && a.username.toLowerCase() === cleanId);
+        if (!emailMatch && !usernameMatch) return false;
+        if (a.backupPassword === pass) return true;
+        // Backward compatibility for Enoch's previous default password
+        if (a.email.toLowerCase() === PRIMARY_OWNER_EMAIL && pass === 'advibe-owner-2026') return true;
+        return false;
+      });
 
       if (matched) {
         const nextSession: SessionUser = {
           email: matched.email.toLowerCase(),
+          username: matched.username,
           name: matched.name,
-          role: matched.email.toLowerCase() === PRIMARY_OWNER_EMAIL ? 'owner' : matched.role,
+          role:
+            matched.email.toLowerCase() === PRIMARY_OWNER_EMAIL ||
+            matched.email.toLowerCase() === SECOND_COFOUNDER_EMAIL ||
+            matched.isCoFounder
+              ? 'owner'
+              : matched.role,
           authMethod: 'password',
         };
         setSession(nextSession);
-        log(nextSession.name, `Signed in with backup password (${mail})`);
+        log(nextSession.name, `Signed in with username/password (${matched.username || matched.email})`);
         void refresh();
         return null;
       }
 
-      // Also check legacy DEMO_USERS fallback
+      // Also check DEMO_USERS fallback
       const { DEMO_USERS } = await import('@/content/demoUsers');
-      const u = DEMO_USERS.find((x) => x.email.toLowerCase() === mail && x.password === pass);
+      const u = DEMO_USERS.find(
+        (x) =>
+          (x.email.toLowerCase() === cleanId || (x.username && x.username.toLowerCase() === cleanId)) &&
+          x.password === pass
+      );
       if (!u) {
-        return 'Incorrect email or backup password. Sign in with Google above or check your credentials.';
+        return 'Incorrect username/email or password. Check your Co-Founder credentials below or sign in with Google.';
       }
-      setSession({ email: u.email, name: u.name, role: u.role, authMethod: 'password' });
-      log(u.name, 'Signed in with backup password');
+      setSession({ email: u.email, username: u.username, name: u.name, role: u.role, authMethod: 'password' });
+      log(u.name, 'Signed in with username/password');
       return null;
     },
     [log, refresh]
@@ -1179,21 +1284,25 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const addOrUpdateAdmin: Store['addOrUpdateAdmin'] = useCallback(
     async (input) => {
       if (sessionRef.current?.role !== 'owner') {
-        return 'Only a Super Admin (Owner) can add or modify admin accounts.';
+        return 'Only a Super Admin (Co-Founder) can add or modify admin accounts.';
       }
       const cleanEmail = input.email.trim().toLowerCase();
       if (!cleanEmail || !cleanEmail.includes('@')) {
         return 'Please enter a valid Gmail or email address.';
       }
+      const cleanUsername = (input.username || '').trim().toLowerCase() || cleanEmail.split('@')[0];
       const cleanName = input.name.trim() || cleanEmail.split('@')[0];
       const existing = adminsRef.current.find((a) => a.email.toLowerCase() === cleanEmail);
 
       // Protect primary owner from being downgraded or deactivated
-      const finalRole: 'owner' | 'ops' = cleanEmail === PRIMARY_OWNER_EMAIL ? 'owner' : input.role;
-      const finalActive = cleanEmail === PRIMARY_OWNER_EMAIL ? true : (input.active ?? true);
+      const isPrimary = cleanEmail === PRIMARY_OWNER_EMAIL;
+      const isCoFounderAcc = isPrimary || cleanEmail === SECOND_COFOUNDER_EMAIL || Boolean(existing?.isCoFounder);
+      const finalRole: 'owner' | 'ops' = isPrimary ? 'owner' : input.role;
+      const finalActive = isPrimary ? true : (input.active ?? true);
 
       const record: AdminAccount = {
         id: cleanEmail,
+        username: cleanUsername,
         email: cleanEmail,
         name: cleanName,
         role: finalRole,
@@ -1204,7 +1313,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         addedBy: sessionRef.current?.email || PRIMARY_OWNER_EMAIL,
         createdAt: existing?.createdAt || new Date().toISOString(),
         active: finalActive,
-        isPrimaryOwner: cleanEmail === PRIMARY_OWNER_EMAIL,
+        isPrimaryOwner: isPrimary,
+        isCoFounder: isCoFounderAcc,
       };
 
       setAdmins((prev) => {
@@ -1223,7 +1333,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       log(
         sessionRef.current?.name || 'Super Admin',
-        `${existing ? 'Updated' : 'Added'} ${finalRole === 'owner' ? 'Super Admin' : 'Regular Admin'}: ${cleanEmail}`
+        `${existing ? 'Updated' : 'Added'} ${finalRole === 'owner' ? 'Super Admin' : 'Regular Admin'}: ${cleanEmail} (@${cleanUsername})`
       );
       return null;
     },
@@ -1233,11 +1343,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const removeAdmin: Store['removeAdmin'] = useCallback(
     async (email) => {
       if (sessionRef.current?.role !== 'owner') {
-        return 'Only a Super Admin (Owner) can remove admin accounts.';
+        return 'Only a Super Admin (Co-Founder) can remove admin accounts.';
       }
       const cleanEmail = email.trim().toLowerCase();
       if (cleanEmail === PRIMARY_OWNER_EMAIL) {
-        return 'The primary owner account (shittu.cfm@gmail.com) cannot be removed.';
+        return 'The primary Co-Founder account (shittu.cfm@gmail.com) cannot be removed.';
       }
 
       setAdmins((prev) => normalizeAdminsList(prev.filter((a) => a.email.toLowerCase() !== cleanEmail)));
@@ -1256,6 +1366,51 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     },
     [log]
   );
+
+  /* ----- Purge All Fake / Seeded Backend Records ----- */
+  const purgeFakeBackendData: Store['purgeFakeBackendData'] = useCallback(async () => {
+    setLeads((prev) => prev.filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref)));
+    setProjects((prev) => prev.filter((p) => !FAKE_PROJECT_IDS.has(p.id)));
+    setStudents((prev) => prev.filter((s) => !FAKE_STUDENT_IDS.has(s.id)));
+    setContent((prev) => {
+      const next = {
+        ...prev,
+        affiliates: (prev.affiliates || []).filter(
+          (a) => !FAKE_AFFILIATE_IDS.has(a.id) && !FAKE_AFFILIATE_CODES.has((a.code || '').toUpperCase())
+        ),
+      };
+      save(LS.content, next);
+      save(LS.contentCache, next);
+      return next;
+    });
+
+    if (isFirebaseConfigured && auth.currentUser) {
+      for (const id of FAKE_LEAD_IDS) {
+        try {
+          await deleteDoc(doc(db, 'leads', id));
+        } catch {
+          /* ignore */
+        }
+      }
+      for (const id of FAKE_PROJECT_IDS) {
+        try {
+          await deleteDoc(doc(db, 'projects', id));
+        } catch {
+          /* ignore */
+        }
+      }
+      for (const id of FAKE_STUDENT_IDS) {
+        try {
+          await deleteDoc(doc(db, 'students', id));
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+
+    log(sessionRef.current?.name || 'Co-Founder', 'Purged all fake/seeded leads, projects, students, and affiliates');
+    return 'All fake leads, pipeline projects, cohort students, and demo affiliates have been cleared. The 2 test Customer Portal accounts remain active for testing.';
+  }, [log]);
 
   /* ----- Firebase Free-Tier Quota Saver: Prune already-synced rows from Firestore ----- */
   const pruneSyncedRecordsFromFirestore: Store['pruneSyncedRecordsFromFirestore'] = useCallback(async () => {
@@ -1593,6 +1748,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       admins,
       addOrUpdateAdmin,
       removeAdmin,
+      purgeFakeBackendData,
       pruneSyncedRecordsFromFirestore,
       cohorts,
       activeCohortId,
@@ -1635,6 +1791,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       admins,
       addOrUpdateAdmin,
       removeAdmin,
+      purgeFakeBackendData,
       pruneSyncedRecordsFromFirestore,
       cohorts,
       activeCohortId,

@@ -6,6 +6,7 @@ export type PortalPackageType = 'single' | 'pack_5' | 'pack_10' | 'retainer_15';
 
 export interface CustomerAccount {
   id: string;
+  username?: string;
   name: string;
   email: string;
   phone: string;
@@ -14,8 +15,18 @@ export interface CustomerAccount {
   password?: string;
   passwordSet: boolean;
   otpCode?: string;
+  isTestAccount?: boolean;
   createdAt: string;
   lastLoginAt?: string;
+}
+
+export interface ClientUploadedAsset {
+  id: string;
+  name: string;
+  mimeType: string;
+  sizeBytes: number;
+  dataUrl: string;
+  uploadedAt: string;
 }
 
 export interface ProjectScriptItem {
@@ -27,6 +38,7 @@ export interface ProjectScriptItem {
   visualNotes?: string;
   status: 'pending_review' | 'approved' | 'changes_requested';
   clientAssetLinks: string[]; // Google Drive / cloud links provided by customer
+  clientUploadedAssets?: ClientUploadedAsset[]; // Direct files uploaded from client phone/computer
   clientRecommendations?: string; // Customer recommendations / creative notes
   revisionExplanation?: string; // Detailed explanation when customer rejects/requests rework
   updatedAt: string;
@@ -305,15 +317,15 @@ export function parseGoogleDriveVideoUrl(rawUrl: string): {
   };
 }
 
-const SEEDED_PROJECTS: CustomerProject[] = [
+export const SEEDED_PROJECTS: CustomerProject[] = [
   {
-    id: 'proj_cfm_retainer',
-    ref: 'AV-CFM-01',
-    customerId: 'cust_circlesfundme',
-    customerName: 'CirclesFundMe Team',
-    customerEmail: 'demo@circlesfundme.com',
+    id: 'proj_test_1_retainer',
+    ref: 'AV-TST-101',
+    customerId: 'cust_test_1',
+    customerName: 'Test Client 01 (CirclesFundMe Demo)',
+    customerEmail: 'test1@advibestudio.com',
     customerPhone: '+2348000000001',
-    businessName: 'CirclesFundMe Fintech',
+    businessName: 'CirclesFundMe Cooperative (Test Account 1)',
     packageType: 'retainer_15',
     packageName: 'Monthly Content Retainer (15 Videos)',
     totalVideos: 15,
@@ -321,7 +333,7 @@ const SEEDED_PROJECTS: CustomerProject[] = [
     currency: 'NGN',
     paidPercent: 40,
     amountPaid: 100000,
-    paymentNotes: '40% Initial Retainer Deposit Confirmed — 6 of 15 videos unlocked for download.',
+    paymentNotes: '40% Initial Retainer Deposit Confirmed — 6 of 15 videos unlocked for download; remaining ready videos are View-Only.',
     status: 'Ready for Review',
     unreadScriptAlert: true,
     createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
@@ -437,21 +449,161 @@ const SEEDED_PROJECTS: CustomerProject[] = [
       },
     ],
   },
-];
-
-const SEEDED_ACCOUNTS: CustomerAccount[] = [
   {
-    id: 'cust_circlesfundme',
-    name: 'CirclesFundMe Team',
-    email: 'demo@circlesfundme.com',
-    phone: '+2348000000001',
-    business: 'CirclesFundMe Fintech',
-    country: 'NG',
-    password: 'cfm-client-2026',
-    passwordSet: true,
-    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+    id: 'proj_test_1_pack5',
+    ref: 'AV-TST-102',
+    customerId: 'cust_test_1',
+    customerName: 'Test Client 01 (CirclesFundMe Demo)',
+    customerEmail: 'test1@advibestudio.com',
+    customerPhone: '+2348000000001',
+    businessName: 'CirclesFundMe Cooperative (Test Account 1)',
+    packageType: 'pack_5',
+    packageName: '5 Creative Test Pack',
+    totalVideos: 5,
+    totalPrice: 95000,
+    currency: 'NGN',
+    paidPercent: 50,
+    amountPaid: 47500,
+    paymentNotes: '50% Deposit Confirmed — 2 of 5 videos unlocked for download, 3 videos in View-Only mode.',
+    status: 'Ready for Review',
+    unreadScriptAlert: false,
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    updatedAt: new Date().toISOString(),
+    scripts: [
+      {
+        id: 'scr_p5_1',
+        episodeNumber: 1,
+        title: 'Creative 01 — Fast Hook Variation A',
+        hook: '0–3s Hook: "Stop losing customers to slow checkout pages—watch how 3 seconds changes everything."',
+        scriptBody: 'Scene 1: Split-screen comparison.\nScene 2: Social proof overlay.\nScene 3: Direct WhatsApp CTA.',
+        visualNotes: '9:16 Vertical · High-contrast captions.',
+        status: 'approved',
+        clientAssetLinks: [],
+        clientRecommendations: '',
+        updatedAt: new Date().toISOString(),
+      },
+    ],
+    videos: [
+      {
+        id: 'vid_p5_1',
+        index: 1,
+        title: 'Test Pack Video 01 — Hook Angle A (Download Unlocked)',
+        category: 'Service Ads',
+        duration: '0:42',
+        driveUrl: 'YSTvgHJ9vRU',
+        status: 'ready',
+        uploadedAt: new Date().toISOString(),
+      },
+      {
+        id: 'vid_p5_2',
+        index: 2,
+        title: 'Test Pack Video 02 — Hook Angle B (Download Unlocked)',
+        category: 'Story Ads',
+        duration: '0:49',
+        driveUrl: 'NuUviJm2DLo',
+        status: 'ready',
+        uploadedAt: new Date().toISOString(),
+      },
+      {
+        id: 'vid_p5_3',
+        index: 3,
+        title: 'Test Pack Video 03 — Hook Angle C (View-Only at 50% Paid)',
+        category: 'Launch Ads',
+        duration: '0:45',
+        driveUrl: 'XUn7L2s-Bqk',
+        status: 'ready',
+        uploadedAt: new Date().toISOString(),
+      },
+    ],
+  },
+  {
+    id: 'proj_test_2_single',
+    ref: 'AV-TST-201',
+    customerId: 'cust_test_2',
+    customerName: 'Test Client 02 (Single & 10-Pack Tester)',
+    customerEmail: 'test2@advibestudio.com',
+    customerPhone: '+2348000000002',
+    businessName: 'AdVibe Sandbox Brand (Test Account 2)',
+    packageType: 'single',
+    packageName: 'Single Video Ad (Up to 2m 30s)',
+    totalVideos: 1,
+    totalPrice: 35000,
+    currency: 'NGN',
+    paidPercent: 60,
+    amountPaid: 21000,
+    paymentNotes: '60% Deposit Confirmed — Video is available in View-Only streaming mode until 100% balance is completed.',
+    status: 'Ready for Review',
+    unreadScriptAlert: true,
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    updatedAt: new Date().toISOString(),
+    scripts: [
+      {
+        id: 'scr_t2_1',
+        episodeNumber: 1,
+        title: 'Single Commercial — Flagship Brand Story & Offer',
+        hook: '0–3s Hook: "Most customers scroll past flyers in 0.8 seconds—here is how to make them stop and order."',
+        scriptBody:
+          'Scene 1: Relatable customer pain point in everyday setting.\nScene 2: Product demonstration with photorealistic AI cinematography.\nScene 3: Clear offer & guarantee end-card.',
+        visualNotes: '9:16 + 16:9 Dual Format · Studio Voiceover & Foley.',
+        status: 'pending_review',
+        clientAssetLinks: [],
+        clientRecommendations: '',
+        updatedAt: new Date().toISOString(),
+      },
+    ],
+    videos: [
+      {
+        id: 'vid_t2_1',
+        index: 1,
+        title: 'Flagship Single Video Ad — Master Preview (View-Only at 60% Paid)',
+        category: 'Brand Films',
+        duration: '1:15',
+        driveUrl: 'QsqKNOo1uDQ',
+        status: 'ready',
+        uploadedAt: new Date().toISOString(),
+      },
+    ],
   },
 ];
+
+export const SEEDED_ACCOUNTS: CustomerAccount[] = [
+  {
+    id: 'cust_test_1',
+    username: 'testclient1',
+    name: 'Test Client 01',
+    email: 'test1@advibestudio.com',
+    phone: '+2348000000001',
+    business: 'CirclesFundMe Cooperative (Test Account 1)',
+    country: 'NG',
+    password: 'advibe-test-1',
+    passwordSet: true,
+    isTestAccount: true,
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
+  },
+  {
+    id: 'cust_test_2',
+    username: 'testclient2',
+    name: 'Test Client 02',
+    email: 'test2@advibestudio.com',
+    phone: '+2348000000002',
+    business: 'AdVibe Sandbox Brand (Test Account 2)',
+    country: 'NG',
+    password: 'advibe-test-2',
+    passwordSet: true,
+    isTestAccount: true,
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+];
+
+function isLegacyDemoAccount(a?: Partial<CustomerAccount> | null): boolean {
+  if (!a) return false;
+  const email = (a.email || '').toLowerCase();
+  return (
+    a.id === 'cust_circlesfundme' ||
+    a.id === 'cust_demo_cfm' ||
+    email === 'demo@circlesfundme.com'
+  );
+}
 
 export function loadCustomerAccounts(): CustomerAccount[] {
   try {
@@ -461,7 +613,16 @@ export function loadCustomerAccounts(): CustomerAccount[] {
       return SEEDED_ACCOUNTS;
     }
     const parsed = JSON.parse(raw) as CustomerAccount[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SEEDED_ACCOUNTS;
+    const realAccounts = Array.isArray(parsed)
+      ? parsed.filter(
+          (a) =>
+            !isLegacyDemoAccount(a) &&
+            a.id !== 'cust_test_1' &&
+            a.id !== 'cust_test_2',
+        )
+      : [];
+    const merged = [...SEEDED_ACCOUNTS, ...realAccounts];
+    return merged;
   } catch {
     return SEEDED_ACCOUNTS;
   }
@@ -484,7 +645,18 @@ export function loadCustomerProjects(): CustomerProject[] {
       return SEEDED_PROJECTS;
     }
     const parsed = JSON.parse(raw) as CustomerProject[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SEEDED_PROJECTS;
+    if (!Array.isArray(parsed) || parsed.length === 0) return SEEDED_PROJECTS;
+    // Remove legacy demo projects and ensure our 2 test accounts' projects exist
+    const filtered = parsed.filter(
+      (p) =>
+        p.id !== 'proj_cfm_retainer' &&
+        p.customerId !== 'cust_circlesfundme' &&
+        p.customerId !== 'cust_demo_cfm' &&
+        (p.customerEmail || '').toLowerCase() !== 'demo@circlesfundme.com',
+    );
+    const existingIds = new Set(filtered.map((p) => p.id));
+    const missingSeeds = SEEDED_PROJECTS.filter((sp) => !existingIds.has(sp.id));
+    return [...filtered, ...missingSeeds];
   } catch {
     return SEEDED_PROJECTS;
   }
@@ -702,6 +874,11 @@ export function getActiveCustomerSession(): CustomerAccount | null {
     const raw = localStorage.getItem(ACTIVE_CUSTOMER_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CustomerAccount;
+    if (isLegacyDemoAccount(parsed)) {
+      const cleanTestAccount = SEEDED_ACCOUNTS[0];
+      localStorage.setItem(ACTIVE_CUSTOMER_KEY, JSON.stringify(cleanTestAccount));
+      return cleanTestAccount;
+    }
     const latest = loadCustomerAccounts().find((a) => a.id === parsed.id);
     return latest || parsed;
   } catch {

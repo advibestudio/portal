@@ -61,12 +61,14 @@ export function TeamAndSyncAdmin() {
     content,
     saveContent,
     pruneSyncedRecordsFromFirestore,
+    purgeFakeBackendData,
   } = useStore();
 
   const isSuperAdmin = session?.role === 'owner';
 
   // New / Edit Admin form state
   const [newEmail, setNewEmail] = useState('');
+  const [newUsername, setNewUsername] = useState('');
   const [newName, setNewName] = useState('');
   const [newRole, setNewRole] = useState<'owner' | 'ops'>('owner');
   const [newPassword, setNewPassword] = useState('');
@@ -114,6 +116,7 @@ export function TeamAndSyncAdmin() {
     setTeamMsg(null);
     const err = await addOrUpdateAdmin({
       email: newEmail,
+      username: newUsername.trim().toLowerCase() || undefined,
       name: newName,
       role: newRole,
       backupPassword: newPassword || 'advibe-admin-2026',
@@ -125,14 +128,23 @@ export function TeamAndSyncAdmin() {
     } else {
       setTeamMsg({
         type: 'ok',
-        text: `Saved ${newEmail.trim().toLowerCase()} as ${
+        text: `Saved ${newEmail.trim().toLowerCase()} ${newUsername ? `(@${newUsername.trim().toLowerCase()})` : ''} as ${
           newRole === 'owner' ? 'Super Admin (Full Owner)' : 'Regular Admin (Ops)'
-        }. They can now sign in with Google or their backup password.`,
+        }. They can now sign in with their username/password or Google.`,
       });
       setNewEmail('');
+      setNewUsername('');
       setNewName('');
       setNewPassword('');
     }
+  };
+
+  const handlePurgeFakeData = async () => {
+    setSyncBusy(true);
+    setTeamMsg(null);
+    const res = await purgeFakeBackendData();
+    setSyncBusy(false);
+    setTeamMsg({ type: 'ok', text: res.message });
   };
 
   const handleRoleToggle = async (email: string, currentName: string, nextRole: 'owner' | 'ops') => {
@@ -654,32 +666,52 @@ export function TeamAndSyncAdmin() {
         </div>
       </div>
 
-      {/* SECTION 2: SUPER ADMIN & REGULAR ADMIN TEAM MANAGER */}
+      {/* SECTION 2: DUAL CO-FOUNDER SUPER ADMINS & TEAM MANAGER */}
       <div className="bg-white rounded-3xl border border-ink/10 p-6 md:p-8 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-ink/10">
           <div>
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-700">
-              <Users className="w-4 h-4" /> Role-Based Access Control
+              <Users className="w-4 h-4" /> Dual Co-Founder Access &amp; Team Control
             </div>
             <h3 className="font-display text-xl md:text-2xl font-semibold mt-1 text-ink">
-              Super Admins &amp; Regular Admins ({admins.length})
+              Co-Founder Super Admins &amp; Team ({admins.length})
             </h3>
             <p className="text-sm text-ink/65 mt-1">
-              Add your new Gmail account or team members below. <strong>Super Admins</strong> have full ownership
-              control (including creating other admins and editing prices), while <strong>Regular Admins</strong> manage
-              leads, projects, and student payments.
+              Both Co-Founders (<strong>@enoch</strong> and <strong>@esther</strong>) have separate Super Admin
+              usernames and passwords. You can also add additional admins or clear any legacy seeded records below.
             </p>
           </div>
+          {isSuperAdmin && (
+            <button
+              type="button"
+              disabled={syncBusy}
+              onClick={handlePurgeFakeData}
+              className="h-10 px-4 rounded-full bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Clear Any Fake / Seeded Backend Data
+            </button>
+          )}
         </div>
 
-        {/* Add New Gmail / Admin Form (Super Admin Only) */}
+        {/* Add New Gmail / Username Admin Form (Super Admin Only) */}
         {isSuperAdmin ? (
           <form onSubmit={handleAddAdmin} className="mt-6 bg-warm/60 rounded-2xl p-5 border border-ink/10">
             <div className="flex items-center gap-2 text-sm font-semibold text-ink mb-4">
               <UserPlus className="w-4 h-4 text-amber-700" />
-              Add or Update an Admin Account (Supports Google Sign-In + Backup Password)
+              Add or Update a Co-Founder / Admin Account (Username + Password or Google)
             </div>
-            <div className="grid md:grid-cols-4 gap-3">
+            <div className="grid md:grid-cols-5 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-ink/70 mb-1">Username (e.g. enoch)</label>
+                <input
+                  type="text"
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+                  placeholder="enoch / esther"
+                  className="w-full h-11 px-3.5 rounded-xl bg-white border border-ink/15 text-sm font-mono text-ink focus:outline-none focus:border-ink"
+                />
+              </div>
               <div>
                 <label className="block text-xs font-medium text-ink/70 mb-1">Gmail / Email Address *</label>
                 <input
@@ -687,7 +719,7 @@ export function TeamAndSyncAdmin() {
                   required
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
-                  placeholder="yournewgmail@gmail.com"
+                  placeholder="cofounder@advibestudio.com"
                   className="w-full h-11 px-3.5 rounded-xl bg-white border border-ink/15 text-sm text-ink focus:outline-none focus:border-ink"
                 />
               </div>
@@ -698,7 +730,7 @@ export function TeamAndSyncAdmin() {
                   required
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="e.g. AdVibe Owner (New Gmail)"
+                  placeholder="e.g. Co-Founder Name"
                   className="w-full h-11 px-3.5 rounded-xl bg-white border border-ink/15 text-sm text-ink focus:outline-none focus:border-ink"
                 />
               </div>
@@ -714,7 +746,7 @@ export function TeamAndSyncAdmin() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-ink/70 mb-1">Backup Password</label>
+                <label className="block text-xs font-medium text-ink/70 mb-1">Admin Password *</label>
                 <input
                   type="text"
                   value={newPassword}
@@ -726,8 +758,7 @@ export function TeamAndSyncAdmin() {
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <p className="text-xs text-ink/60">
-                Tip: If you sign in with a Gmail address added here, clicking <strong>Continue with Google</strong> on
-                the login screen logs you in immediately.
+                Sign in on either <strong>General Admin (#/admin)</strong> or <strong>Mobile Client Admin (#/client-admin)</strong> using the Username or Email + Password.
               </p>
               <button
                 type="submit"
@@ -762,31 +793,39 @@ export function TeamAndSyncAdmin() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-ink/10 text-[11px] font-mono uppercase tracking-wider text-ink/55">
-                <th className="py-3 pr-4">Admin Name &amp; Email</th>
+                <th className="py-3 pr-4">Co-Founder / Admin</th>
+                <th className="py-3 px-4">Username</th>
                 <th className="py-3 px-4">Role</th>
-                <th className="py-3 px-4">Backup Password</th>
-                <th className="py-3 px-4">Sign-In Methods</th>
+                <th className="py-3 px-4">Password</th>
                 {isSuperAdmin && <th className="py-3 pl-4 text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-ink/10 text-sm">
               {admins.map((a) => {
-                const isPrimary = a.email.toLowerCase() === 'shittu.cfm@gmail.com' || a.isPrimaryOwner;
+                const isProtected =
+                  a.email.toLowerCase() === 'shittu.cfm@gmail.com' ||
+                  a.email.toLowerCase() === 'advibestudios.global@gmail.com' ||
+                  a.email.toLowerCase() === 'esther@advibestudio.com' ||
+                  a.isPrimaryOwner ||
+                  a.isCoFounder;
                 return (
                   <tr key={a.email} className="hover:bg-warm/40">
                     <td className="py-3.5 pr-4">
-                      <div className="font-semibold text-ink flex items-center gap-2">
+                      <div className="font-semibold text-ink flex flex-wrap items-center gap-2">
                         {a.name}
-                        {isPrimary && (
+                        {isProtected && (
                           <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-amber/25 text-ink">
-                            Primary Owner
+                            Co-Founder Super Admin
                           </span>
                         )}
                       </div>
                       <div className="text-xs text-ink/60 font-mono">{a.email}</div>
                     </td>
+                    <td className="py-3.5 px-4 font-mono text-xs font-semibold text-amber-800">
+                      {a.username ? `@${a.username}` : '—'}
+                    </td>
                     <td className="py-3.5 px-4">
-                      {isSuperAdmin && !isPrimary ? (
+                      {isSuperAdmin && !isProtected ? (
                         <select
                           value={a.role}
                           onChange={(e) =>
@@ -812,12 +851,9 @@ export function TeamAndSyncAdmin() {
                     <td className="py-3.5 px-4 font-mono text-xs text-ink/75">
                       {isSuperAdmin ? a.backupPassword || 'advibe-admin-2026' : '••••••••••••'}
                     </td>
-                    <td className="py-3.5 px-4 text-xs text-ink/65">
-                      Google Sign-In + Backup Password
-                    </td>
                     {isSuperAdmin && (
                       <td className="py-3.5 pl-4 text-right">
-                        {!isPrimary ? (
+                        {!isProtected ? (
                           <button
                             type="button"
                             onClick={() => handleRemoveAdmin(a.email)}
@@ -826,7 +862,7 @@ export function TeamAndSyncAdmin() {
                             <Trash2 className="w-3.5 h-3.5" /> Remove
                           </button>
                         ) : (
-                          <span className="text-xs text-ink/40">Protected</span>
+                          <span className="text-xs text-ink/40">Co-Founder Protected</span>
                         )}
                       </td>
                     )}
@@ -837,35 +873,30 @@ export function TeamAndSyncAdmin() {
           </table>
         </div>
 
-        {/* Guide for Transitioning Ownership to a New Gmail Account */}
+        {/* Test Portal Accounts & WebApp Directory Reference */}
         <div className="mt-6 rounded-2xl bg-amber/10 border border-amber/30 p-5">
           <div className="flex items-start gap-3">
             <ArrowRightLeft className="w-5 h-5 text-amber-800 shrink-0 mt-0.5" />
-            <div className="text-xs md:text-sm text-ink/80 space-y-1.5">
+            <div className="text-xs md:text-sm text-ink/80 space-y-2">
               <div className="font-semibold text-ink">
-                How to Move Full Ownership to Your New Gmail Account Anytime:
+                Ready-to-Test Customer Portal Logins &amp; Dedicated WebApp URLs:
               </div>
-              <ol className="list-decimal list-inside space-y-1 text-ink/75">
-                <li>
-                  Add your new Gmail above with role set to <strong>Super Admin (Full Owner)</strong>. It immediately
-                  gets full Super Admin power inside this dashboard.
-                </li>
-                <li>
-                  To also make that new Gmail the cloud owner of the Firebase database, open{' '}
-                  <a
-                    href={firebaseProjectInfo.iamUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline font-medium text-ink inline-flex items-center gap-1"
-                  >
-                    Firebase Users &amp; Permissions <ExternalLink className="w-3 h-3" />
-                  </a>{' '}
-                  and invite your new Gmail as an <strong>Owner</strong>.
-                </li>
-                <li>
-                  Share your connected Google Sheet with your new Gmail as an <strong>Editor / Owner</strong>.
-                </li>
-              </ol>
+              <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                <div className="rounded-xl bg-white/80 border border-ink/10 p-3">
+                  <div className="font-semibold text-ink text-xs">Test Customer Portal Account #1 (Retainer + 5-Pack)</div>
+                  <div className="font-mono text-[11px] text-ink/75 mt-1">
+                    Username: <strong>testclient1</strong> · Email: <strong>test1@advibestudio.com</strong>
+                  </div>
+                  <div className="font-mono text-[11px] text-amber-800">Password: <strong>advibe-test-1</strong></div>
+                </div>
+                <div className="rounded-xl bg-white/80 border border-ink/10 p-3">
+                  <div className="font-semibold text-ink text-xs">Test Customer Portal Account #2 (1-Video Gate)</div>
+                  <div className="font-mono text-[11px] text-ink/75 mt-1">
+                    Username: <strong>testclient2</strong> · Email: <strong>test2@advibestudio.com</strong>
+                  </div>
+                  <div className="font-mono text-[11px] text-amber-800">Password: <strong>advibe-test-2</strong></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

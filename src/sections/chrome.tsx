@@ -9,6 +9,7 @@ import { track } from '@/lib/tracking';
 import type { PortfolioItem } from '@/content/types';
 import { Reveal, VideoCard, SecHead, EmLast } from '@/components/shared';
 import { Wall } from '@/components/Wall';
+import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 
 function ArrowBtn() {
   return <span className="btn-arrow" aria-hidden="true"><ArrowRight size={18} strokeWidth={2.4} /></span>;
@@ -74,7 +75,6 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
     { label: 'Services', href: '#services', on: sec.services },
     { label: 'Packages', href: '#pricing', on: true },
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
-    { label: 'How It Works', href: '#process', on: sec.process },
     { label: 'AI Mini-Series', href: '#/promotional-mini-series', on: true },
     {
       label: 'Training',
@@ -84,7 +84,12 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
     },
     {
       label: 'Client Portal',
-      href: '#/portal',
+      href: '#/client-portal',
+      on: true,
+    },
+    {
+      label: 'Download Apps',
+      href: '#/apps',
       on: true,
     },
   ].filter((l) => l.on);
@@ -117,6 +122,10 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
           ))}
         </nav>
         <div className="site-actions">
+          <div className="hidden lg:block">
+            <AppQuickSwitcher label="Apps" compact />
+          </div>
+          <ThemeToggleButton compact />
           <CountrySwitch />
           <button onClick={handlePrimaryCta} className="btn-studio is-sm">
             <span>Book a Free Strategy Session</span><span className="btn-arrow" aria-hidden="true"><ArrowRight size={16} strokeWidth={2.4} /></span>
@@ -138,6 +147,29 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
               )}
             </a>
           ))}
+          <a
+            href="#/affiliate-portal"
+            onClick={() => setOpen(false)}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+          >
+            <span>Affiliate Partner Portal</span>
+            <span style={{ fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '3px 8px', borderRadius: 999, background: 'rgb(var(--brand))', color: '#111412' }}>
+              10% Commission
+            </span>
+          </a>
+          <div style={{ marginTop: 8, paddingTop: 10, borderTop: '1px solid rgb(var(--line))' }}>
+            <button
+              onClick={() => {
+                setOpen(false);
+                handlePrimaryCta();
+              }}
+              className="btn-studio is-sm"
+              style={{ width: '100%', justifyContent: 'space-between' }}
+            >
+              <span>Book a Free Strategy Session</span>
+              <span className="btn-arrow" aria-hidden="true"><ArrowRight size={16} strokeWidth={2.4} /></span>
+            </button>
+          </div>
         </nav>
       )}
     </header>

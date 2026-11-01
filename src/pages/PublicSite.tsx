@@ -92,7 +92,7 @@ function Page() {
   };
 
   return (
-    <div className="studio" style={{ minHeight: '100dvh' }}>
+    <div className="studio theme-adaptive" style={{ minHeight: '100dvh' }}>
       <Nav onOrder={() => openStrategy()} onStrategy={() => openStrategy()} />
       <main>
         <Hero onOrder={() => openStrategy()} onStrategy={() => openStrategy()} onPlay={setPlaying} />

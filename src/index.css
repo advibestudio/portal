@@ -4,15 +4,18 @@
   html {
     scroll-behavior: smooth;
   }
-  /* Admin dashboard keeps its dark look. The public site's look lives in
-     src/styles/studio.css (it switches on body.is-public). */
   body {
     margin: 0;
     font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
-    background-color: #0b0b0c;
-    color: #f4f2ec;
+    background-color: #faf9f5;
+    color: #111412;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  html[data-theme="dark"] body {
+    background-color: #0b0e12;
+    color: #f4f2ec;
   }
   .font-display {
     font-family: 'Bricolage Grotesque Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
@@ -80,71 +83,243 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 48 25% 97%;
+    --foreground: 140 8% 7%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 140 8% 7%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --popover-foreground: 140 8% 7%;
+    --primary: 140 8% 7%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --secondary: 72 14% 95%;
+    --secondary-foreground: 140 8% 7%;
+    --muted: 72 14% 95%;
+    --muted-foreground: 128 5% 36%;
+    --accent: 72 14% 95%;
+    --accent-foreground: 140 8% 7%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 75 13% 88%;
+    --input: 75 13% 88%;
+    --ring: 140 8% 7%;
     --radius: 0.625rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 214 24% 6%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 218 22% 9%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 218 22% 9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 218 20% 14%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
+    --muted: 218 20% 14%;
+    --muted-foreground: 215 12% 65%;
+    --accent: 218 20% 14%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 218 18% 18%;
+    --input: 218 18% 18%;
+    --ring: 37 91% 55%;
   }
 }
 
-* {
-  border-color: hsl(var(--border));
+/* ==========================================================================
+   UNIVERSAL WHITE MODE & DARK MODE ADAPTATION (.theme-adaptive)
+   Ensures all WebApps, Portals, Admin, and Commercial pages look crisp,
+   studio-grade, and 100% legible in both White (Light) and Dark (Black) mode.
+   ========================================================================== */
+
+/* 1. WHITE (LIGHT) MODE ADAPTATION FOR DARK-AUTHORED SURFACES */
+html[data-theme="light"] .theme-adaptive .bg-\[\#0b0e12\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#0a0d12\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#0b0d11\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#07090c\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#0b0b0c\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#090b0e\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#0d1117\] {
+  background-color: #faf9f5 !important;
+  color: #111412 !important;
 }
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+
+html[data-theme="light"] .theme-adaptive .bg-\[\#0b0e12\]\/95,
+html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\]\/95,
+html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\]\/98,
+html[data-theme="light"] .theme-adaptive .bg-\[\#0a0d12\]\/95,
+html[data-theme="light"] .theme-adaptive .bg-\[\#0b0d11\]\/95,
+html[data-theme="light"] .theme-adaptive .bg-\[\#07090c\]\/90,
+html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\]\/95,
+html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\]\/98 {
+  background-color: rgba(250, 249, 245, 0.95) !important;
+  color: #111412 !important;
+}
+
+html[data-theme="light"] .theme-adaptive .bg-\[\#12161d\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#12161f\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#121518\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#141922\],
+html[data-theme="light"] .theme-adaptive .bg-\[\#161b22\] {
+  background-color: #ffffff !important;
+  color: #111412 !important;
+  border-color: rgba(17, 20, 18, 0.12) !important;
+  box-shadow: 0 12px 32px -18px rgba(17, 20, 18, 0.08);
+}
+
+html[data-theme="light"] .theme-adaptive .bg-black\/30,
+html[data-theme="light"] .theme-adaptive .bg-black\/40,
+html[data-theme="light"] .theme-adaptive .bg-black\/50,
+html[data-theme="light"] .theme-adaptive .bg-black\/60,
+html[data-theme="light"] .theme-adaptive .bg-black\/70,
+html[data-theme="light"] .theme-adaptive .bg-white\/5,
+html[data-theme="light"] .theme-adaptive .bg-white\/10,
+html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.02\],
+html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.03\],
+html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.04\],
+html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.06\] {
+  background-color: #f3f4ef !important;
+  color: #111412 !important;
+}
+
+html[data-theme="light"] .theme-adaptive .border-white\/5,
+html[data-theme="light"] .theme-adaptive .border-white\/10,
+html[data-theme="light"] .theme-adaptive .border-white\/12,
+html[data-theme="light"] .theme-adaptive .border-white\/15,
+html[data-theme="light"] .theme-adaptive .border-white\/20,
+html[data-theme="light"] .theme-adaptive .border-white\/25 {
+  border-color: rgba(17, 20, 18, 0.14) !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-white:not(.bg-\[\#111412\]):not(.bg-red-500):not(.bg-emerald-600):not(.keep-white) {
+  color: #111412 !important;
+}
+html[data-theme="light"] .theme-adaptive .bg-\[\#111412\] .text-white,
+html[data-theme="light"] .theme-adaptive .bg-\[\#111412\].text-white,
+html[data-theme="light"] .theme-adaptive .bg-red-500.text-white,
+html[data-theme="light"] .theme-adaptive .vcard .text-white,
+html[data-theme="light"] .theme-adaptive .keep-dark .text-white {
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-white\/90,
+html[data-theme="light"] .theme-adaptive .text-white\/85,
+html[data-theme="light"] .theme-adaptive .text-white\/80,
+html[data-theme="light"] .theme-adaptive .text-white\/75,
+html[data-theme="light"] .theme-adaptive .text-white\/70 {
+  color: #2a302b !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-white\/65,
+html[data-theme="light"] .theme-adaptive .text-white\/60,
+html[data-theme="light"] .theme-adaptive .text-white\/55,
+html[data-theme="light"] .theme-adaptive .text-white\/50 {
+  color: #525b53 !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-white\/45,
+html[data-theme="light"] .theme-adaptive .text-white\/40,
+html[data-theme="light"] .theme-adaptive .text-white\/35,
+html[data-theme="light"] .theme-adaptive .text-white\/30 {
+  color: #6e776f !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-emerald-300,
+html[data-theme="light"] .theme-adaptive .text-emerald-200,
+html[data-theme="light"] .theme-adaptive .text-emerald-400 {
+  color: #047857 !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-amber-300,
+html[data-theme="light"] .theme-adaptive .text-amber-200,
+html[data-theme="light"] .theme-adaptive .text-amber-400 {
+  color: #b45309 !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-red-300,
+html[data-theme="light"] .theme-adaptive .text-red-200,
+html[data-theme="light"] .theme-adaptive .text-red-400 {
+  color: #b91c1c !important;
+}
+
+html[data-theme="light"] .theme-adaptive .text-sky-300,
+html[data-theme="light"] .theme-adaptive .text-sky-400 {
+  color: #0369a1 !important;
+}
+
+html[data-theme="light"] .theme-adaptive input::placeholder,
+html[data-theme="light"] .theme-adaptive textarea::placeholder {
+  color: rgba(17, 20, 18, 0.42) !important;
+}
+
+html[data-theme="light"] .theme-adaptive select option {
+  background-color: #ffffff;
+  color: #111412;
+}
+
+/* 2. DARK (BLACK) MODE ADAPTATION FOR LIGHT-AUTHORED SURFACES */
+html[data-theme="dark"] .theme-adaptive .bg-\[\#fafaf6\],
+html[data-theme="dark"] .theme-adaptive .bg-\[\#faf9f4\],
+html[data-theme="dark"] .theme-adaptive .bg-\[\#f4f2ec\],
+html[data-theme="dark"] .theme-adaptive .bg-\[\#f3f4ef\] {
+  background-color: #0b0e12 !important;
+  color: #f4f2ec !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .bg-\[\#fafaf6\]\/90,
+html[data-theme="dark"] .theme-adaptive .bg-\[\#faf9f4\]\/90,
+html[data-theme="dark"] .theme-adaptive .bg-white\/90,
+html[data-theme="dark"] .theme-adaptive .bg-white\/95 {
+  background-color: rgba(11, 14, 18, 0.92) !important;
+  color: #f4f2ec !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .bg-white:not(.btn-studio):not(button):not(.bg-\[\#f5a524\]) {
+  background-color: #12161d !important;
+  color: #f4f2ec !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .bg-\[\#fff8e6\] {
+  background-color: rgba(245, 165, 36, 0.12) !important;
+  color: #f4f2ec !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]:not(button):not(.bg-\[\#f5a524\]):not(.bg-emerald-500):not(.bg-white),
+html[data-theme="dark"] .theme-adaptive .text-\[\#2a302b\] {
+  color: #f4f2ec !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-\[\#586159\] {
+  color: rgba(244, 242, 236, 0.65) !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/80,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/75,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/70 {
+  color: rgba(244, 242, 236, 0.8) !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/65,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/60,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/55,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/50,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/40 {
+  color: rgba(244, 242, 236, 0.58) !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/10,
+html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/12,
+html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/15,
+html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/20 {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+html[data-theme="dark"] .theme-adaptive select option {
+  background-color: #12161d;
+  color: #f4f2ec;
 }

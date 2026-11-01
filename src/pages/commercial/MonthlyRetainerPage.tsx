@@ -24,6 +24,7 @@ import { SoundWaveVisualizer } from '@/components/animations/SoundWaveVisualizer
 import { ClapperboardGraphic } from '@/components/animations/ClapperboardGraphic';
 import { AnimatedStoryGraphic } from '@/components/animations/AnimatedStoryGraphic';
 import { TactileRipple, RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
+import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 
 export default function MonthlyRetainerPage() {
   const { content } = useStore();
@@ -134,23 +135,25 @@ export default function MonthlyRetainerPage() {
 
       {/* 2. STICKY BRAND HEADER */}
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#07090c]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
-          <a href="#/" className="flex items-center gap-2.5 text-inherit no-underline group">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/10 text-[#f5a524] border border-white/10 shadow-sm transition group-hover:scale-105 group-hover:border-[#f5a524]/40">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
+          <a href="#/" className="flex items-center gap-2.5 text-inherit no-underline group min-w-0">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10 text-[#f5a524] border border-white/10 shadow-sm transition group-hover:scale-105 group-hover:border-[#f5a524]/40">
               <Film className="h-4 w-4" />
             </span>
-            <div className="flex flex-col text-left">
-              <span className="font-display text-base font-extrabold tracking-tight sm:text-lg leading-tight text-white">
+            <div className="flex flex-col text-left min-w-0">
+              <span className="font-display text-sm sm:text-lg font-extrabold tracking-tight leading-tight text-white truncate">
                 {content.brand.name}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-[#f5a524] font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-[#f5a524] font-bold truncate">
                 Commercial Retainer
               </span>
             </div>
           </a>
 
-          {/* Quick country switcher & Ripple CTA */}
-          <div className="flex items-center gap-3">
+          {/* Navigation, Theme Toggle, Country switcher & CTA */}
+          <div className="flex items-center gap-2 shrink-0">
+            <AppQuickSwitcher label="Navigate" />
+            <ThemeToggleButton compact />
             <select
               value={country.code}
               onChange={(e) => setCountry(e.target.value)}
@@ -166,7 +169,7 @@ export default function MonthlyRetainerPage() {
 
             <RippleButton
               onClick={() => setStrategyOpen(true)}
-              className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-[#07090c] shadow transition hover:bg-[#f5a524] hover:text-black"
+              className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#f5a524] px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow transition hover:brightness-110"
             >
               <span>{offerData.hero.primaryCta}</span>
               <ArrowRight className="h-3.5 w-3.5" />

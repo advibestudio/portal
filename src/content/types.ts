@@ -320,7 +320,9 @@ export interface ReferralDiscountSettings {
 
 export interface AffiliatePartner {
   id: string;
-  code: string; // e.g. 'ADV-JOHN'
+  code: string; // e.g. 'ADV-PARTNER'
+  username?: string;
+  password?: string;
   name: string;
   email: string;
   whatsapp: string;
@@ -487,6 +489,7 @@ export interface AuditEntry { id: string; at: string; user: string; action: stri
 
 export interface SessionUser {
   email: string;
+  username?: string;
   name: string;
   role: 'owner' | 'ops';
   authMethod?: 'google' | 'password';
@@ -495,6 +498,7 @@ export interface SessionUser {
 
 export interface AdminAccount {
   id: string; // lowercase email key
+  username?: string; // distinct co-founder username (e.g. 'enoch', 'esther')
   email: string;
   name: string;
   role: 'owner' | 'ops'; // 'owner' = Super Admin, 'ops' = Regular Admin
@@ -503,6 +507,7 @@ export interface AdminAccount {
   createdAt: string;
   active: boolean;
   isPrimaryOwner?: boolean;
+  isCoFounder?: boolean;
 }
 
 /* ---------- TRAINING PROGRAM TYPES ---------- */

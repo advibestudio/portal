@@ -21,6 +21,8 @@ import {
   RefreshCw,
   Eye,
   Send,
+  Upload,
+  Trash2,
 } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '@/firebase';
@@ -28,7 +30,9 @@ import { useStore, waLink } from '@/lib/store';
 import { useCountry } from '@/lib/country';
 import { waNumberFor } from '@/lib/money';
 import { PWAInstallButton, OfflineBanner } from '@/lib/pwa';
+import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 import {
+  type ClientUploadedAsset,
   type CustomerAccount,
   type CustomerProject,
   type PortalPackageType,
@@ -46,6 +50,65 @@ import {
   syncCustomerAccountToFirestore,
   syncCustomerProjectToFirestore,
 } from '@/lib/customerPortalStore';
+
+async function fileToClientAsset(file: File): Promise<ClientUploadedAsset> {
+  const dataUrl = await new Promise<string>((resolve, reject) => {
+    if (file.type.startsWith('image/') && file.size > 300 * 1024) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 1280;
+          let { width, height } = img;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.82));
+          } else {
+            resolve(String(reader.result || ''));
+          }
+        };
+        img.onerror = () => resolve(String(reader.result || ''));
+        img.src = String(reader.result || '');
+      };
+      reader.onerror = () => reject(new Error('Could not read image file'));
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+
+  return {
+    id: `asset_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+    name: file.name,
+    mimeType: file.type || 'application/octet-stream',
+    sizeBytes: file.size,
+    dataUrl,
+    uploadedAt: new Date().toISOString(),
+  };
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export default function CustomerPortalPage() {
   const { content } = useStore();
@@ -72,6 +135,7 @@ export default function CustomerPortalPage() {
 
   // Script review states
   const [assetInputByScript, setAssetInputByScript] = useState<Record<string, string>>({});
+  const [uploadingScriptId, setUploadingScriptId] = useState<string | null>(null);
   const [notesByScript, setNotesByScript] = useState<Record<string, string>>({});
   const [rejectingScriptId, setRejectingScriptId] = useState<string | null>(null);
   const [rejectExplanation, setRejectExplanation] = useState('');
@@ -153,29 +217,35 @@ export default function CustomerPortalPage() {
   }, [content.settings.whatsappNumber, content.settings.whatsappDisplay, country, session, activeProject]);
 
   /* ---------------- AUTH HANDLERS ---------------- */
-  const handlePasswordLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError('');
-    const clean = identifier.trim().toLowerCase();
-    const cleanDigits = identifier.replace(/\D/g, '');
-    if (!clean) {
-      setAuthError('Please enter your email address or phone number.');
-      return;
-    }
+  const findMatchingCustomerAccount = (rawIdentifier: string) => {
+    const clean = rawIdentifier.trim().toLowerCase();
+    const cleanDigits = rawIdentifier.replace(/\D/g, '');
+    if (!clean) return undefined;
     const accounts = loadCustomerAccounts();
-    const found = accounts.find(
+    return accounts.find(
       (a) =>
+        (a.username && a.username.toLowerCase() === clean) ||
         (a.email && a.email.toLowerCase() === clean) ||
         (cleanDigits.length >= 6 && a.phone.replace(/\D/g, '').endsWith(cleanDigits.slice(-8))),
     );
+  };
+
+  const handlePasswordLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    if (!identifier.trim()) {
+      setAuthError('Please enter your username, email address, or phone number.');
+      return;
+    }
+    const found = findMatchingCustomerAccount(identifier);
 
     if (!found) {
-      setAuthError('No client account found with that email or phone. Book a free strategy session first or use Demo Login below.');
+      setAuthError('No client account found with that username, email, or phone. Book a free strategy session first or use one of the 2 Test Logins below.');
       return;
     }
 
     if (found.passwordSet && found.password && found.password !== passwordInput) {
-      setAuthError('Incorrect password. You can switch to "Login with Email/Phone OTP" to sign in with a one-time code.');
+      setAuthError('Incorrect password. You can switch to "One-Time Code (OTP)" or click a Quick Test Login below.');
       return;
     }
 
@@ -188,20 +258,13 @@ export default function CustomerPortalPage() {
   const handleSendOtp = () => {
     setAuthError('');
     setAuthNotice('');
-    const clean = identifier.trim().toLowerCase();
-    const cleanDigits = identifier.replace(/\D/g, '');
-    if (!clean) {
-      setAuthError('Enter your registered email address or phone number first.');
+    if (!identifier.trim()) {
+      setAuthError('Enter your registered username, email address, or phone number first.');
       return;
     }
-    const accounts = loadCustomerAccounts();
-    const found = accounts.find(
-      (a) =>
-        (a.email && a.email.toLowerCase() === clean) ||
-        (cleanDigits.length >= 6 && a.phone.replace(/\D/g, '').endsWith(cleanDigits.slice(-8))),
-    );
+    const found = findMatchingCustomerAccount(identifier);
     if (!found) {
-      setAuthError('Account not found. Please check your email/phone or book your free strategy call first.');
+      setAuthError('Account not found. Please check your email/phone or use one of the 2 Test Accounts below.');
       return;
     }
     const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
@@ -214,14 +277,7 @@ export default function CustomerPortalPage() {
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
-    const clean = identifier.trim().toLowerCase();
-    const cleanDigits = identifier.replace(/\D/g, '');
-    const accounts = loadCustomerAccounts();
-    const found = accounts.find(
-      (a) =>
-        (a.email && a.email.toLowerCase() === clean) ||
-        (cleanDigits.length >= 6 && a.phone.replace(/\D/g, '').endsWith(cleanDigits.slice(-8))),
-    );
+    const found = findMatchingCustomerAccount(identifier);
     if (!found) {
       setAuthError('Account not found.');
       return;
@@ -296,11 +352,12 @@ export default function CustomerPortalPage() {
     if (!activeProject) return;
     const raw = (assetInputByScript[script.id] || '').trim();
     if (!raw) return;
+    const normalizedUrl = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
     const updatedScripts = activeProject.scripts.map((s) =>
       s.id === script.id
         ? {
             ...s,
-            clientAssetLinks: [...(s.clientAssetLinks || []), raw],
+            clientAssetLinks: [...(s.clientAssetLinks || []), normalizedUrl],
             updatedAt: new Date().toISOString(),
           }
         : s,
@@ -315,6 +372,88 @@ export default function CustomerPortalPage() {
     setAssetInputByScript((prev) => ({ ...prev, [script.id]: '' }));
     setScriptToast('Brand asset link saved to script.');
     setTimeout(() => setScriptToast(''), 3000);
+  };
+
+  const handleRemoveAssetLink = async (script: ProjectScriptItem, linkIndex: number) => {
+    if (!activeProject) return;
+    const updatedScripts = activeProject.scripts.map((s) =>
+      s.id === script.id
+        ? {
+            ...s,
+            clientAssetLinks: (s.clientAssetLinks || []).filter((_, i) => i !== linkIndex),
+            updatedAt: new Date().toISOString(),
+          }
+        : s,
+    );
+    const updatedProject: CustomerProject = {
+      ...activeProject,
+      scripts: updatedScripts,
+      updatedAt: new Date().toISOString(),
+    };
+    await syncCustomerProjectToFirestore(updatedProject);
+    setProjects(loadCustomerProjects());
+    setScriptToast('Removed asset link.');
+    setTimeout(() => setScriptToast(''), 2500);
+  };
+
+  const handleUploadAssetFiles = async (script: ProjectScriptItem, fileList: FileList | null) => {
+    if (!activeProject || !fileList || fileList.length === 0) return;
+    setUploadingScriptId(script.id);
+    try {
+      const files = Array.from(fileList);
+      const uploadedItems: ClientUploadedAsset[] = [];
+      for (const file of files) {
+        const asset = await fileToClientAsset(file);
+        uploadedItems.push(asset);
+      }
+      const updatedScripts = activeProject.scripts.map((s) =>
+        s.id === script.id
+          ? {
+              ...s,
+              clientUploadedAssets: [...(s.clientUploadedAssets || []), ...uploadedItems],
+              updatedAt: new Date().toISOString(),
+            }
+          : s,
+      );
+      const updatedProject: CustomerProject = {
+        ...activeProject,
+        scripts: updatedScripts,
+        updatedAt: new Date().toISOString(),
+      };
+      await syncCustomerProjectToFirestore(updatedProject);
+      setProjects(loadCustomerProjects());
+      setScriptToast(
+        `Uploaded ${uploadedItems.length} file${uploadedItems.length > 1 ? 's' : ''} to "${script.title}".`,
+      );
+      setTimeout(() => setScriptToast(''), 3500);
+    } catch {
+      setScriptToast('Could not upload file. Please try a smaller file or attach a Google Drive link.');
+      setTimeout(() => setScriptToast(''), 4000);
+    } finally {
+      setUploadingScriptId(null);
+    }
+  };
+
+  const handleRemoveUploadedAsset = async (script: ProjectScriptItem, assetId: string) => {
+    if (!activeProject) return;
+    const updatedScripts = activeProject.scripts.map((s) =>
+      s.id === script.id
+        ? {
+            ...s,
+            clientUploadedAssets: (s.clientUploadedAssets || []).filter((a) => a.id !== assetId),
+            updatedAt: new Date().toISOString(),
+          }
+        : s,
+    );
+    const updatedProject: CustomerProject = {
+      ...activeProject,
+      scripts: updatedScripts,
+      updatedAt: new Date().toISOString(),
+    };
+    await syncCustomerProjectToFirestore(updatedProject);
+    setProjects(loadCustomerProjects());
+    setScriptToast('Removed uploaded file.');
+    setTimeout(() => setScriptToast(''), 2500);
   };
 
   const handleSaveRecommendations = async (script: ProjectScriptItem) => {
@@ -403,9 +542,9 @@ export default function CustomerPortalPage() {
       PortalPackageType,
       { name: string; totalVideos: number; price: number }
     > = {
-      single: { name: 'Single AI Video Ad (1 Video)', totalVideos: 1, price: 60000 },
-      pack_5: { name: 'Growth Campaign Pack (5 Videos)', totalVideos: 5, price: 220000 },
-      pack_10: { name: 'Scale Campaign Pack (10 Videos)', totalVideos: 10, price: 400000 },
+      single: { name: 'Single AI Video Ad (1 Video)', totalVideos: 1, price: 35000 },
+      pack_5: { name: '5 Creative Test Pack (5 Videos)', totalVideos: 5, price: 95000 },
+      pack_10: { name: '10 Creative Test Pack (10 Videos)', totalVideos: 10, price: 185000 },
       retainer_15: { name: 'Monthly Content Retainer / Mini-Series (15 Videos)', totalVideos: 15, price: 250000 },
     };
     const cfg = packageConfig[reqPackageType];
@@ -462,7 +601,7 @@ export default function CustomerPortalPage() {
     return (
       <div className="min-h-dvh bg-[#0b0e12] text-white flex flex-col justify-between p-4 sm:p-8">
         <OfflineBanner />
-        <header className="mx-auto w-full max-w-5xl flex items-center justify-between gap-4 py-2">
+        <header className="mx-auto w-full max-w-5xl flex flex-wrap items-center justify-between gap-3 py-2">
           <a href="#/" className="flex items-center gap-2.5 text-white no-underline">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#f5a524] text-black font-bold">
               <Film className="h-4 w-4" />
@@ -471,8 +610,17 @@ export default function CustomerPortalPage() {
               {content.brand.name} · Client Portal
             </span>
           </a>
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <AppQuickSwitcher label="Navigate" />
+            <ThemeToggleButton compact />
             <PWAInstallButton variant="portal" label="Install Client App" />
+            <a
+              href="#/download/customer-app"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-mono font-bold text-white/80 hover:bg-white/10 transition"
+            >
+              <Download className="h-3.5 w-3.5 text-[#f5a524]" />
+              <span>App Guide</span>
+            </a>
             <a
               href={careWaUrl}
               target="_blank"
@@ -485,7 +633,7 @@ export default function CustomerPortalPage() {
           </div>
         </header>
 
-        <main className="mx-auto my-auto w-full max-w-md py-8">
+        <main className="mx-auto my-auto w-full max-w-md py-6">
           <div className="rounded-3xl border border-white/15 bg-[#12161d] p-6 sm:p-8 shadow-2xl space-y-6">
             <div className="space-y-1.5 text-left">
               <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#f5a524]">
@@ -511,7 +659,7 @@ export default function CustomerPortalPage() {
                   loginMode === 'password' ? 'bg-[#f5a524] text-black' : 'text-white/70 hover:text-white'
                 }`}
               >
-                Email / Phone + Password
+                Email / Username + Password
               </button>
               <button
                 type="button"
@@ -531,13 +679,13 @@ export default function CustomerPortalPage() {
               <form onSubmit={handlePasswordLogin} className="space-y-4 text-left">
                 <div>
                   <label className="block font-mono text-[11px] uppercase tracking-wider text-white/60 mb-1.5">
-                    Registered Email or Phone Number
+                    Username, Email, or Phone Number
                   </label>
                   <input
                     type="text"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="you@company.com or +234..."
+                    placeholder="testclient1, test1@advibestudio.com, or +234..."
                     className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#f5a524] focus:outline-none"
                     required
                   />
@@ -561,7 +709,7 @@ export default function CustomerPortalPage() {
                 )}
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-[#f5a524] py-3.5 font-display text-sm font-extrabold uppercase tracking-wider text-black shadow-lg transition hover:brightness-110"
+                  className="w-full rounded-xl bg-[#f5a524] py-3.5 font-display text-sm font-extrabold uppercase tracking-wider text-black shadow-lg transition hover:brightness-110 cursor-pointer"
                 >
                   Sign In to Client Portal
                 </button>
@@ -577,14 +725,14 @@ export default function CustomerPortalPage() {
                       type="text"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
-                      placeholder="you@company.com or +234..."
+                      placeholder="test1@advibestudio.com or +234..."
                       className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#f5a524] focus:outline-none"
                       required
                     />
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      className="shrink-0 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-2.5 font-mono text-xs font-bold text-[#f5a524] hover:bg-[#f5a524] hover:text-black transition"
+                      className="shrink-0 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-2.5 font-mono text-xs font-bold text-[#f5a524] hover:bg-[#f5a524] hover:text-black transition cursor-pointer"
                     >
                       Get OTP
                     </button>
@@ -615,7 +763,7 @@ export default function CustomerPortalPage() {
                 )}
                 <button
                   type="submit"
-                  className="w-full rounded-xl bg-[#f5a524] py-3.5 font-display text-sm font-extrabold uppercase tracking-wider text-black shadow-lg transition hover:brightness-110"
+                  className="w-full rounded-xl bg-[#f5a524] py-3.5 font-display text-sm font-extrabold uppercase tracking-wider text-black shadow-lg transition hover:brightness-110 cursor-pointer"
                 >
                   Verify & Enter Portal
                 </button>
@@ -628,36 +776,86 @@ export default function CustomerPortalPage() {
               <div className="flex-grow border-t border-white/10" />
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-3">
               <button
                 type="button"
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-bold text-white hover:bg-white/10 transition"
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-bold text-white hover:bg-white/10 transition cursor-pointer"
               >
                 <span>Continue with Google Account</span>
               </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  const demoAcc = loadCustomerAccounts().find((a) => a.id === 'cust_circlesfundme') || loadCustomerAccounts()[0];
-                  if (demoAcc) {
-                    setActiveCustomerSession(demoAcc);
-                    setSession(demoAcc);
-                  }
-                }}
-                className="w-full flex items-center justify-center gap-2 rounded-xl border border-[#f5a524]/30 bg-[#f5a524]/10 py-2.5 font-mono text-xs font-bold text-[#f5a524] hover:bg-[#f5a524]/20 transition"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Explore Live Demo Account (CirclesFundMe 15-Video Retainer)</span>
-              </button>
+              {/* 2 TEST CUSTOMER PORTAL LOGINS */}
+              <div className="rounded-2xl border border-[#f5a524]/30 bg-[#f5a524]/5 p-4 space-y-2.5 text-left">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#f5a524] flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5" /> 2 Test Portal Accounts (Instant Access)
+                  </span>
+                </div>
+                <p className="text-[11px] text-white/60 leading-relaxed">
+                  Click either test account below to auto-fill credentials or sign in immediately to test payment gates, script reviews, and Drive downloads:
+                </p>
+                <div className="grid grid-cols-1 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const acc = loadCustomerAccounts().find((a) => a.id === 'cust_test_1') || loadCustomerAccounts()[0];
+                      if (acc) {
+                        setActiveCustomerSession(acc);
+                        setSession(acc);
+                      }
+                    }}
+                    className="w-full rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-2.5 text-left hover:bg-[#f5a524]/25 transition cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-display text-xs font-bold text-white">
+                        Test Account 1 · Retainer (15 Vids) + 5-Pack
+                      </span>
+                      <span className="rounded-md bg-[#f5a524] px-2 py-0.5 font-mono text-[10px] font-bold text-black">
+                        1-Tap Login
+                      </span>
+                    </div>
+                    <p className="mt-1 font-mono text-[10px] text-[#f5a524]">
+                      Email: test1@advibestudio.com · User: testclient1 · Pass: advibe-test-1
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const acc = loadCustomerAccounts().find((a) => a.id === 'cust_test_2') || loadCustomerAccounts()[1];
+                      if (acc) {
+                        setActiveCustomerSession(acc);
+                        setSession(acc);
+                      }
+                    }}
+                    className="w-full rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-3.5 py-2.5 text-left hover:bg-emerald-500/20 transition cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-display text-xs font-bold text-white">
+                        Test Account 2 · Single Video (60% Paid)
+                      </span>
+                      <span className="rounded-md bg-emerald-400 px-2 py-0.5 font-mono text-[10px] font-bold text-black">
+                        1-Tap Login
+                      </span>
+                    </div>
+                    <p className="mt-1 font-mono text-[10px] text-emerald-300">
+                      Email: test2@advibestudio.com · User: testclient2 · Pass: advibe-test-2
+                    </p>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </main>
 
-        <footer className="mx-auto w-full max-w-5xl text-center text-xs text-white/40 py-4">
+        <footer className="mx-auto w-full max-w-5xl flex flex-wrap items-center justify-center gap-4 text-center text-xs text-white/40 py-4">
           <a href="#/" className="text-[#f5a524] hover:underline">
             ← Return to {content.brand.name} Main Website
+          </a>
+          <span>·</span>
+          <a href="#/apps" className="text-white/70 hover:text-white hover:underline">
+            Download WebApps Hub
           </a>
         </footer>
       </div>
@@ -676,37 +874,39 @@ export default function CustomerPortalPage() {
       };
 
   return (
-    <div className="min-h-dvh bg-[#0b0e12] text-white pb-20">
+    <div className="min-h-dvh bg-[#0b0e12] text-white pb-28 overflow-x-hidden">
       <OfflineBanner />
 
       {/* =====================================================================
           TOP BAR CONTRACT — CLIENT PORTAL WEBAPP
       ====================================================================== */}
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0b0e12]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 flex-wrap">
-          <div className="flex items-center gap-3">
-            <a href="#/" className="flex items-center gap-2.5 text-white no-underline">
-              <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#f5a524] text-black">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 flex-wrap">
+          <div className="flex items-center gap-3 min-w-0">
+            <a href="#/" className="flex items-center gap-2.5 text-white no-underline min-w-0">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#f5a524] text-black">
                 <Film className="h-4 w-4" />
               </span>
-              <div>
-                <span className="font-display text-base font-extrabold tracking-tight block leading-none">
+              <div className="min-w-0">
+                <span className="font-display text-base font-extrabold tracking-tight block leading-none truncate">
                   {content.brand.name}
                 </span>
-                <span className="font-mono text-[10px] text-[#f5a524] uppercase tracking-wider">
+                <span className="font-mono text-[10px] text-[#f5a524] uppercase tracking-wider block truncate">
                   Client Project WebApp
                 </span>
               </div>
             </a>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <PWAInstallButton variant="portal" label="Install Client App" />
+          <div className="flex items-center gap-2 flex-wrap">
+            <AppQuickSwitcher label="Navigate" />
+            <ThemeToggleButton compact />
+            <PWAInstallButton variant="portal" label="Install App" />
 
             <button
               type="button"
               onClick={() => setNewProjectModal(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/5 px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:border-[#f5a524] hover:text-[#f5a524] transition whitespace-nowrap shrink-0"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/5 px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white hover:border-[#f5a524] hover:text-[#f5a524] transition whitespace-nowrap shrink-0 cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Request New Project</span>
@@ -716,10 +916,11 @@ export default function CustomerPortalPage() {
               href={careWaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow-sm hover:brightness-110 transition whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-3 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow-sm hover:brightness-110 transition whitespace-nowrap shrink-0"
             >
               <MessageCircle className="h-3.5 w-3.5" />
-              <span>WhatsApp Customer Care</span>
+              <span className="hidden sm:inline">WhatsApp Customer Care</span>
+              <span className="sm:hidden">Support</span>
             </a>
 
             <button
@@ -728,7 +929,7 @@ export default function CustomerPortalPage() {
                 setActiveCustomerSession(null);
                 setSession(null);
               }}
-              className="inline-flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/70 hover:bg-white/10 hover:text-white transition"
+              className="inline-flex items-center gap-1 rounded-xl border border-white/10 bg-white/5 px-2.5 py-2 text-xs text-white/70 hover:bg-white/10 hover:text-white transition cursor-pointer"
               title="Sign out"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -795,27 +996,29 @@ export default function CustomerPortalPage() {
         )}
 
         {/* =====================================================================
-            PROJECT SWITCHER & ACCOUNT SUMMARY
+            PROJECT SWITCHER & ACCOUNT SUMMARY (Mobile Overflow Safe)
         ====================================================================== */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-[#12161d] p-5 sm:p-6">
-          <div className="space-y-1 text-left">
-            <div className="flex items-center gap-2 font-mono text-xs text-white/60">
-              <span>CLIENT ACCOUNT:</span>
-              <strong className="text-white">{session.name}</strong>
-              <span>·</span>
-              <span>{session.email || session.phone}</span>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-3xl border border-white/10 bg-[#12161d] p-4 sm:p-6 overflow-hidden w-full">
+          <div className="space-y-1 text-left min-w-0 w-full md:w-auto">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[11px] sm:text-xs text-white/60 min-w-0">
+              <span className="shrink-0 uppercase">Client Account:</span>
+              <strong className="text-white truncate max-w-full">{session.name}</strong>
+              <span className="hidden sm:inline">·</span>
+              <span className="truncate max-w-full text-[#f5a524] sm:text-white/60">
+                {session.email || session.phone}
+              </span>
             </div>
-            <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+            <h1 className="font-display text-xl sm:text-3xl font-extrabold text-white leading-tight break-words">
               {activeProject ? activeProject.packageName : 'Your Studio Projects'}
             </h1>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto min-w-0">
             {customerProjects.length > 1 && (
               <select
                 value={activeProject?.id || ''}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
-                className="rounded-xl border border-white/20 bg-black/60 px-3.5 py-2.5 text-xs font-bold text-white focus:border-[#f5a524] focus:outline-none"
+                className="w-full max-w-full sm:w-auto min-w-0 truncate rounded-xl border border-white/20 bg-black/60 px-3.5 py-2.5 text-xs font-bold text-white focus:border-[#f5a524] focus:outline-none cursor-pointer"
               >
                 {customerProjects.map((proj) => (
                   <option key={proj.id} value={proj.id}>
@@ -824,14 +1027,24 @@ export default function CustomerPortalPage() {
                 ))}
               </select>
             )}
-            <button
-              type="button"
-              onClick={() => void refreshData()}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-mono text-white/80 hover:text-white transition"
-            >
-              <RefreshCw className="h-3.5 w-3.5" />
-              <span>Sync Status</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => void refreshData()}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-xs font-mono text-white/80 hover:text-white transition cursor-pointer"
+              >
+                <RefreshCw className="h-3.5 w-3.5 shrink-0" />
+                <span>Sync Status</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setNewProjectModal(true)}
+                className="sm:hidden inline-flex items-center justify-center gap-1.5 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-2.5 text-xs font-display font-bold text-[#f5a524] transition cursor-pointer"
+              >
+                <Plus className="h-3.5 w-3.5 shrink-0" />
+                <span>New Project</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -948,33 +1161,39 @@ export default function CustomerPortalPage() {
             {/* =====================================================================
                 NAVIGATION TABS (OVERVIEW / SCRIPTS & ASSETS / GOOGLE DRIVE VIDEOS)
             ====================================================================== */}
-            <div className="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 border-b border-white/10 pb-4">
               <button
                 type="button"
                 onClick={() => setActiveTab('overview')}
-                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+                className={`w-full min-w-0 flex items-center justify-between sm:justify-center gap-2 rounded-2xl px-4 py-3 font-display text-xs font-bold uppercase tracking-wider transition text-left sm:text-center cursor-pointer ${
                   activeTab === 'overview'
-                    ? 'bg-[#f5a524] text-black'
-                    : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#f5a524] text-black shadow-md'
+                    : 'border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <ShieldCheck className="h-4 w-4" />
-                <span>Project Overview</span>
+                <span className="flex items-center gap-2 min-w-0">
+                  <ShieldCheck className="h-4 w-4 shrink-0" />
+                  <span className="truncate">Project Overview</span>
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('scripts')}
-                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+                className={`w-full min-w-0 flex items-center justify-between sm:justify-center gap-2 rounded-2xl px-4 py-3 font-display text-xs font-bold uppercase tracking-wider transition text-left sm:text-center cursor-pointer ${
                   activeTab === 'scripts'
-                    ? 'bg-[#f5a524] text-black'
-                    : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#f5a524] text-black shadow-md'
+                    : 'border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <FileText className="h-4 w-4" />
-                <span>Scripts, Approvals & Brand Assets ({activeProject.scripts.length})</span>
+                <span className="flex items-center gap-2 min-w-0">
+                  <FileText className="h-4 w-4 shrink-0" />
+                  <span className="truncate">
+                    Scripts, Approvals & Brand Assets ({activeProject.scripts.length})
+                  </span>
+                </span>
                 {pendingScriptsCount > 0 && (
-                  <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-mono font-extrabold text-white">
+                  <span className="shrink-0 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-mono font-extrabold text-white">
                     {pendingScriptsCount} New
                   </span>
                 )}
@@ -983,14 +1202,18 @@ export default function CustomerPortalPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab('videos')}
-                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider transition whitespace-nowrap ${
+                className={`w-full min-w-0 flex items-center justify-between sm:justify-center gap-2 rounded-2xl px-4 py-3 font-display text-xs font-bold uppercase tracking-wider transition text-left sm:text-center cursor-pointer ${
                   activeTab === 'videos'
-                    ? 'bg-[#f5a524] text-black'
-                    : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+                    ? 'bg-[#f5a524] text-black shadow-md'
+                    : 'border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <Play className="h-4 w-4" />
-                <span>Google Drive Video Deliverables ({activeProject.videos.length}/{activeProject.totalVideos})</span>
+                <span className="flex items-center gap-2 min-w-0">
+                  <Play className="h-4 w-4 shrink-0" />
+                  <span className="truncate">
+                    Google Drive Videos ({activeProject.videos.length}/{activeProject.totalVideos})
+                  </span>
+                </span>
               </button>
             </div>
 
@@ -1117,48 +1340,139 @@ export default function CustomerPortalPage() {
                         )}
                       </div>
 
-                      {/* Client Asset Links & Recommendations Section */}
+                      {/* Client Asset Uploads, Links & Recommendations Section */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                        {/* Google Drive / Cloud Brand Assets */}
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-3">
-                          <div className="flex items-center gap-2 font-mono text-xs font-bold text-[#f5a524]">
-                            <FolderPlus className="h-4 w-4" />
-                            <span>PROVIDE ASSETS FOR THIS VIDEO (GOOGLE DRIVE / CLOUD LINKS)</span>
+                        {/* Direct File Upload + Google Drive / Cloud Brand Assets */}
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-3.5 min-w-0 overflow-hidden">
+                          <div className="flex items-start gap-2 font-mono text-xs font-bold text-[#f5a524]">
+                            <FolderPlus className="h-4 w-4 shrink-0 mt-0.5" />
+                            <span>PROVIDE ASSETS FOR THIS VIDEO (UPLOAD FILES OR PASTE LINKS)</span>
                           </div>
-                          <div className="flex gap-2">
+
+                          {/* 1. Direct Device Upload Control */}
+                          <div>
+                            <label className="flex items-center justify-center gap-2 w-full rounded-xl border border-dashed border-[#f5a524]/50 bg-[#f5a524]/10 px-3.5 py-3 text-xs font-display font-bold text-[#f5a524] hover:bg-[#f5a524]/20 transition cursor-pointer text-center">
+                              <Upload className="h-4 w-4 shrink-0" />
+                              <span>
+                                {uploadingScriptId === scr.id
+                                  ? 'Uploading files…'
+                                  : 'Upload Files from Device (Photos, Logos, Audio, PDF)'}
+                              </span>
+                              <input
+                                type="file"
+                                multiple
+                                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip"
+                                className="hidden"
+                                onChange={(e) => {
+                                  void handleUploadAssetFiles(scr, e.target.files);
+                                  e.target.value = '';
+                                }}
+                              />
+                            </label>
+                          </div>
+
+                          {/* Uploaded Files List */}
+                          {scr.clientUploadedAssets && scr.clientUploadedAssets.length > 0 && (
+                            <div className="space-y-1.5">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-white/55 block">
+                                Uploaded Files ({scr.clientUploadedAssets.length})
+                              </span>
+                              <ul className="space-y-1.5">
+                                {scr.clientUploadedAssets.map((asset) => (
+                                  <li
+                                    key={asset.id}
+                                    className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-xs min-w-0"
+                                  >
+                                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                                      {asset.mimeType.startsWith('image/') ? (
+                                        <img
+                                          src={asset.dataUrl}
+                                          alt={asset.name}
+                                          className="h-8 w-8 rounded-lg object-cover shrink-0 border border-white/15"
+                                        />
+                                      ) : (
+                                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#f5a524]/15 text-[#f5a524]">
+                                          <FileText className="h-4 w-4" />
+                                        </span>
+                                      )}
+                                      <div className="min-w-0 flex-1">
+                                        <p className="font-mono text-xs font-semibold text-white truncate">
+                                          {asset.name}
+                                        </p>
+                                        <p className="font-mono text-[10px] text-white/50">
+                                          {formatFileSize(asset.sizeBytes)}
+                                        </p>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                      <a
+                                        href={asset.dataUrl}
+                                        download={asset.name}
+                                        className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/15 px-2.5 py-1 font-mono text-[10px] font-bold text-emerald-300 hover:bg-emerald-500/25 transition no-underline"
+                                      >
+                                        <Download className="h-3 w-3" />
+                                        <span>Save</span>
+                                      </a>
+                                      <button
+                                        type="button"
+                                        onClick={() => void handleRemoveUploadedAsset(scr, asset.id)}
+                                        className="inline-flex items-center justify-center rounded-lg bg-red-500/15 p-1.5 text-red-300 hover:bg-red-500/25 transition cursor-pointer"
+                                        title="Remove file"
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </button>
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* 2. Google Drive / Cloud Link Input (Mobile Overflow Safe) */}
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
                             <input
                               type="url"
                               value={assetInputByScript[scr.id] || ''}
                               onChange={(e) =>
                                 setAssetInputByScript((prev) => ({ ...prev, [scr.id]: e.target.value }))
                               }
-                              placeholder="Paste Google Drive folder or file link..."
-                              className="flex-1 rounded-xl border border-white/15 bg-black/60 px-3 py-2 text-xs text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none"
+                              placeholder="Or paste Google Drive / cloud link..."
+                              className="w-full min-w-0 flex-1 rounded-xl border border-white/15 bg-black/60 px-3 py-2.5 text-xs text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none"
                             />
                             <button
                               type="button"
                               onClick={() => void handleAddAssetLink(scr)}
-                              className="shrink-0 rounded-xl bg-white/10 px-3.5 py-2 font-mono text-xs font-bold text-white hover:bg-[#f5a524] hover:text-black transition"
+                              className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center rounded-xl bg-white/10 px-3.5 py-2.5 font-mono text-xs font-bold text-white hover:bg-[#f5a524] hover:text-black transition cursor-pointer"
                             >
                               + Attach Link
                             </button>
                           </div>
+
                           {scr.clientAssetLinks && scr.clientAssetLinks.length > 0 && (
                             <ul className="space-y-1.5 pt-1">
                               {scr.clientAssetLinks.map((lnk, idx) => (
                                 <li
                                   key={idx}
-                                  className="flex items-center justify-between gap-2 rounded-lg bg-black/40 px-3 py-1.5 text-xs font-mono text-emerald-300"
+                                  className="flex items-center justify-between gap-2 rounded-lg bg-black/40 px-3 py-1.5 text-xs font-mono text-emerald-300 min-w-0"
                                 >
                                   <a
                                     href={lnk}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="truncate hover:underline flex items-center gap-1.5"
+                                    className="truncate hover:underline flex items-center gap-1.5 min-w-0 flex-1"
                                   >
                                     <ExternalLink className="h-3 w-3 shrink-0" />
                                     <span className="truncate">{lnk}</span>
                                   </a>
+                                  <button
+                                    type="button"
+                                    onClick={() => void handleRemoveAssetLink(scr, idx)}
+                                    className="shrink-0 text-white/40 hover:text-red-300 transition cursor-pointer p-0.5"
+                                    title="Remove link"
+                                  >
+                                    <X className="h-3.5 w-3.5" />
+                                  </button>
                                 </li>
                               ))}
                             </ul>
@@ -1572,6 +1886,64 @@ export default function CustomerPortalPage() {
           </div>
         </div>
       )}
+
+      {/* =====================================================================
+          MOBILE BOTTOM TAB BAR — 1-TAP CLIENT WORKSPACE NAVIGATION
+      ====================================================================== */}
+      <nav
+        aria-label="Client Portal Mobile Navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0e12]/95 px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden"
+      >
+        <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('overview');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className={`flex flex-col items-center justify-center gap-0.5 rounded-xl py-2 font-mono text-[10px] font-bold transition cursor-pointer ${
+              activeTab === 'overview' ? 'bg-[#f5a524] text-black' : 'text-white/65'
+            }`}
+          >
+            <ShieldCheck className="h-4 w-4" />
+            <span>Overview</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('scripts')}
+            className={`relative flex flex-col items-center justify-center gap-0.5 rounded-xl py-2 font-mono text-[10px] font-bold transition cursor-pointer ${
+              activeTab === 'scripts' ? 'bg-[#f5a524] text-black' : 'text-white/65'
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            <span>Scripts ({activeProject?.scripts.length || 0})</span>
+            {pendingScriptsCount > 0 && (
+              <span className="absolute top-1 right-3 h-2 w-2 rounded-full bg-red-500" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('videos')}
+            className={`flex flex-col items-center justify-center gap-0.5 rounded-xl py-2 font-mono text-[10px] font-bold transition cursor-pointer ${
+              activeTab === 'videos' ? 'bg-[#f5a524] text-black' : 'text-white/65'
+            }`}
+          >
+            <Play className="h-4 w-4" />
+            <span>Videos ({activeProject?.videos.length || 0})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setNewProjectModal(true)}
+            className="flex flex-col items-center justify-center gap-0.5 rounded-xl py-2 font-mono text-[10px] font-bold text-[#f5a524] transition cursor-pointer"
+          >
+            <Plus className="h-4 w-4" />
+            <span>New Project</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }

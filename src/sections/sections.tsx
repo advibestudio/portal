@@ -120,7 +120,7 @@ export function Events({ onOrder }: { onOrder: (eventName: string) => void }) {
       <div className="wrap">
         <div className="seasons">
           <Reveal>
-            <span className="pill-label" style={{ background: '#ffffffa6' }}>Sales seasons</span>
+            <span className="pill-label">Sales seasons</span>
             <h2 className="h-section" style={{ maxWidth: '16ch' }}><EmLast text={content.events.heading} /></h2>
             <p className="season-sub">{content.events.subheading}</p>
             <p className="season-body">{content.events.body}</p>
@@ -414,6 +414,20 @@ export function Footer() {
               </a>
             ))}
           </div>
+          <div className="foot-col">
+            <h4>WebApps & Portals</h4>
+            {[
+              ['Customer Portal WebApp', '#/client-portal'],
+              ['Affiliate Partner WebApp', '#/affiliate-portal'],
+              ['Download Customer App', '#/download/customer-app'],
+              ['Download Affiliate App', '#/download/affiliate-app'],
+              ['All WebApps Hub', '#/apps'],
+            ].map(([l, h]) => (
+              <a key={h} href={h}>
+                {l}
+              </a>
+            ))}
+          </div>
         </div>
         <p className="foot-legal">© {new Date().getFullYear()} {content.brand.name}. AI-assisted production, human-directed creative.</p>
       </div>
@@ -440,9 +454,9 @@ export function CommercialOffersShowcase() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: 20, textAlign: 'left' }}>
           {/* Retainer Card */}
           {retainer.showOnHomepage && (
-            <div style={{ borderRadius: 28, background: '#fff', border: '1px solid rgb(var(--line))', padding: 'clamp(24px, 3.5vw, 36px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ borderRadius: 28, background: 'rgb(var(--surface))', border: '1px solid rgb(var(--line))', padding: 'clamp(24px, 3.5vw, 36px)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.12em', color: '#b87508' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.12em', color: 'rgb(var(--accent))' }}>
                   {retainer.hero.eyebrow}
                 </span>
                 <h3 style={{ font: '800 clamp(22px, 2.5vw, 28px) / 1.15 var(--font-display)', color: 'rgb(var(--ink))', marginTop: 8 }}>

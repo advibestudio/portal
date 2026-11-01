@@ -1,6 +1,6 @@
 {
-  "summary":  "Mobile Layout & Overflow Fixes Plan addressing: (1) Client Spotlight grid track blowout and horizontal carousel clipping on mobile, (2) Sales Seasons CTA button overflowing its container on mobile screens, and (3) Monthly Retainer callout button overflowing its container in the Packages section on mobile.",
-  "updatedAt":  "2026-11-01T19:23:34.965300331Z",
+  "summary":  "Implementation plan to fix the mobile tab clipping and asset input overflow in the Client Portal WebApp (#/client-portal), and add direct file upload (photos, logos, video clips, voice notes, PDFs) to the Brand Assets section alongside Google Drive/Cloud links, with Admin visibility and download support.",
+  "updatedAt":  "2026-11-01T21:37:12.354163784Z",
   "requestFeedback":  true,
   "userFacing":  true
 }

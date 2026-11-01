@@ -25,6 +25,7 @@ import { SoundWaveVisualizer } from '@/components/animations/SoundWaveVisualizer
 import { RetentionCurveGraph } from '@/components/animations/RetentionCurveGraph';
 import { StoryConceptBadge } from '@/components/animations/StoryConceptIcons';
 import { RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
+import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 
 export default function MiniSeriesPage() {
   const { content } = useStore();
@@ -117,11 +118,11 @@ export default function MiniSeriesPage() {
   ];
 
   return (
-    <div className="min-h-dvh bg-[#fafaf6] text-[#111412] antialiased selection:bg-[#f5a524] selection:text-black">
+    <div className="min-h-dvh bg-[#0b0e12] text-white antialiased selection:bg-[#f5a524] selection:text-black">
       {/* =====================================================================
           1. TOP ANNOUNCEMENT TICKER (Editorial Studio Grade)
       ====================================================================== */}
-      <div className="bg-[#0b0e12] text-white/90 px-4 py-2 text-center text-xs font-mono tracking-wide border-b border-white/10">
+      <div className="bg-[#090c10] text-white/90 px-4 py-2 text-center text-xs font-mono tracking-wide border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 font-bold text-[#f5a524] uppercase tracking-wider text-[11px]">
@@ -148,32 +149,34 @@ export default function MiniSeriesPage() {
       {/* =====================================================================
           2. STICKY BRAND HEADER
       ====================================================================== */}
-      <header className="sticky top-0 z-40 border-b border-[#111412]/10 bg-[#fafaf6]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <a href="#/" className="flex items-center gap-2.5 text-inherit no-underline group">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#111412] text-[#f5a524] shadow-sm transition group-hover:scale-105">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0b0e12]/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3 sm:px-6">
+          <a href="#/" className="flex items-center gap-2.5 text-inherit no-underline group min-w-0">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/10 text-[#f5a524] border border-white/10 shadow-sm transition group-hover:scale-105">
               <Film className="h-4 w-4" />
             </span>
-            <div className="flex flex-col text-left">
-              <span className="font-display text-base font-extrabold tracking-tight sm:text-lg text-[#111412] leading-tight">
+            <div className="flex flex-col text-left min-w-0">
+              <span className="font-display text-sm sm:text-lg font-extrabold tracking-tight text-white leading-tight truncate">
                 {content.brand.name}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-[#a06200] font-bold">
+              <span className="font-mono text-[9px] uppercase tracking-widest text-[#f5a524] font-bold truncate">
                 Promotional Mini-Series
               </span>
             </div>
           </a>
 
-          {/* Quick country switcher & crisp CTA */}
-          <div className="flex items-center gap-2.5">
+          {/* Navigation, Theme Toggle, Country switcher & CTA */}
+          <div className="flex items-center gap-2 shrink-0">
+            <AppQuickSwitcher label="Navigate" />
+            <ThemeToggleButton compact />
             <select
               value={country.code}
               onChange={(e) => setCountry(e.target.value)}
-              className="rounded-full border border-[#111412]/15 bg-white px-3 py-1.5 text-xs font-semibold text-[#111412] shadow-sm focus:border-[#f5a524] focus:outline-none cursor-pointer"
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white shadow-sm focus:border-[#f5a524] focus:outline-none cursor-pointer"
               aria-label="Select country currency"
             >
               {content.countries.map((c) => (
-                <option key={c.code} value={c.code} className="bg-white text-[#111412]">
+                <option key={c.code} value={c.code} className="bg-[#12161d] text-white">
                   {c.flag} {c.currency}
                 </option>
               ))}
@@ -181,7 +184,7 @@ export default function MiniSeriesPage() {
 
             <RippleButton
               onClick={() => setStrategyOpen(true)}
-              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#111412] px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#f5a524] hover:text-black"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#f5a524] px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow-sm transition hover:brightness-110"
             >
               <span>Book Strategy Call</span>
               <ArrowRight className="h-3.5 w-3.5" />

@@ -22,6 +22,7 @@ import { RealtimeFirestoreSummaryWidget } from '@/components/admin/RealtimeFires
 import { SectionHeatmapWidget } from '@/components/admin/SectionHeatmapWidget';
 import { ClientProjectsAdminView } from '@/components/admin/ClientProjectsAdminView';
 import { PWAInstallButton, AdminNotificationToggle } from '@/lib/pwa';
+import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 
 export type PrimaryAdminTab =
   | 'analytics'
@@ -38,7 +39,7 @@ export type PrimaryAdminTab =
 /* ---------- SIGN IN SCREEN ---------- */
 function SignIn() {
   const { signIn, signInWithGoogle } = useStore();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -48,7 +49,7 @@ function SignIn() {
     e.preventDefault();
     setBusy(true);
     setError('');
-    const err = await signIn(email, password);
+    const err = await signIn(identifier, password);
     setBusy(false);
     if (err) setError(err);
   };
@@ -66,68 +67,39 @@ function SignIn() {
 
   return (
     <div className="grid min-h-dvh place-items-center bg-[#0b0b0c] px-4 py-8">
-      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#121416] p-7 sm:p-8 shadow-2xl">
-        <p className="font-display text-2xl tracking-tight text-white font-bold">
-          AdVibe<span className="text-[#f5a524]">.</span>
-        </p>
-        <p className="mt-1 flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-white/50">
-          <Lock className="h-3.5 w-3.5 text-[#f5a524]" /> Admin Portal · Firebase + Google Sheets
-        </p>
-
-        {/* PRIMARY: GOOGLE SIGN-IN */}
-        <button
-          type="button"
-          onClick={handleGoogleSignIn}
-          disabled={googleBusy || busy}
-          className="mt-6 min-h-[50px] w-full rounded-xl bg-white text-black font-display text-sm font-bold flex items-center justify-center gap-3 transition hover:bg-white/90 active:scale-[0.98] disabled:opacity-60 shadow-lg cursor-pointer"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-            />
-          </svg>
-          <span>{googleBusy ? 'Connecting Google Account…' : 'Continue with Google'}</span>
-        </button>
-
-        <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/10" />
-          <span className="text-[11px] font-mono uppercase tracking-wider text-white/40">
-            or use backup admin password
-          </span>
-          <div className="h-px flex-1 bg-white/10" />
+      <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#121416] p-6 sm:p-8 shadow-2xl">
+        <div className="flex items-center justify-between gap-2">
+          <p className="font-display text-2xl tracking-tight text-white font-bold">
+            AdVibe<span className="text-[#f5a524]">.</span>
+          </p>
+          <a
+            href="#/client-admin"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#f5a524]/40 bg-[#f5a524]/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#f5a524] hover:bg-[#f5a524]/20 transition"
+          >
+            <span>Mobile Client App →</span>
+          </a>
         </div>
+        <p className="mt-1 flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-white/50">
+          <Lock className="h-3.5 w-3.5 text-[#f5a524]" /> Co-Founder Super Admin Command Center
+        </p>
 
-        {/* BACKUP ADMIN EMAIL & PASSWORD */}
-        <form onSubmit={submit} className="space-y-3.5">
+        {/* CO-FOUNDER USERNAME & PASSWORD LOGIN */}
+        <form onSubmit={submit} className="mt-6 space-y-3.5">
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">
-              Admin Email
+            <label className="block text-xs font-mono uppercase tracking-wider text-white/60 mb-1">
+              Co-Founder Username or Email
             </label>
             <input
               className={inputCls}
-              placeholder="shittu.cfm@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              inputMode="email"
+              placeholder="enoch or esther (or email)"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               autoComplete="username"
             />
           </div>
           <div>
-            <label className="block text-xs font-mono uppercase tracking-wider text-white/50 mb-1">
-              Backup Password
+            <label className="block text-xs font-mono uppercase tracking-wider text-white/60 mb-1">
+              Super Admin Password
             </label>
             <input
               className={inputCls}
@@ -150,42 +122,89 @@ function SignIn() {
             disabled={busy || googleBusy}
             className="mt-2 min-h-[50px] w-full rounded-xl bg-[#f5a524] font-display text-sm font-bold uppercase tracking-wider text-black transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60 shadow-lg cursor-pointer"
           >
-            {busy ? 'Signing in…' : 'Sign in with Backup Password'}
+            {busy ? 'Signing in…' : 'Sign In as Super Admin'}
           </button>
         </form>
 
-        <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-xs leading-relaxed text-white/60 space-y-2">
-          <p className="font-semibold text-white/85">Quick Backup Sign-In:</p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('shittu.cfm@gmail.com');
-                setPassword('advibe-owner-2026');
-              }}
-              className="px-3 py-1.5 rounded-lg bg-[#f5a524]/15 border border-[#f5a524]/30 text-[#f5a524] font-mono text-[11px] hover:bg-[#f5a524]/25 transition cursor-pointer"
-            >
-              Super Admin: shittu.cfm@gmail.com
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEmail('ops@advibestudio.com');
-                setPassword('advibe-ops-2026');
-              }}
-              className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-white/80 font-mono text-[11px] hover:bg-white/15 transition cursor-pointer"
-            >
-              Regular Admin: ops@advibestudio.com
-            </button>
-          </div>
-          <p className="text-[11px] text-white/40 pt-1">
-            Inside the dashboard, go to <strong>Team & Sheets</strong> to add your new Gmail as a Super Admin or Regular Admin.
-          </p>
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/10" />
+          <span className="text-[11px] font-mono uppercase tracking-wider text-white/40">
+            or connect google account
+          </span>
+          <div className="h-px flex-1 bg-white/10" />
         </div>
 
-        <a href="#/" className="mt-5 block text-center text-xs text-white/40 hover:text-white">
-          ← Back to AdVibe Studios Website
-        </a>
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={googleBusy || busy}
+          className="min-h-[48px] w-full rounded-xl bg-white text-black font-display text-xs font-bold flex items-center justify-center gap-3 transition hover:bg-white/90 active:scale-[0.98] disabled:opacity-60 shadow-md cursor-pointer"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          <span>{googleBusy ? 'Connecting Google Account…' : 'Continue with Google'}</span>
+        </button>
+
+        {/* DUAL CO-FOUNDER SUPER ADMIN LOGINS */}
+        <div className="mt-6 rounded-2xl border border-[#f5a524]/25 bg-[#f5a524]/[0.06] p-4 text-xs leading-relaxed text-white/70 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#f5a524]">
+              Dual Co-Founder Super Admin Logins
+            </p>
+            <span className="font-mono text-[10px] text-white/40">Tap to autofill</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('enoch');
+                setPassword('advibe-enoch-2026');
+              }}
+              className="rounded-xl border border-[#f5a524]/30 bg-black/40 p-2.5 text-left hover:border-[#f5a524] transition cursor-pointer"
+            >
+              <p className="font-display text-xs font-bold text-white">Co-Founder 1 · Enoch</p>
+              <p className="font-mono text-[10px] text-[#f5a524] mt-0.5">user: enoch</p>
+              <p className="font-mono text-[10px] text-white/45">pass: advibe-enoch-2026</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('esther');
+                setPassword('advibe-esther-2026');
+              }}
+              className="rounded-xl border border-emerald-500/30 bg-black/40 p-2.5 text-left hover:border-emerald-400 transition cursor-pointer"
+            >
+              <p className="font-display text-xs font-bold text-white">Co-Founder 2 · Esther</p>
+              <p className="font-mono text-[10px] text-emerald-400 mt-0.5">user: esther</p>
+              <p className="font-mono text-[10px] text-white/45">pass: advibe-esther-2026</p>
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center justify-between text-xs text-white/45">
+          <a href="#/" className="hover:text-white transition">
+            ← Public Website
+          </a>
+          <a href="#/apps" className="text-[#f5a524] hover:underline font-mono text-[11px]">
+            Download WebApps Hub →
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -515,7 +534,7 @@ function AnalyticsView({
   );
 }
 
-/* ---------- REDESIGNED MOBILE-FIRST ADMIN SHELL ---------- */
+/* ---------- REDESIGNED GENERAL ADMIN COMMAND CENTER ---------- */
 export default function Admin() {
   const {
     session,
@@ -535,6 +554,7 @@ export default function Admin() {
 
   // Primary navigation tab
   const [tab, setTab] = useState<PrimaryAdminTab>('analytics');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Sub-segmented navigation states for grouped tasks
   const [cohortSubTab, setCohortSubTab] = useState<'active' | 'students'>('active');
@@ -556,258 +576,309 @@ export default function Admin() {
 
   const handleTabSwitch = (newTab: PrimaryAdminTab) => {
     setTab(newTab);
+    setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  };
+
+  const TAB_META: Record<PrimaryAdminTab, { title: string; category: string }> = {
+    analytics: { title: 'Analytics & Heatmaps', category: 'Overview' },
+    portal: { title: 'Client Portal & Video Gates', category: 'Client Operations' },
+    pipeline: { title: 'Leads & Production Pipeline', category: 'Client Operations' },
+    quiz: { title: 'Quiz Funnel & Assessments', category: 'Client Operations' },
+    affiliates: { title: 'Affiliate Partners & Codes', category: 'Growth & Affiliates' },
+    promotions: { title: '5% Referral Promotions', category: 'Growth & Affiliates' },
+    cohorts: { title: 'AI Academy Cohorts & Students', category: 'Academy & Website' },
+    content: { title: 'Website & Sales Page CMS', category: 'Academy & Website' },
+    team: { title: 'Co-Founders & Cloud Sync', category: 'System & Founders' },
+    more: { title: 'Platform Settings & Currencies', category: 'System & Founders' },
   };
 
   return (
     <div className="min-h-dvh bg-[#0b0b0c] text-white md:flex">
-      {/* DESKTOP SIDEBAR (≥ 768px) */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-white/10 bg-[#0e1114] p-5 md:flex">
+      {/* DESKTOP SIDEBAR (≥ 768px) — CATEGORIZED & EASY TO NAVIGATE */}
+      <aside className="hidden w-68 shrink-0 flex-col border-r border-white/10 bg-[#0e1114] p-5 md:flex">
         {/* Brand */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10">
           <div>
             <p className="font-display text-lg tracking-tight font-bold">
               AdVibe<span className="text-[#f5a524]">.</span>{' '}
-              <span className="text-[10px] font-mono text-white/40">ADMIN</span>
+              <span className="text-[10px] font-mono text-white/40">COMMAND</span>
             </p>
             <p className="text-[11px] font-mono text-[#f5a524]">
-              Cohort {activeCohort.cohortNumber} Active
+              {session.username ? `@${session.username}` : session.name} · Super Admin
             </p>
           </div>
+          <a
+            href="#/client-admin"
+            className="rounded-lg border border-[#f5a524]/40 bg-[#f5a524]/15 px-2.5 py-1 font-mono text-[10px] font-bold text-[#f5a524] hover:bg-[#f5a524]/25 transition"
+            title="Open Mobile Client Manager App"
+          >
+            Mobile App
+          </a>
         </div>
 
-        {/* Grouped Navigation */}
-        <nav className="mt-7 flex-1 space-y-1">
-          {/* Analytics */}
-          <button
-            onClick={() => handleTabSwitch('analytics')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'analytics'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <BarChart3 className="h-4 w-4" />
-              <span>Analytics & KPIs</span>
-            </div>
-          </button>
-
-          {/* Cohort Management */}
-          <button
-            onClick={() => handleTabSwitch('cohorts')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'cohorts'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Flame className="h-4 w-4" />
-              <span>Cohort Management</span>
-            </div>
-            {pendingStudentsCount > 0 ? (
-              <span className="rounded-full bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
-                {pendingStudentsCount} pending
-              </span>
-            ) : (
-              <span className="rounded-full bg-[#f5a524]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#f5a524]">
-                {confirmedPaidCount}/{activeCohort.seatCapacity || 100}
-              </span>
-            )}
-          </button>
-
-          {/* Content Control */}
-          <button
-            onClick={() => handleTabSwitch('content')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'content'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Globe className="h-4 w-4" />
-              <span>Content Control</span>
-            </div>
-            <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] font-mono text-white/50">
-              CMS
-            </span>
-          </button>
-
-          {/* Pipeline */}
-          <button
-            onClick={() => handleTabSwitch('pipeline')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'pipeline'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Users className="h-4 w-4" />
-              <span>Pipeline & CRM</span>
-            </div>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-white/60">
-              {leads.length}
-            </span>
-          </button>
-
-          {/* Client Portal & Payment Approval */}
-          <button
-            onClick={() => handleTabSwitch('portal')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'portal'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <FolderKanban className="h-4 w-4 text-[#f5a524]" />
-              <span>Client Portal & Videos</span>
-            </div>
-            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
-              GATE
-            </span>
-          </button>
-
-          {/* Service Discovery Quiz & Funnel */}
-          <button
-            onClick={() => handleTabSwitch('quiz')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'quiz'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Layers className="h-4 w-4 text-[#f5a524]" />
-              <span>Quiz & Funnel</span>
-            </div>
-            <span className="rounded-full bg-[#f5a524]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#f5a524]">
-              12 Qs
-            </span>
-          </button>
-
-          {/* Promotions & 5% Discount Eligibility */}
-          <button
-            onClick={() => handleTabSwitch('promotions')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'promotions'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Tag className="h-4 w-4 text-[#f5a524]" />
-              <span>Promotions</span>
-            </div>
-            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
-              5% OFF
-            </span>
-          </button>
-
-          {/* Affiliates & 5% Promo */}
-          <button
-            onClick={() => handleTabSwitch('affiliates')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'affiliates'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Sparkles className="h-4 w-4 text-[#f5a524]" />
-              <span>Affiliates & Partners</span>
-            </div>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-white/60">
-              {content.affiliates?.length ?? 4}
-            </span>
-          </button>
-
-          {/* Team, Firebase & Google Sheets Sync */}
-          <button
-            onClick={() => handleTabSwitch('team')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'team'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
-              <span>Team & Sheets Sync</span>
-            </div>
-            <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400">
-              LIVE
-            </span>
-          </button>
-
-          {/* Settings & More */}
-          <button
-            onClick={() => handleTabSwitch('more')}
-            className={`flex w-full min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-semibold transition active:scale-[0.98] ${
-              tab === 'more'
-                ? 'bg-[#f5a524]/15 text-[#f5a524] font-bold'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <SlidersHorizontal className="h-4 w-4" />
-              <span>Settings & More</span>
-            </div>
-          </button>
-        </nav>
-
-        {/* Bottom Utility Links */}
-        <div className="space-y-1.5 border-t border-white/10 pt-4">
-          <a
-            href="/advibe-studios-final.zip"
-            download="advibe-studios-final.zip"
-            className="flex min-h-[40px] items-center gap-2 rounded-xl bg-[#f5a524]/10 px-3.5 py-2 text-xs font-semibold text-[#f5a524] transition hover:bg-[#f5a524]/20"
-          >
-            <Download className="h-4 w-4" />
-            <span>Download Source ZIP</span>
-          </a>
-
-          <a
-            href="#/"
-            className="flex min-h-[40px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs text-white/60 transition hover:text-white"
-          >
-            <ExternalLink className="h-4 w-4" />
-            <span>View Public Site</span>
-          </a>
-
-          <div className="pb-1">
-            <PWAInstallButton variant="admin" className="w-full justify-center" />
+        {/* Categorized Navigation */}
+        <nav className="mt-4 flex-1 space-y-5 overflow-y-auto pr-1">
+          {/* GROUP 1: OVERVIEW */}
+          <div className="space-y-1">
+            <p className="px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-white/35">
+              1 · Overview
+            </p>
+            <button
+              onClick={() => handleTabSwitch('analytics')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'analytics'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <BarChart3 className="h-4 w-4" />
+                <span>Analytics & Heatmaps</span>
+              </div>
+            </button>
           </div>
 
-          <a
-            href="#/portal"
-            className="flex min-h-[40px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs text-white/60 transition hover:text-white"
-          >
-            <FolderKanban className="h-4 w-4 text-[#f5a524]" />
-            <span>Client Portal WebApp</span>
-          </a>
+          {/* GROUP 2: CLIENT OPERATIONS */}
+          <div className="space-y-1">
+            <p className="px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-white/35">
+              2 · Client Operations
+            </p>
+            <button
+              onClick={() => handleTabSwitch('portal')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'portal'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <FolderKanban className="h-4 w-4" />
+                <span>Client Portal & Videos</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+                tab === 'portal' ? 'bg-black/20 text-black' : 'bg-emerald-500/20 text-emerald-400'
+              }`}>
+                GATE
+              </span>
+            </button>
 
+            <button
+              onClick={() => handleTabSwitch('pipeline')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'pipeline'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Users className="h-4 w-4" />
+                <span>Leads & Pipeline</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${
+                tab === 'pipeline' ? 'bg-black/20 text-black font-bold' : 'bg-white/10 text-white/60'
+              }`}>
+                {leads.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => handleTabSwitch('quiz')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'quiz'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Layers className="h-4 w-4" />
+                <span>Quiz & Assessments</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+                tab === 'quiz' ? 'bg-black/20 text-black' : 'bg-[#f5a524]/20 text-[#f5a524]'
+              }`}>
+                12 Qs
+              </span>
+            </button>
+          </div>
+
+          {/* GROUP 3: GROWTH & AFFILIATES */}
+          <div className="space-y-1">
+            <p className="px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-white/35">
+              3 · Growth & Affiliates
+            </p>
+            <button
+              onClick={() => handleTabSwitch('affiliates')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'affiliates'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-4 w-4" />
+                <span>Affiliate Partners</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${
+                tab === 'affiliates' ? 'bg-black/20 text-black font-bold' : 'bg-white/10 text-white/60'
+              }`}>
+                {content.affiliates?.length ?? 0}
+              </span>
+            </button>
+
+            <button
+              onClick={() => handleTabSwitch('promotions')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'promotions'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Tag className="h-4 w-4" />
+                <span>5% Referral Promos</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+                tab === 'promotions' ? 'bg-black/20 text-black' : 'bg-emerald-500/20 text-emerald-400'
+              }`}>
+                5% OFF
+              </span>
+            </button>
+          </div>
+
+          {/* GROUP 4: ACADEMY & WEBSITE CMS */}
+          <div className="space-y-1">
+            <p className="px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-white/35">
+              4 · Academy & Website
+            </p>
+            <button
+              onClick={() => handleTabSwitch('cohorts')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'cohorts'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Flame className="h-4 w-4" />
+                <span>Cohort & Students</span>
+              </div>
+              {pendingStudentsCount > 0 ? (
+                <span className="rounded-full bg-amber-500/20 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
+                  {pendingStudentsCount}
+                </span>
+              ) : (
+                <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+                  tab === 'cohorts' ? 'bg-black/20 text-black' : 'bg-white/10 text-white/60'
+                }`}>
+                  {confirmedPaidCount}/{activeCohort.seatCapacity || 100}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => handleTabSwitch('content')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'content'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Globe className="h-4 w-4" />
+                <span>Website & Sales CMS</span>
+              </div>
+            </button>
+          </div>
+
+          {/* GROUP 5: SYSTEM & CO-FOUNDERS */}
+          <div className="space-y-1">
+            <p className="px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-white/35">
+              5 · System & Founders
+            </p>
+            <button
+              onClick={() => handleTabSwitch('team')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'team'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="h-4 w-4" />
+                <span>Co-Founders & Cloud</span>
+              </div>
+              <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-bold ${
+                tab === 'team' ? 'bg-black/20 text-black' : 'bg-emerald-500/20 text-emerald-400'
+              }`}>
+                SYNC
+              </span>
+            </button>
+
+            <button
+              onClick={() => handleTabSwitch('more')}
+              className={`flex w-full min-h-[42px] items-center justify-between rounded-xl px-3.5 py-2 text-xs font-semibold transition cursor-pointer ${
+                tab === 'more'
+                  ? 'bg-[#f5a524] text-black font-bold shadow-md'
+                  : 'text-white/65 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <SlidersHorizontal className="h-4 w-4" />
+                <span>Settings & Currencies</span>
+              </div>
+            </button>
+          </div>
+        </nav>
+
+        {/* Bottom WebApp Ecosystem Shortcuts */}
+        <div className="mt-4 space-y-1.5 border-t border-white/10 pt-3">
+          <p className="px-2 font-mono text-[9px] font-bold uppercase tracking-widest text-white/35">
+            WebApp Ecosystem
+          </p>
           <a
-            href="#/training"
-            className="flex min-h-[40px] items-center gap-2 rounded-xl px-3.5 py-2 text-xs text-white/60 transition hover:text-white"
+            href="#/client-admin"
+            className="flex min-h-[38px] items-center justify-between rounded-xl bg-[#f5a524]/15 border border-[#f5a524]/30 px-3 py-1.5 text-xs font-bold text-[#f5a524] transition hover:bg-[#f5a524]/25"
           >
-            <Sparkles className="h-4 w-4 text-[#f5a524]" />
-            <span>Training Portal</span>
+            <span>Mobile Client Admin PWA</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
+          <div className="grid grid-cols-2 gap-1.5">
+            <a
+              href="#/client-portal"
+              className="flex items-center justify-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] font-semibold text-white/75 hover:bg-white/10 hover:text-white"
+            >
+              <span>Client App</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
+            <a
+              href="#/affiliate-portal"
+              className="flex items-center justify-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] font-semibold text-white/75 hover:bg-white/10 hover:text-white"
+            >
+              <span>Affiliate App</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
+          </div>
+          <a
+            href="#/apps"
+            className="flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white/70 hover:text-white"
+          >
+            <Download className="h-3.5 w-3.5 text-[#f5a524]" />
+            <span>WebApps Download Center</span>
           </a>
         </div>
 
         {/* User Card */}
-        <div className="mt-4 border-t border-white/10 pt-4 flex items-center justify-between">
+        <div className="mt-3 border-t border-white/10 pt-3 flex items-center justify-between">
           <div className="min-w-0">
             <p className="truncate text-xs font-bold text-white">{session.name}</p>
-            <p className="text-[10px] capitalize text-white/40">{session.role === 'owner' ? 'Super Admin' : 'Operations'}</p>
+            <p className="text-[10px] text-[#f5a524] font-mono">
+              {session.username ? `@${session.username}` : session.email}
+            </p>
           </div>
           <button
             onClick={signOut}
-            className="min-h-[36px] min-w-[36px] grid place-items-center rounded-lg p-2 text-white/40 transition hover:bg-white/5 hover:text-red-300"
+            className="min-h-[36px] min-w-[36px] grid place-items-center rounded-lg p-2 text-white/40 transition hover:bg-white/5 hover:text-red-300 cursor-pointer"
             title="Sign out"
           >
             <LogOut className="h-4 w-4" />
@@ -816,47 +887,94 @@ export default function Admin() {
       </aside>
 
       {/* MOBILE TOP BAR (Safe Area Friendly) */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#0e1114]/95 px-4 py-3 backdrop-blur-md md:hidden">
-        <div className="flex items-center gap-2.5">
-          <p className="font-display text-base font-bold text-white">
-            AdVibe<span className="text-[#f5a524]">.</span>
-          </p>
-          <span className="rounded-full bg-[#f5a524]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#f5a524]">
-            Cohort {activeCohort.cohortNumber}
-          </span>
-          <span className="font-mono text-[10px] text-white/50">
-            {confirmedPaidCount}/{activeCohort.seatCapacity || 100}
-          </span>
-        </div>
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0e1114]/95 px-4 py-3 backdrop-blur-md md:hidden">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95"
+              aria-label="Open admin menu"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-bold text-white truncate">
+                {TAB_META[tab].title}
+              </p>
+              <p className="font-mono text-[10px] text-[#f5a524] truncate">
+                {TAB_META[tab].category}
+              </p>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-2">
-          <a
-            href="#/"
-            className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-white/70 active:scale-95"
-            title="View live site"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
-          <button
-            onClick={() => handleTabSwitch('more')}
-            className={`grid h-9 w-9 place-items-center rounded-xl border border-white/15 ${
-              tab === 'more' ? 'bg-[#f5a524] text-black' : 'bg-white/5 text-white/80'
-            }`}
-            aria-label="Settings"
-          >
-            <Settings className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <AppQuickSwitcher label="Apps" compact includeAdmin />
+            <ThemeToggleButton compact />
+            <a
+              href="#/client-admin"
+              className="inline-flex h-9 items-center gap-1 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-2.5 font-mono text-[10px] font-bold text-[#f5a524]"
+            >
+              <span>Mobile App</span>
+              <ArrowUpRight className="h-3 w-3" />
+            </a>
+            <a
+              href="#/"
+              className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-white/70 active:scale-95"
+              title="View live site"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="flex-1 px-4 pb-28 pt-4 sm:px-8 md:pb-12 md:pt-8 overflow-x-hidden">
+      <main className="flex-1 px-4 pb-28 pt-4 sm:px-8 md:pb-12 md:pt-6 overflow-x-hidden">
         <div className="mx-auto max-w-5xl">
-          {mode === 'demo' && (
-            <div className="mb-6 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-3.5 text-xs text-amber-200 text-left">
-              <strong>Demo mode active.</strong> Changes are saved to this browser's localStorage. Connect your Supabase keys anytime for live cloud sync.
+          {/* TOP ECOSYSTEM BAR — INSTANT ACCESS TO ALL WEBAPPS & DOWNLOAD PAGES */}
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#121518] px-4 py-3">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/45">
+                {TAB_META[tab].category}
+              </span>
+              <ChevronRight className="h-3.5 w-3.5 text-white/30" />
+              <span className="font-display font-bold text-white">{TAB_META[tab].title}</span>
             </div>
-          )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <AppQuickSwitcher label="Navigate" includeAdmin />
+              <ThemeToggleButton />
+              <a
+                href="#/client-admin"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#f5a524] px-3 py-1.5 font-display text-[11px] font-bold uppercase tracking-wider text-black hover:brightness-110 transition"
+              >
+                <span>Mobile Client Manager PWA</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href="#/client-portal"
+                className="inline-flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-white/80 hover:bg-white/10 transition"
+              >
+                <span>Customer Portal</span>
+                <ArrowUpRight className="h-3 w-3" />
+              </a>
+              <a
+                href="#/affiliate-portal"
+                className="inline-flex items-center gap-1 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 font-mono text-[11px] text-emerald-300 hover:bg-emerald-500/20 transition"
+              >
+                <span>Affiliate Portal</span>
+                <ArrowUpRight className="h-3 w-3" />
+              </a>
+              <a
+                href="#/apps"
+                className="inline-flex items-center gap-1 rounded-xl border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-white/80 hover:bg-white/10 transition"
+              >
+                <Download className="h-3 w-3 text-[#f5a524]" />
+                <span>Download Apps</span>
+              </a>
+            </div>
+          </div>
 
           {syncError && (
             <div className="mb-6 flex items-start justify-between gap-4 rounded-2xl border border-red-500/40 bg-red-500/10 p-3.5 text-xs text-red-200 text-left">
@@ -1161,122 +1279,168 @@ export default function Admin() {
         </div>
       </main>
 
-      {/* MOBILE BOTTOM NAVIGATION BAR (THUMB ZONE OPTIMIZED) */}
+      {/* CATEGORIZED MOBILE NAVIGATION DRAWER */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/80 backdrop-blur-sm md:hidden">
+          <div className="max-h-[85dvh] overflow-y-auto rounded-t-3xl border-t border-white/15 bg-[#11151a] p-5 pb-10 space-y-5">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div>
+                <p className="font-display text-base font-bold text-white">
+                  Admin Command Menu
+                </p>
+                <p className="font-mono text-[10px] text-[#f5a524]">
+                  Signed in as {session.name} ({session.username ? `@${session.username}` : session.email})
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-white/80"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Dedicated Mobile Client Manager PWA Banner */}
+            <a
+              href="#/client-admin"
+              className="flex items-center justify-between rounded-2xl border border-[#f5a524]/40 bg-[#f5a524]/15 p-3.5 text-left"
+            >
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#f5a524]">
+                  Built for Mobile
+                </p>
+                <p className="font-display text-sm font-bold text-white mt-0.5">
+                  Switch to Mobile Client Manager PWA
+                </p>
+                <p className="text-[11px] text-white/65">
+                  Fast pocket view for Clients, Orders, Affiliates & Push Alerts
+                </p>
+              </div>
+              <ArrowUpRight className="h-5 w-5 text-[#f5a524] shrink-0" />
+            </a>
+
+            {/* Categorized Sections */}
+            <div className="grid grid-cols-2 gap-2.5">
+              {(
+                [
+                  { id: 'analytics', label: 'Analytics & Heatmaps', sub: 'Overview', icon: BarChart3 },
+                  { id: 'portal', label: 'Client Portal & Videos', sub: 'Payment Gates', icon: FolderKanban },
+                  { id: 'pipeline', label: `Leads & Pipeline (${leads.length})`, sub: 'CRM & Orders', icon: Users },
+                  { id: 'affiliates', label: `Affiliates (${content.affiliates?.length ?? 0})`, sub: 'Partner Codes', icon: Sparkles },
+                  { id: 'promotions', label: '5% Referral Promos', sub: 'Discounts', icon: Tag },
+                  { id: 'quiz', label: 'Quiz & Assessments', sub: '12-Q Funnel', icon: Layers },
+                  { id: 'cohorts', label: 'Academy & Students', sub: `Cohort #${activeCohort.cohortNumber}`, icon: Flame },
+                  { id: 'content', label: 'Website & Sales CMS', sub: 'Copy & Proof', icon: Globe },
+                  { id: 'team', label: 'Co-Founders & Cloud', sub: 'Logins & Purge', icon: ShieldCheck },
+                  { id: 'more', label: 'Settings & Currencies', sub: 'Multi-Market', icon: SlidersHorizontal },
+                ] as const
+              ).map((item) => {
+                const Icon = item.icon;
+                const active = tab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => handleTabSwitch(item.id)}
+                    className={`flex flex-col items-start justify-between rounded-2xl border p-3.5 text-left transition ${
+                      active
+                        ? 'border-[#f5a524] bg-[#f5a524] text-black'
+                        : 'border-white/10 bg-white/5 text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon className={`h-4 w-4 ${active ? 'text-black' : 'text-[#f5a524]'}`} />
+                    <div className="mt-2.5">
+                      <p className="font-display text-xs font-bold leading-snug">{item.label}</p>
+                      <p className={`font-mono text-[10px] mt-0.5 ${active ? 'text-black/70' : 'text-white/45'}`}>
+                        {item.sub}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Ecosystem Links */}
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/10">
+              <a
+                href="#/portal"
+                className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-center font-mono text-[10px] font-bold text-white/80"
+              >
+                Customer App ↗
+              </a>
+              <a
+                href="#/affiliate-portal"
+                className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-center font-mono text-[10px] font-bold text-emerald-300"
+              >
+                Affiliate App ↗
+              </a>
+              <a
+                href="#/apps"
+                className="rounded-xl border border-[#f5a524]/30 bg-[#f5a524]/10 p-2.5 text-center font-mono text-[10px] font-bold text-[#f5a524]"
+              >
+                Download Hub ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CLEAN 5-ITEM MOBILE BOTTOM NAVIGATION BAR */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-white/10 bg-[#0e1114]/95 backdrop-blur-md md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-white/10 bg-[#0e1114]/95 backdrop-blur-md md:hidden"
         style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}
       >
-        {/* 1. Analytics */}
         <button
           onClick={() => handleTabSwitch('analytics')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'analytics' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          className={`flex min-h-[56px] flex-col items-center justify-center gap-1 text-[10px] font-bold transition ${
+            tab === 'analytics' ? 'text-[#f5a524]' : 'text-white/55 hover:text-white'
           }`}
         >
           <BarChart3 className="h-4 w-4" />
-          <span>Analytics</span>
+          <span>Overview</span>
         </button>
 
-        {/* 2. Cohort Management */}
-        <button
-          onClick={() => handleTabSwitch('cohorts')}
-          className={`relative flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'cohorts' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <Flame className="h-4 w-4" />
-          <span>Cohorts</span>
-          {pendingStudentsCount > 0 && (
-            <span className="absolute top-1.5 right-4 h-2 w-2 rounded-full bg-amber-400 ring-2 ring-[#0e1114]" />
-          )}
-        </button>
-
-        {/* 3. Content Control */}
-        <button
-          onClick={() => handleTabSwitch('content')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'content' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <Globe className="h-4 w-4" />
-          <span>Content</span>
-        </button>
-
-        {/* 4. Pipeline & CRM */}
-        <button
-          onClick={() => handleTabSwitch('pipeline')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'pipeline' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <Users className="h-4 w-4" />
-          <span>Pipeline</span>
-        </button>
-
-        {/* 4.2 Client Portal & Payments */}
         <button
           onClick={() => handleTabSwitch('portal')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'portal' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          className={`flex min-h-[56px] flex-col items-center justify-center gap-1 text-[10px] font-bold transition ${
+            tab === 'portal' ? 'text-[#f5a524]' : 'text-white/55 hover:text-white'
           }`}
         >
           <FolderKanban className="h-4 w-4" />
-          <span>Portal</span>
+          <span>Clients</span>
         </button>
 
-        {/* 4.5 Quiz & Funnel */}
         <button
-          onClick={() => handleTabSwitch('quiz')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'quiz' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          onClick={() => handleTabSwitch('pipeline')}
+          className={`flex min-h-[56px] flex-col items-center justify-center gap-1 text-[10px] font-bold transition ${
+            tab === 'pipeline' ? 'text-[#f5a524]' : 'text-white/55 hover:text-white'
           }`}
         >
-          <Layers className="h-4 w-4" />
-          <span>Quiz</span>
+          <Users className="h-4 w-4" />
+          <span>Leads</span>
         </button>
 
-        {/* 5. Promotions */}
-        <button
-          onClick={() => handleTabSwitch('promotions')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'promotions' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <Tag className="h-4 w-4" />
-          <span>Promos</span>
-        </button>
-
-        {/* 6. Affiliates */}
         <button
           onClick={() => handleTabSwitch('affiliates')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'affiliates' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          className={`flex min-h-[56px] flex-col items-center justify-center gap-1 text-[10px] font-bold transition ${
+            tab === 'affiliates' ? 'text-[#f5a524]' : 'text-white/55 hover:text-white'
           }`}
         >
           <Sparkles className="h-4 w-4" />
           <span>Affiliates</span>
         </button>
 
-        {/* 6.5 Team & Sheets */}
         <button
-          onClick={() => handleTabSwitch('team')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'team' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
+          onClick={() => setMobileMenuOpen((v) => !v)}
+          className={`flex min-h-[56px] flex-col items-center justify-center gap-1 text-[10px] font-bold transition ${
+            mobileMenuOpen || !['analytics', 'portal', 'pipeline', 'affiliates'].includes(tab)
+              ? 'text-[#f5a524]'
+              : 'text-white/55 hover:text-white'
           }`}
         >
-          <ShieldCheck className="h-4 w-4" />
-          <span>Team/Sync</span>
-        </button>
-
-        {/* 7. More / Settings */}
-        <button
-          onClick={() => handleTabSwitch('more')}
-          className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-[10px] font-bold transition active:scale-95 ${
-            tab === 'more' ? 'text-[#f5a524]' : 'text-white/50 hover:text-white'
-          }`}
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-          <span>More</span>
+          <Menu className="h-4 w-4" />
+          <span>All Tools</span>
         </button>
       </nav>
     </div>

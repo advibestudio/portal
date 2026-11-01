@@ -14,9 +14,13 @@ const TrainingThankYou = lazy(() => import('@/pages/training/TrainingThankYou'))
 const MonthlyRetainerPage = lazy(() => import('@/pages/commercial/MonthlyRetainerPage'));
 const MiniSeriesPage = lazy(() => import('@/pages/commercial/MiniSeriesPage'));
 const CustomerPortalPage = lazy(() => import('@/pages/CustomerPortalPage'));
+const AffiliatePortalPage = lazy(() => import('@/pages/AffiliatePortalPage'));
+const AppDownloadHubPage = lazy(() => import('@/pages/AppDownloadHubPage'));
+const MobileClientAdminApp = lazy(() => import('@/pages/admin/MobileClientAdminApp'));
 import { TapRipple } from '@/components/animations/TapRipple';
 import { usePageHeatmapTracker } from '@/lib/heatmapAnalytics';
 import { OfflineBanner } from '@/lib/pwa';
+import { ThemeProvider } from '@/lib/theme';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -84,8 +88,12 @@ function useAppRoute() {
     if (hash && hash !== '#' && hash !== '#/') {
       return hash.replace(/^#\/?/, '/');
     }
-    const path = window.location.pathname || '/';
-    return path;
+    // Strip GitHub Pages repository base path `/portal` or `/portal/` so visiting
+    // https://advibestudio.github.io/portal/ or https://advibestudio.github.io/portal/#/
+    // always opens the Main Website (`/`).
+    const rawPath = window.location.pathname || '/';
+    const stripped = rawPath.replace(/^\/portal\/?/i, '/');
+    return stripped.startsWith('/') ? stripped : `/${stripped}`;
   };
 
   const [route, setRoute] = useState(getRoute);
@@ -111,12 +119,31 @@ export default function App() {
 
   const isMonthlyContent = route.startsWith('/monthly-content') || route.startsWith('monthly-content');
   const isMiniSeries = route.startsWith('/promotional-mini-series') || route.startsWith('promotional-mini-series');
-  const isAdmin = route.startsWith('/admin') || route.startsWith('admin');
+  const isClientAdmin = route.startsWith('/client-admin') || route.startsWith('client-admin');
+  const isAdmin = !isClientAdmin && (route.startsWith('/admin') || route.startsWith('admin'));
+  const isAffiliatePortal =
+    route.startsWith('/affiliate-portal') ||
+    route.startsWith('affiliate-portal') ||
+    route.startsWith('/affiliates') ||
+    route.startsWith('affiliates');
   const isCustomerPortal =
-    route.startsWith('/portal') ||
-    route.startsWith('portal') ||
-    route.startsWith('/client-portal') ||
-    route.startsWith('client-portal');
+    !isAffiliatePortal &&
+    (route.startsWith('/client-portal') ||
+      route.startsWith('client-portal') ||
+      route.startsWith('/portal') ||
+      route.startsWith('portal'));
+  const isDownloadCustomerApp =
+    route.startsWith('/download/customer-app') || route.startsWith('download/customer-app');
+  const isDownloadAffiliateApp =
+    route.startsWith('/download/affiliate-app') || route.startsWith('download/affiliate-app');
+  const isDownloadAdminApp =
+    route.startsWith('/download/admin-app') || route.startsWith('download/admin-app');
+  const isAppsHub =
+    route.startsWith('/apps') ||
+    route.startsWith('apps') ||
+    isDownloadCustomerApp ||
+    isDownloadAffiliateApp ||
+    isDownloadAdminApp;
   const isCase = route.startsWith('/ai-video') || route.startsWith('ai-video');
   const isTrainingBusiness = route.startsWith('/training/business') || route.startsWith('training/business');
   const isTrainingCreators = route.startsWith('/training/creators') || route.startsWith('training/creators');
@@ -129,10 +156,16 @@ export default function App() {
     !isTrainingThankYou;
 
   useEffect(() => {
-    if (isAdmin) {
+    if (isClientAdmin) {
+      document.title = 'Mobile Client Manager Admin PWA — AdVibe Studios';
+    } else if (isAdmin) {
       document.title = 'Admin Portal — AdVibe Studios';
+    } else if (isAffiliatePortal) {
+      document.title = 'Affiliate Partner Portal WebApp — AdVibe Studios';
     } else if (isCustomerPortal) {
       document.title = 'Client Project Portal — AdVibe Studios';
+    } else if (isAppsHub) {
+      document.title = 'Download AdVibe WebApps — Client & Affiliate Partner Apps';
     } else if (isBookStrategy) {
       document.title = 'Book Free Strategy Session — AdVibe Studios';
     } else if (isMonthlyContent) {
@@ -152,93 +185,149 @@ export default function App() {
     } else {
       document.title = 'AdVibe Studio — AI Video Ads That Turn Attention Into Orders';
     }
-  }, [isAdmin, isCustomerPortal, isBookStrategy, isCase, isMonthlyContent, isMiniSeries, isTrainingBusiness, isTrainingCreators, isTrainingSelector, isTrainingThankYou]);
+  }, [
+    isClientAdmin,
+    isAdmin,
+    isAffiliatePortal,
+    isCustomerPortal,
+    isAppsHub,
+    isBookStrategy,
+    isCase,
+    isMonthlyContent,
+    isMiniSeries,
+    isTrainingBusiness,
+    isTrainingCreators,
+    isTrainingSelector,
+    isTrainingThankYou,
+  ]);
+
+  const downloadMode = isDownloadCustomerApp
+    ? 'customer'
+    : isDownloadAffiliateApp
+    ? 'affiliate'
+    : isDownloadAdminApp
+    ? 'admin'
+    : 'hub';
 
   return (
-    <StoreProvider>
-      <ReferralProvider>
-        <CountryProvider>
-          <OfflineBanner />
-          <TapRipple />
-          <ErrorBoundary>
-          {isAdmin ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#0b0b0c] text-white/50 font-mono text-xs">
-                  Loading admin…
-                </div>
-              }
-            >
-              <Admin />
-            </Suspense>
-          ) : isCustomerPortal ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#0b0e12] text-white/60 font-mono text-xs">
-                  Loading Client Portal…
-                </div>
-              }
-            >
-              <CustomerPortalPage />
-            </Suspense>
-          ) : isMonthlyContent ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
-                  Loading Monthly Retainer…
-                </div>
-              }
-            >
-              <MonthlyRetainerPage />
-            </Suspense>
-          ) : isMiniSeries ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#0d1117] text-white/60 font-mono text-xs">
-                  Loading Mini Series…
-                </div>
-              }
-            >
-              <MiniSeriesPage />
-            </Suspense>
-          ) : isTrainingBusiness ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
-                  Loading Business Owner Training…
-                </div>
-              }
-            >
-              <BusinessSalesPage />
-            </Suspense>
-          ) : isTrainingCreators ? (
-            <Suspense
-              fallback={
-                <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
-                  Loading Creator Training…
-                </div>
-              }
-            >
-              <CreatorSalesPage />
-            </Suspense>
-          ) : isTrainingSelector ? (
-            <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
-              <TrainingSelector />
-            </Suspense>
-          ) : isTrainingThankYou ? (
-            <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
-              <TrainingThankYou />
-            </Suspense>
-          ) : isCase ? (
-            <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
-              <AiVideoPage />
-            </Suspense>
-          ) : (
-            <PublicSite />
-          )}
-        </ErrorBoundary>
-      </CountryProvider>
-    </ReferralProvider>
-  </StoreProvider>
+    <ThemeProvider route={route}>
+      <StoreProvider>
+        <ReferralProvider>
+          <CountryProvider>
+            <OfflineBanner />
+            <TapRipple />
+            <ErrorBoundary>
+              <div className="theme-adaptive">
+                {isClientAdmin ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading Mobile Client Manager…
+                      </div>
+                    }
+                  >
+                    <MobileClientAdminApp />
+                  </Suspense>
+                ) : isAdmin ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading admin…
+                      </div>
+                    }
+                  >
+                    <Admin />
+                  </Suspense>
+                ) : isAffiliatePortal ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading Affiliate Portal…
+                      </div>
+                    }
+                  >
+                    <AffiliatePortalPage />
+                  </Suspense>
+                ) : isCustomerPortal ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading Client Portal…
+                      </div>
+                    }
+                  >
+                    <CustomerPortalPage />
+                  </Suspense>
+                ) : isAppsHub ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading WebApps Download Center…
+                      </div>
+                    }
+                  >
+                    <AppDownloadHubPage mode={downloadMode} />
+                  </Suspense>
+                ) : isMonthlyContent ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#07090c] text-white/60 font-mono text-xs">
+                        Loading Monthly Retainer…
+                      </div>
+                    }
+                  >
+                    <MonthlyRetainerPage />
+                  </Suspense>
+                ) : isMiniSeries ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#0b0e12] text-white/60 font-mono text-xs">
+                        Loading Mini Series…
+                      </div>
+                    }
+                  >
+                    <MiniSeriesPage />
+                  </Suspense>
+                ) : isTrainingBusiness ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading Business Owner Training…
+                      </div>
+                    }
+                  >
+                    <BusinessSalesPage />
+                  </Suspense>
+                ) : isTrainingCreators ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#faf9f4] text-[#111412]/60 font-mono text-xs">
+                        Loading Creator Training…
+                      </div>
+                    }
+                  >
+                    <CreatorSalesPage />
+                  </Suspense>
+                ) : isTrainingSelector ? (
+                  <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
+                    <TrainingSelector />
+                  </Suspense>
+                ) : isTrainingThankYou ? (
+                  <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
+                    <TrainingThankYou />
+                  </Suspense>
+                ) : isCase ? (
+                  <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
+                    <AiVideoPage />
+                  </Suspense>
+                ) : (
+                  <PublicSite />
+                )}
+              </div>
+            </ErrorBoundary>
+          </CountryProvider>
+        </ReferralProvider>
+      </StoreProvider>
+    </ThemeProvider>
   );
 }

@@ -50,23 +50,23 @@ export function ChooseYourPathStrip() {
           {retainer.showOnHomepage && (
             <div style={{
               borderRadius: 24,
-              background: '#fff',
+              background: 'rgb(var(--surface))',
               border: '1px solid rgb(var(--line))',
               padding: 'clamp(22px, 3vw, 28px)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: '0 12px 30px -18px rgba(17,20,18,0.12)',
+              boxShadow: 'var(--shadow-card)',
               position: 'relative',
               textAlign: 'left'
             }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 12 }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: '#b87508' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgb(var(--accent))' }}>
                     <Video size={13} style={{ color: '#f5a524' }} />
                     <span>Monthly Retainer</span>
                   </span>
-                  <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', padding: '3px 8px', borderRadius: 999, background: 'rgba(17,20,18,0.06)', color: 'rgb(var(--ink-2))' }}>
+                  <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', padding: '3px 8px', borderRadius: 999, background: 'rgb(var(--surface-2))', color: 'rgb(var(--ink-2))' }}>
                     15 videos/mo
                   </span>
                 </div>

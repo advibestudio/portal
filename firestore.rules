@@ -29,9 +29,9 @@ service cloud.firestore {
       return request.resource.data;
     }
 
-    // Bootstrapped primary owner + dynamic Super Admins in /admins/{email}
+    // Bootstrapped primary owners + dynamic Super Admins in /admins/{email}
     function isBootstrappedSuperAdmin() {
-      return isVerifiedEmail() && request.auth.token.email == 'shittu.cfm@gmail.com';
+      return isVerifiedEmail() && request.auth.token.email in ['shittu.cfm@gmail.com', 'advibestudios.global@gmail.com'];
     }
 
     function isSuperAdmin() {
@@ -234,7 +234,7 @@ service cloud.firestore {
       );
       allow list: if isAdmin();
       allow create, update: if isValidAdminId(adminId) && isSuperAdmin() && isValidAdminAccount(incoming());
-      allow delete: if isValidAdminId(adminId) && isSuperAdmin() && adminId != 'shittu.cfm@gmail.com';
+      allow delete: if isValidAdminId(adminId) && isSuperAdmin() && !(adminId in ['shittu.cfm@gmail.com', 'advibestudios.global@gmail.com']);
     }
 
     // ---------------------------------------------------------

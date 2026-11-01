@@ -430,10 +430,39 @@ export function ClientProjectsAdminView() {
                       </div>
                     )}
 
+                    {scr.clientUploadedAssets && scr.clientUploadedAssets.length > 0 && (
+                      <div className="space-y-1.5 pt-1">
+                        <span className="font-mono text-[10px] uppercase text-[#f5a524] block">
+                          Client Uploaded Files ({scr.clientUploadedAssets.length}):
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {scr.clientUploadedAssets.map((asset) => (
+                            <a
+                              key={asset.id}
+                              href={asset.dataUrl}
+                              download={asset.name}
+                              className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 font-mono text-[11px] text-white hover:border-[#f5a524] hover:text-[#f5a524] transition no-underline"
+                            >
+                              {asset.mimeType.startsWith('image/') ? (
+                                <img
+                                  src={asset.dataUrl}
+                                  alt={asset.name}
+                                  className="h-5 w-5 rounded object-cover shrink-0"
+                                />
+                              ) : (
+                                <FileText className="h-3.5 w-3.5 shrink-0 text-[#f5a524]" />
+                              )}
+                              <span className="truncate max-w-[180px]">{asset.name}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {scr.clientAssetLinks && scr.clientAssetLinks.length > 0 && (
                       <div className="space-y-1 pt-1">
                         <span className="font-mono text-[10px] uppercase text-emerald-400 block">
-                          Client Submitted Brand Assets:
+                          Client Submitted Cloud Links:
                         </span>
                         <div className="flex flex-wrap gap-2">
                           {scr.clientAssetLinks.map((lnk, i) => (
