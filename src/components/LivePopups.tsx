@@ -4,6 +4,8 @@ import { useStore } from '@/lib/store';
 import { playNotificationChime } from '@/lib/sound';
 
 const OFF_KEY = 'advibe.popups.off';
+// Paused per studio owner request — set to false to re-enable live activity popups
+const POPUPS_GLOBALLY_PAUSED = true;
 
 export interface LiveActivityItem {
   id: string;
@@ -18,6 +20,7 @@ export interface LiveActivityItem {
 }
 
 export default function LivePopups({ paused }: { paused: boolean }) {
+  const isPaused = paused || POPUPS_GLOBALLY_PAUSED;
   const { content, leads, students } = useStore();
 
   const [current, setCurrent] = useState<LiveActivityItem | null>(null);
@@ -38,10 +41,11 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
   // Trigger subtle notification sound whenever a new live popup appears
   useEffect(() => {
+    if (isPaused) return;
     if (current && !muted) {
       playNotificationChime();
     }
-  }, [current?.id, muted]);
+  }, [current?.id, muted, isPaused]);
 
   // Clear any past dismissal blocks from localStorage/sessionStorage
   useEffect(() => {
@@ -305,7 +309,7 @@ export default function LivePopups({ paused }: { paused: boolean }) {
 
   // Natural cadence: display for 4.5s (exit animation starts at 4.1s), then wait 6.5s gap between popups (5-10s range)
   useEffect(() => {
-    if (off || !activityQueue.length || !isTabVisible) return;
+    if (isPaused || off || !activityQueue.length || !isTabVisible) return;
 
     if (current) {
       setIsExiting(false);
@@ -326,8 +330,6 @@ export default function LivePopups({ paused }: { paused: boolean }) {
       };
     }
 
-    if (paused) return;
-
     // First popup appears 1.5s after load, subsequent ones randomized within the 5-10 second interval
     const delay =
       shownCount.current === 0
@@ -342,9 +344,9 @@ export default function LivePopups({ paused }: { paused: boolean }) {
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [activityQueue, current, paused, off, isTabVisible]);
+  }, [activityQueue, current, isPaused, off, isTabVisible]);
 
-  if (!current || off || paused || !isTabVisible) return null;
+  if (!current || off || isPaused || !isTabVisible) return null;
 
   const handleDismiss = () => {
     setIsExiting(true);

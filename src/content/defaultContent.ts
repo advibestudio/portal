@@ -41,7 +41,7 @@ export const defaultContent: SiteContent = {
   commercialOffers: defaultCommercialOffers,
   sections: {
     wall: true, proof: true, showcase: true, clients: true, problem: true, services: true,
-    events: true, whyUs: true, process: true, testimonials: true, faq: true, finalCta: true, liveToasts: true, aiCompare: true,
+    events: true, whyUs: true, process: true, testimonials: true, faq: true, finalCta: true, liveToasts: false, aiCompare: true,
   },
   client: {
     name: 'CirclesFundMe',
