@@ -881,8 +881,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     (async () => {
       try {
-        // Perform one-time cloud clean-slate wipe of public-accessible collections on boot
-        if (localStorage.getItem(CLEAN_SLATE_CLOUD_KEY) !== 'done') {
+        // Only run cloud collection deletes if an admin is currently signed in
+        if (auth.currentUser && localStorage.getItem(CLEAN_SLATE_CLOUD_KEY) !== 'done') {
           await clearAllCustomerPortalData();
           await clearAllHeatmapAndPageviews();
         }
@@ -906,8 +906,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           }
         }
         localStorage.setItem(LS.contentSyncAt, String(Date.now()));
-      } catch (err) {
-        console.warn('Using cached website content:', err);
+      } catch {
+        // Offline or unreachable — fall back cleanly to local cached / default content
       } finally {
         if (!cancelled) setReady(true);
       }

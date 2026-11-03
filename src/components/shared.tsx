@@ -62,12 +62,14 @@ export function VideoCard({ item, onPlay }: { item: PortfolioItem; onPlay: (item
   return (
     <button
       onClick={() => onPlay(item)}
-      className="vcard"
+      onContextMenu={(e) => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
+      className="vcard select-none"
       style={{ aspectRatio: item.orientation === 'vertical' ? '9 / 16' : '16 / 9' }}
       aria-label={`Play video: ${item.title}`}
     >
       {imgOk ? (
-        <img src={ytThumb(item.youtubeId)} alt="" loading="lazy" onError={() => setImgOk(false)} />
+        <img src={ytThumb(item.youtubeId)} alt="" loading="lazy" draggable={false} onError={() => setImgOk(false)} />
       ) : (
         <div className="fallback" />
       )}
@@ -103,8 +105,10 @@ export function Lightbox({ item, onClose }: { item: PortfolioItem | null; onClos
   const vertical = item.orientation === 'vertical';
   return (
     <div
-      className="lightbox"
+      className="lightbox select-none"
       onClick={onClose}
+      onContextMenu={(e) => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
       role="dialog"
       aria-modal="true"
       aria-label={`Video: ${item.title}`}
@@ -263,9 +267,9 @@ export function Lightbox({ item, onClose }: { item: PortfolioItem | null; onClos
             </div>
           )}
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${item.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+            src={`https://www.youtube-nocookie.com/embed/${item.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`}
             title={item.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope"
             allowFullScreen
             onLoad={() => setIframeLoaded(true)}
             style={{
@@ -276,6 +280,42 @@ export function Lightbox({ item, onClose }: { item: PortfolioItem | null; onClos
               border: 0,
               opacity: iframeLoaded ? 1 : 0,
               transition: 'opacity 0.2s ease',
+            }}
+          />
+          {/* View-only shield: prevents clicking external title/watch-on-YouTube links while keeping playback & fullscreen controls active */}
+          <div
+            onContextMenu={(e) => e.preventDefault()}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 56,
+              zIndex: 3,
+              background: 'linear-gradient(to bottom, rgba(0,0,0,0.65), transparent)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 12px',
+              fontSize: 10,
+              fontFamily: 'var(--font-mono)',
+              color: 'rgba(255,255,255,0.7)',
+              userSelect: 'none',
+            }}
+          >
+            <span>AdVibe Studios · View-Only Stream</span>
+            <span>Protected Master</span>
+          </div>
+          <div
+            onContextMenu={(e) => e.preventDefault()}
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 44,
+              width: 110,
+              height: 44,
+              zIndex: 3,
+              userSelect: 'none',
             }}
           />
         </div>

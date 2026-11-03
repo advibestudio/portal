@@ -71,7 +71,7 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
   // Recommended main navigation per Part 1.1:
   // Our Work, Services, Packages, Monthly Retainer, How It Works (plus non-competing access to Mini-Series & Training)
   const links: Array<{ label: string; href: string; on: boolean; pill?: string }> = [
-    { label: 'Our Work', href: '#work', on: sec.showcase },
+    { label: 'Our Work', href: '#/our-work', on: true },
     { label: 'Services', href: '#services', on: sec.services },
     { label: 'Packages', href: '#pricing', on: true },
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
@@ -353,10 +353,18 @@ export function Showcase({ onPlay }: { onPlay: (i: PortfolioItem) => void }) {
                 </div>
               ))}
             </div>
-            <div className="scroll-controls">
+            <div className="scroll-controls" style={{ flexWrap: 'wrap', gap: 12 }}>
               <button className="circle-btn" onClick={() => scrollBy(-1)} aria-label="Previous videos"><ChevronLeft size={20} /></button>
               <button className="circle-btn" onClick={() => scrollBy(1)} aria-label="Next videos"><ChevronRight size={20} /></button>
               <span className="counter">{String(Math.min(idx + 1, items.length)).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
+              <a
+                href="#/our-work"
+                className="btn-studio is-sm"
+                style={{ marginLeft: 'auto', textDecoration: 'none' }}
+              >
+                <span>Open Full Screening Room (All {content.portfolio.filter((p) => p.visible).length} Videos)</span>
+                <ArrowBtn />
+              </a>
             </div>
           </>
         )}

@@ -391,10 +391,51 @@ function AddButton({ label, onClick }: { label: string; onClick: () => void }) {
 
 /* ---------- PORTFOLIO EDITOR ---------- */
 function PortfolioEditor({ draft, set }: { draft: SiteContent; set: (fn: (d: SiteContent) => void) => void }) {
+  const [copiedLink, setCopiedLink] = useState(false);
+  const publicScreeningUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}#/our-work`
+      : '#/our-work';
+
+  const copyScreeningLink = async () => {
+    try {
+      await navigator.clipboard.writeText(publicScreeningUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#f5a524]/35 bg-[#f5a524]/[0.07] p-4">
+        <div>
+          <p className="text-sm font-bold text-white">Public View-Only Display Page (All Our Work)</p>
+          <p className="mt-0.5 text-xs text-white/65">
+            Share <code className="rounded bg-black/40 px-1.5 py-0.5 font-mono text-[#f5a524]">#/our-work</code> with prospective clients. They can watch every visible video and click direct watch links, with downloads and right-click saving disabled.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={copyScreeningLink}
+            className="min-h-[38px] rounded-xl bg-[#f5a524] px-3.5 text-xs font-extrabold text-black transition hover:brightness-110"
+          >
+            {copiedLink ? '✓ Link Copied!' : 'Copy Display Page Link'}
+          </button>
+          <a
+            href="#/our-work"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 text-xs font-bold text-white/85 transition hover:bg-white/10"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> Open Display Page
+          </a>
+        </div>
+      </div>
       <p className="rounded-lg border border-white/10 bg-white/[0.03] p-4 text-sm text-white/55">
-        Paste a YouTube link — the video appears on the site instantly. Thumbnails load from YouTube automatically.
+        Paste a YouTube link — the video appears on the site and in the View-Only Display Page instantly. Thumbnails load from YouTube automatically.
       </p>
       {draft.portfolio.map((p, i) => (
         <div key={p.id} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">

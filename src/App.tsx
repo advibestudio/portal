@@ -17,6 +17,7 @@ const CustomerPortalPage = lazy(() => import('@/pages/CustomerPortalPage'));
 const AffiliatePortalPage = lazy(() => import('@/pages/AffiliatePortalPage'));
 const AppDownloadHubPage = lazy(() => import('@/pages/AppDownloadHubPage'));
 const MobileClientAdminApp = lazy(() => import('@/pages/admin/MobileClientAdminApp'));
+const WorkShowcasePage = lazy(() => import('@/pages/WorkShowcasePage'));
 import { TapRipple } from '@/components/animations/TapRipple';
 import { usePageHeatmapTracker } from '@/lib/heatmapAnalytics';
 import { OfflineBanner, getPreferredPWALaunchRoute, setPreferredPWALaunchRoute } from '@/lib/pwa';
@@ -157,6 +158,17 @@ export default function App() {
     isDownloadAffiliateApp ||
     isDownloadAdminApp;
   const isCase = route.startsWith('/ai-video') || route.startsWith('ai-video');
+  const isWorkShowcase =
+    route.startsWith('/our-work') ||
+    route.startsWith('our-work') ||
+    route.startsWith('/portfolio') ||
+    route.startsWith('portfolio') ||
+    route.startsWith('/work-gallery') ||
+    route.startsWith('work-gallery') ||
+    route.startsWith('/watch') ||
+    route.startsWith('watch') ||
+    route.startsWith('/showcase') ||
+    route.startsWith('showcase');
   const isTrainingBusiness = route.startsWith('/training/business') || route.startsWith('training/business');
   const isTrainingCreators = route.startsWith('/training/creators') || route.startsWith('training/creators');
   const isTrainingThankYou = route.startsWith('/training/thank-you') || route.startsWith('training/thank-you');
@@ -196,6 +208,8 @@ export default function App() {
       document.title = 'Choose Your AI Video Track — AdVibe Studios';
     } else if (isTrainingThankYou) {
       document.title = 'Registration Received — AdVibe Studios';
+    } else if (isWorkShowcase) {
+      document.title = 'All Our Work — Official Studio Screening Room — AdVibe Studios';
     } else if (isCase) {
       document.title = 'AI Video Ads Breakdown — AdVibe Studios';
     } else {
@@ -208,6 +222,7 @@ export default function App() {
     isCustomerPortal,
     isAppsHub,
     isBookStrategy,
+    isWorkShowcase,
     isCase,
     isMonthlyContent,
     isMiniSeries,
@@ -331,6 +346,16 @@ export default function App() {
                 ) : isTrainingThankYou ? (
                   <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>
                     <TrainingThankYou />
+                  </Suspense>
+                ) : isWorkShowcase ? (
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-[#0a0c0f] text-white/60 font-mono text-xs">
+                        Loading Studio Screening Room…
+                      </div>
+                    }
+                  >
+                    <WorkShowcasePage />
                   </Suspense>
                 ) : isCase ? (
                   <Suspense fallback={<div className="min-h-dvh bg-[#faf9f4]" />}>

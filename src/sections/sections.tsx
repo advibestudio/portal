@@ -101,7 +101,13 @@ export function ClientSpotlight({ onPlay }: { onPlay: (i: PortfolioItem) => void
                   </div>
                 ))}
               </div>
-              <p className="spot-swipe-hint">Swipe sideways to explore all {vids.length} {k.name} reels →</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12 }}>
+                <p className="spot-swipe-hint" style={{ margin: 0 }}>Swipe sideways to explore {k.name} reels →</p>
+                <a href="#/our-work" className="btn-studio is-sm" style={{ textDecoration: 'none' }}>
+                  <span>Watch All {content.portfolio.filter((p) => p.visible).length} Videos in Screening Room</span>
+                  <ArrowBtn />
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -401,7 +407,7 @@ export function Footer() {
           <div className="foot-col">
             <h4>Explore</h4>
             {[
-              ['Our Work', '#work', true],
+              ['All Our Work (Screening Room)', '#/our-work', true],
               ['Services', '#services', true],
               ['Packages', '#pricing', true],
               ['Monthly Retainer', '#/monthly-content', true],
