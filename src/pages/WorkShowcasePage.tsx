@@ -15,12 +15,15 @@ import {
   Search,
   Share2,
   ShieldCheck,
+  X,
 } from 'lucide-react';
 import { useStore, waLink, ytThumb } from '@/lib/store';
 import { useCountry } from '@/lib/country';
 import { waNumberFor } from '@/lib/money';
+import { useTheme } from '@/lib/theme';
 import type { PortfolioItem } from '@/content/types';
 import { Lightbox } from '@/components/shared';
+import { AppQuickSwitcher, ThemeToggleButton } from '@/components/UnifiedAppNav';
 
 const StrategyModal = lazy(() =>
   import('@/components/StrategyModal').then((m) => ({ default: m.StrategyModal }))
@@ -41,6 +44,8 @@ function getQueryVideoId(): string | null {
 export default function WorkShowcasePage() {
   const { content } = useStore();
   const { country } = useCountry();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const allVideos = useMemo(
     () =>
@@ -60,6 +65,7 @@ export default function WorkShowcasePage() {
   });
 
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [formatFilter, setFormatFilter] = useState<'all' | 'vertical' | 'horizontal'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [autoPlayStage, setAutoPlayStage] = useState<boolean>(false);
   const [stageIframeLoaded, setStageIframeLoaded] = useState<boolean>(false);
@@ -122,15 +128,19 @@ export default function WorkShowcasePage() {
     const q = searchQuery.trim().toLowerCase();
     return allVideos.filter((v) => {
       const matchesCat = activeCategory === 'All' || v.category === activeCategory;
+      const matchesFormat =
+        formatFilter === 'all' ||
+        (formatFilter === 'vertical' && v.orientation === 'vertical') ||
+        (formatFilter === 'horizontal' && v.orientation !== 'vertical');
       const matchesSearch =
         !q ||
         v.title.toLowerCase().includes(q) ||
         v.client.toLowerCase().includes(q) ||
         v.category.toLowerCase().includes(q) ||
         (v.result && v.result.toLowerCase().includes(q));
-      return matchesCat && matchesSearch;
+      return matchesCat && matchesFormat && matchesSearch;
     });
-  }, [allVideos, activeCategory, searchQuery]);
+  }, [allVideos, activeCategory, formatFilter, searchQuery]);
 
   const buildShareUrl = (videoId?: string) => {
     if (typeof window === 'undefined') return '#/our-work';
@@ -138,23 +148,40 @@ export default function WorkShowcasePage() {
     return videoId ? `${base}#/our-work?v=${encodeURIComponent(videoId)}` : `${base}#/our-work`;
   };
 
-  const handleCopyLink = async (key: string, videoId?: string) => {
-    const url = buildShareUrl(videoId);
+  const copyTextToClipboard = async (key: string, text: string) => {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(text);
       setCopiedKey(key);
-      setTimeout(() => setCopiedKey((prev) => (prev === key ? null : prev)), 2200);
+      setTimeout(() => setCopiedKey((prev) => (prev === key ? null : prev)), 2400);
     } catch {
-      // Fallback copy
-      const input = document.createElement('input');
-      input.value = url;
-      document.body.appendChild(input);
-      input.select();
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
       document.execCommand('copy');
-      document.body.removeChild(input);
+      document.body.removeChild(textarea);
       setCopiedKey(key);
-      setTimeout(() => setCopiedKey((prev) => (prev === key ? null : prev)), 2200);
+      setTimeout(() => setCopiedKey((prev) => (prev === key ? null : prev)), 2400);
     }
+  };
+
+  const handleCopyLink = (key: string, videoId?: string) => {
+    const url = buildShareUrl(videoId);
+    void copyTextToClipboard(key, url);
+  };
+
+  const handleCopyAllLinksBundle = () => {
+    const masterUrl = buildShareUrl();
+    const lines = [
+      `${content.brand.name} — Official View-Only Portfolio & Screening Room`,
+      `Watch All Videos: ${masterUrl}`,
+      '',
+      ...allVideos.map(
+        (v, idx) =>
+          `${String(idx + 1).padStart(2, '0')}. ${v.title} (${v.client} · ${v.category})\n   Watch: ${buildShareUrl(v.id)}`
+      ),
+    ];
+    void copyTextToClipboard('bundle-all', lines.join('\n'));
   };
 
   const handleSelectVideo = (item: PortfolioItem, scrollToStage = true) => {
@@ -187,54 +214,81 @@ export default function WorkShowcasePage() {
     `Hi ${content.settings.whatsappDisplay}, I just watched your videos in the AdVibe Screening Room and would love to discuss a project.`
   );
 
+  // Explicit theme palette classes so both White Mode and Dark Mode have 100% WCAG AAA contrast
+  const pageBg = isDark ? 'bg-[#0a0d12] text-[#f5f5f0]' : 'bg-[#faf9f5] text-[#111412]';
+  const headerBg = isDark
+    ? 'border-white/12 bg-[#0a0d12]/92 text-[#f5f5f0]'
+    : 'border-[#111412]/10 bg-[#faf9f5]/92 text-[#111412]';
+  const cardBg = isDark
+    ? 'border-white/14 bg-[#131822] text-[#f5f5f0] shadow-[0_20px_50px_-24px_rgba(0,0,0,0.85)]'
+    : 'border-[#111412]/12 bg-white text-[#111412] shadow-[0_20px_48px_-28px_rgba(17,20,18,0.14)]';
+  const subtleSurface = isDark
+    ? 'border-white/12 bg-white/[0.04] text-[#f5f5f0]'
+    : 'border-[#111412]/12 bg-[#f3f4ef] text-[#111412]';
+  const textPrimary = isDark ? 'text-white' : 'text-[#111412]';
+  const textSecondary = isDark ? 'text-white/78' : 'text-[#2a302b]';
+  const textMuted = isDark ? 'text-white/60' : 'text-[#525b53]';
+  const accentText = isDark ? 'text-[#f5a524]' : 'text-[#a86400]';
+  const dividerBorder = isDark ? 'border-white/12' : 'border-[#111412]/10';
+  const secondaryBtn = isDark
+    ? 'border-white/18 bg-white/[0.06] text-white hover:border-[#f5a524] hover:bg-white/[0.12]'
+    : 'border-[#111412]/15 bg-white text-[#111412] hover:border-[#111412]/40 hover:bg-[#f3f4ef]';
+
   return (
     <div
-      className="min-h-dvh bg-[#0a0c0f] text-[#f5f5f0] select-none"
+      className={`theme-managed min-h-dvh select-none transition-colors duration-200 ${pageBg}`}
       onContextMenu={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
     >
       {/* Top Studio Navigation Bar */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0a0c0f]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
-          <div className="flex items-center gap-3 sm:gap-5">
+      <header className={`sticky top-0 z-40 border-b backdrop-blur-xl ${headerBg}`}>
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-2.5 px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <a
               href="#/"
-              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-white/85 transition hover:border-white/30 hover:bg-white/[0.08]"
+              className={`inline-flex min-h-[40px] shrink-0 items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold no-underline transition ${secondaryBtn}`}
             >
-              <ArrowLeft className="h-4 w-4 text-[#f5a524]" />
-              <span>Back to Main Site</span>
+              <ArrowLeft className={`h-4 w-4 ${isDark ? 'text-[#f5a524]' : 'text-[#111412]'}`} />
+              <span>Main Site</span>
             </a>
 
-            <div className="hidden items-center gap-2.5 sm:flex">
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#f5a524] text-[#111412]">
+            <div className="hidden items-center gap-2.5 md:flex min-w-0">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#111412] text-[#f5a524]">
                 <Play className="h-4 w-4 fill-current" />
               </span>
-              <div>
-                <span className="block font-display text-sm font-bold tracking-tight text-white">
+              <div className="min-w-0">
+                <span className={`block truncate font-display text-sm font-extrabold tracking-tight ${textPrimary}`}>
                   {content.brand.name}
                 </span>
-                <span className="block text-[11px] text-white/55">
-                  Official Studio Screening Room · View-Only Access
+                <span className={`block truncate text-[11px] ${textMuted}`}>
+                  Official Portfolio &amp; Screening Room · View-Only
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            {/* Quick App Switcher */}
+            <AppQuickSwitcher label="Navigate" compact />
+
+            {/* White Mode / Dark Mode Toggle */}
+            <ThemeToggleButton />
+
+            {/* Share All Work Link */}
             <button
               type="button"
               onClick={() => handleCopyLink('page-header')}
-              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl border border-white/15 bg-white/[0.05] px-3.5 py-2 text-xs font-semibold text-white transition hover:border-[#f5a524]/60 hover:bg-white/[0.1]"
+              className={`inline-flex min-h-[40px] items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition ${secondaryBtn}`}
             >
               {copiedKey === 'page-header' ? (
                 <>
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  <span className="text-emerald-300">Page Link Copied</span>
+                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>Link Copied</span>
                 </>
               ) : (
                 <>
-                  <Share2 className="h-3.5 w-3.5 text-[#f5a524]" />
-                  <span>Share All Work Link</span>
+                  <Share2 className={`h-3.5 w-3.5 ${isDark ? 'text-[#f5a524]' : 'text-[#a86400]'}`} />
+                  <span className="hidden sm:inline">Share Page Link</span>
                 </>
               )}
             </button>
@@ -242,9 +296,9 @@ export default function WorkShowcasePage() {
             <button
               type="button"
               onClick={() => setStrategyOpen(true)}
-              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[#f5a524] px-4 py-2 font-display text-xs font-extrabold text-[#111412] transition hover:brightness-110"
+              className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[#f5a524] px-4 py-2 font-display text-xs font-extrabold text-[#111412] transition hover:brightness-105"
             >
-              <span>Book a Strategy Call</span>
+              <span>Book Strategy Call</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -252,33 +306,66 @@ export default function WorkShowcasePage() {
       </header>
 
       <main className="mx-auto max-w-[1280px] px-4 pt-8 pb-24 sm:px-6 sm:pt-12">
-        {/* Hero Header + View-Only Notice */}
-        <div className="mb-8 flex flex-col justify-between gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end">
+        {/* Hero Header + View-Only Notice + Quick Share Toolbar */}
+        <div className={`mb-10 flex flex-col justify-between gap-6 border-b pb-8 lg:flex-row lg:items-end ${dividerBorder}`}>
           <div className="max-w-2xl">
-            <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-[#f5a524]">
+            <div className={`mb-3 flex flex-wrap items-center gap-2 text-xs font-bold ${accentText}`}>
               <ShieldCheck className="h-4 w-4 shrink-0" />
-              <span>Official Portfolio & Master Reel Directory</span>
-              <span aria-hidden="true" className="text-white/30">·</span>
-              <span className="text-white/65">View-Only Streaming (Downloads Disabled)</span>
+              <span>Official Portfolio &amp; Master Reel Directory</span>
+              <span aria-hidden="true" className={textMuted}>·</span>
+              <span className={textMuted}>View-Only Streaming (Downloads Disabled)</span>
             </div>
             <h1
-              className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl"
-              style={{ textWrap: 'balance' }}
+              className={`font-display text-3xl font-extrabold tracking-tight sm:text-5xl ${textPrimary}`}
+              style={{ textWrap: 'balance', lineHeight: 1.06 }}
             >
-              Every AdVibe Studio Production, Ready to Watch.
+              Every {content.brand.name} Video, Ready to Watch.
             </h1>
-            <p className="mt-3 text-base leading-relaxed text-white/70 sm:text-lg">
-              Select any campaign reel below or from the quick-link directory to stream immediately in high definition. All videos are protected studio masters presented for viewing only.
+            <p className={`mt-3.5 text-base leading-relaxed sm:text-lg ${textSecondary}`}>
+              Click any video in the directory or gallery below to watch immediately in high definition, or copy its direct view-only link to share with a client or teammate.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-white/60">
-              <Lock className="h-3.5 w-3.5 text-[#f5a524]" />
-              <span>{allVideos.length} Verified Studio Reels</span>
-              <span aria-hidden="true">·</span>
-              <span>Stream-Only Protection Active</span>
-            </div>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => handleCopyLink('hero-page-link')}
+              className={`inline-flex min-h-[42px] items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition ${secondaryBtn}`}
+            >
+              {copiedKey === 'hero-page-link' ? (
+                <>
+                  <Check className="h-4 w-4 text-emerald-500" />
+                  <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+                    Master Page Link Copied
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Copy className={`h-4 w-4 ${isDark ? 'text-[#f5a524]' : 'text-[#a86400]'}`} />
+                  <span>Copy Master Showcase Link</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCopyAllLinksBundle}
+              className={`inline-flex min-h-[42px] items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition ${secondaryBtn}`}
+            >
+              {copiedKey === 'bundle-all' ? (
+                <>
+                  <Check className="h-4 w-4 text-emerald-500" />
+                  <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+                    All {allVideos.length} Video Links Copied
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Share2 className={`h-4 w-4 ${isDark ? 'text-[#f5a524]' : 'text-[#a86400]'}`} />
+                  <span>Copy All {allVideos.length} Links List</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
 
@@ -290,20 +377,22 @@ export default function WorkShowcasePage() {
             className="mb-16 scroll-mt-24 grid grid-cols-1 gap-6 lg:grid-cols-12"
           >
             {/* Left / Center: Protected View-Only Player Stage */}
-            <div className="flex flex-col justify-between rounded-3xl border border-white/12 bg-[#11151c] p-4 sm:p-6 lg:col-span-7">
+            <div className={`flex flex-col justify-between rounded-3xl border p-4 sm:p-6 lg:col-span-7 ${cardBg}`}>
               {/* Top Stage Bar */}
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3.5">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 text-xs text-white/55">
-                    <span className="font-mono font-bold text-[#f5a524] tabular-nums">
+              <div className={`mb-4 flex flex-wrap items-center justify-between gap-3 border-b pb-4 ${dividerBorder}`}>
+                <div className="min-w-0 flex-1">
+                  <div className={`flex flex-wrap items-center gap-2 text-xs ${textMuted}`}>
+                    <span className={`font-mono font-extrabold tabular-nums ${accentText}`}>
                       REEL {String(activeIndex + 1).padStart(2, '0')} / {String(allVideos.length).padStart(2, '0')}
                     </span>
                     <span aria-hidden="true">·</span>
-                    <span>{activeVideo.client}</span>
+                    <span className={`font-semibold ${textSecondary}`}>{activeVideo.client}</span>
                     <span aria-hidden="true">·</span>
                     <span>{activeVideo.category}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{activeVideo.orientation === 'vertical' ? '9:16 Vertical' : '16:9 Widescreen'}</span>
                   </div>
-                  <h2 className="mt-1 truncate font-display text-lg font-bold text-white sm:text-xl">
+                  <h2 className={`mt-1 truncate font-display text-lg font-extrabold sm:text-xl ${textPrimary}`}>
                     {activeVideo.title}
                   </h2>
                 </div>
@@ -313,7 +402,7 @@ export default function WorkShowcasePage() {
                     type="button"
                     onClick={handlePrevReel}
                     aria-label="Previous video"
-                    className="inline-flex h-9 items-center gap-1 rounded-xl border border-white/15 bg-white/[0.05] px-3 text-xs font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
+                    className={`inline-flex h-9 items-center gap-1 rounded-xl border px-3 text-xs font-bold transition ${secondaryBtn}`}
                   >
                     <ChevronLeft className="h-4 w-4" />
                     <span>Prev</span>
@@ -322,7 +411,7 @@ export default function WorkShowcasePage() {
                     type="button"
                     onClick={handleNextReel}
                     aria-label="Next video"
-                    className="inline-flex h-9 items-center gap-1 rounded-xl border border-white/15 bg-white/[0.05] px-3 text-xs font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
+                    className={`inline-flex h-9 items-center gap-1 rounded-xl border px-3 text-xs font-bold transition ${secondaryBtn}`}
                   >
                     <span>Next</span>
                     <ChevronRight className="h-4 w-4" />
@@ -331,22 +420,22 @@ export default function WorkShowcasePage() {
                     type="button"
                     onClick={() => setLightboxItem(activeVideo)}
                     title="Expand in Theater Lightbox"
-                    className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3 text-xs font-bold text-[#f5a524] transition hover:bg-[#f5a524]/25"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-[#f5a524] px-3.5 text-xs font-extrabold text-[#111412] transition hover:brightness-105"
                   >
                     <Maximize2 className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">Theater Mode</span>
+                    <span className="hidden sm:inline">Fullscreen</span>
                   </button>
                 </div>
               </div>
 
-              {/* View-Only Video Frame */}
-              <div className="relative flex w-full items-center justify-center overflow-hidden rounded-2xl bg-black py-2">
+              {/* View-Only Cinema Video Frame (Always dark theater backdrop for crisp video contrast) */}
+              <div className="keep-dark relative flex w-full items-center justify-center overflow-hidden rounded-2xl bg-[#07090d] p-3 sm:p-5">
                 <div
-                  className="relative w-full overflow-hidden rounded-xl bg-black shadow-2xl"
+                  className="relative w-full overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-white/15"
                   style={{
                     aspectRatio: activeVideo.orientation === 'vertical' ? '9 / 16' : '16 / 9',
-                    maxWidth: activeVideo.orientation === 'vertical' ? 350 : '100%',
-                    maxHeight: '68dvh',
+                    maxWidth: activeVideo.orientation === 'vertical' ? 340 : '100%',
+                    maxHeight: '66dvh',
                   }}
                 >
                   {!autoPlayStage ? (
@@ -362,32 +451,32 @@ export default function WorkShowcasePage() {
                         draggable={false}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/30" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40" />
 
                       {/* View-only top watermark */}
-                      <div className="pointer-events-none absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/75">
-                        <span className="rounded-md bg-black/65 px-2.5 py-1 backdrop-blur-md">
+                      <div className="pointer-events-none absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/90">
+                        <span className="rounded-md bg-black/70 px-2.5 py-1 backdrop-blur-md">
                           {content.brand.name} · View-Only
                         </span>
-                        <span className="rounded-md bg-black/65 px-2.5 py-1 backdrop-blur-md">
-                          {activeVideo.orientation === 'vertical' ? '9:16 Vertical' : '16:9 Widescreen'}
+                        <span className="rounded-md bg-black/70 px-2.5 py-1 backdrop-blur-md">
+                          {activeVideo.orientation === 'vertical' ? '9:16' : '16:9'}
                         </span>
                       </div>
 
                       {/* Center Play Trigger */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center">
-                        <span className="grid h-16 w-16 place-items-center rounded-full bg-[#f5a524] text-[#111412] shadow-[0_0_40px_rgba(245,165,36,0.6)] transition duration-200 group-hover:scale-110">
+                        <span className="grid h-16 w-16 place-items-center rounded-full bg-[#f5a524] text-[#111412] shadow-[0_0_40px_rgba(245,165,36,0.65)] transition duration-200 group-hover:scale-110">
                           <Play className="h-7 w-7 translate-x-0.5 fill-current" />
                         </span>
-                        <span className="rounded-xl bg-black/75 px-3.5 py-1.5 font-display text-xs font-bold text-white backdrop-blur-md">
-                          Click to Watch Reel #{activeIndex + 1}
+                        <span className="rounded-xl bg-black/80 px-4 py-1.5 font-display text-xs font-bold text-white backdrop-blur-md">
+                          Tap to Stream Reel #{activeIndex + 1}
                         </span>
                       </div>
 
                       {/* Bottom info inside frame */}
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
                         <p className="font-display text-base font-bold text-white">{activeVideo.title}</p>
-                        <p className="mt-0.5 text-xs text-white/70">
+                        <p className="mt-0.5 text-xs text-white/75">
                           {activeVideo.client}
                           {activeVideo.result ? ` · ${activeVideo.result}` : ''}
                         </p>
@@ -403,7 +492,7 @@ export default function WorkShowcasePage() {
                             draggable={false}
                             className="absolute inset-0 h-full w-full object-cover opacity-40"
                           />
-                          <div className="relative z-10 flex flex-col items-center gap-2 rounded-2xl bg-black/80 px-5 py-3 text-xs font-bold text-[#f5a524]">
+                          <div className="relative z-10 flex flex-col items-center gap-2 rounded-2xl bg-black/85 px-5 py-3 text-xs font-bold text-[#f5a524]">
                             <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#f5a524]/30 border-t-[#f5a524]" />
                             <span>Loading Protected Stream…</span>
                           </div>
@@ -422,14 +511,14 @@ export default function WorkShowcasePage() {
                       <div
                         className="
                           absolute top-0 left-0 right-0 z-20 flex h-14 items-center justify-between
-                          bg-gradient-to-b from-black/80 via-black/35 to-transparent px-3.5 select-none
+                          bg-gradient-to-b from-black/85 via-black/40 to-transparent px-3.5 select-none
                         "
                         onContextMenu={(e) => e.preventDefault()}
                       >
-                        <span className="font-mono text-[10px] font-semibold tracking-wider text-white/75 uppercase">
+                        <span className="font-mono text-[10px] font-semibold tracking-wider text-white/85 uppercase">
                           {content.brand.name} · Protected View-Only Stream
                         </span>
-                        <span className="font-mono text-[10px] text-white/60">No Download</span>
+                        <span className="font-mono text-[10px] text-white/70">No Download</span>
                       </div>
                       {/* Protective Shield Bottom-Right Logo Area: Blocks external site popout while keeping fullscreen & timeline controls accessible */}
                       <div
@@ -443,27 +532,34 @@ export default function WorkShowcasePage() {
               </div>
 
               {/* Bottom Stage Bar: Direct Watch Link & Actions */}
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3 pt-2">
-                <div className="flex items-center gap-2 text-xs text-white/65">
-                  <Film className="h-4 w-4 text-[#f5a524]" />
-                  <span>{activeVideo.result || `${activeVideo.client} Campaign Production`}</span>
+              <div className={`mt-4 flex flex-wrap items-center justify-between gap-3 border-t pt-4 ${dividerBorder}`}>
+                <div className={`flex items-center gap-2 text-xs font-medium ${textSecondary}`}>
+                  <Film className={`h-4 w-4 shrink-0 ${accentText}`} />
+                  <span>{activeVideo.result || `${activeVideo.client} · ${activeVideo.category}`}</span>
+                  <span aria-hidden="true" className={textMuted}>·</span>
+                  <span className={`inline-flex items-center gap-1 ${textMuted}`}>
+                    <Lock className="h-3 w-3" />
+                    <span>View-Only Master</span>
+                  </span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleCopyLink(`stage-${activeVideo.id}`, activeVideo.id)}
-                    className="inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3.5 text-xs font-semibold text-white transition hover:border-[#f5a524] hover:text-[#f5a524]"
+                    className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold transition ${secondaryBtn}`}
                   >
                     {copiedKey === `stage-${activeVideo.id}` ? (
                       <>
-                        <Check className="h-3.5 w-3.5 text-emerald-400" />
-                        <span className="text-emerald-300">Watch Link Copied</span>
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                        <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>
+                          Direct Watch Link Copied
+                        </span>
                       </>
                     ) : (
                       <>
                         <Copy className="h-3.5 w-3.5" />
-                        <span>Copy Watch Link for This Video</span>
+                        <span>Copy Link to This Video</span>
                       </>
                     )}
                   </button>
@@ -472,26 +568,26 @@ export default function WorkShowcasePage() {
             </div>
 
             {/* Right Column: Complete Directory of Watch Links to All Work */}
-            <div className="flex flex-col justify-between rounded-3xl border border-white/12 bg-[#11151c] p-5 sm:p-6 lg:col-span-5">
+            <div className={`flex flex-col justify-between rounded-3xl border p-5 sm:p-6 lg:col-span-5 ${cardBg}`}>
               <div>
-                <div className="flex items-center justify-between gap-2 border-b border-white/10 pb-4">
+                <div className={`flex items-center justify-between gap-2 border-b pb-4 ${dividerBorder}`}>
                   <div>
-                    <span className="font-mono text-[11px] font-bold tracking-wider text-[#f5a524] uppercase">
+                    <span className={`font-mono text-[11px] font-bold tracking-wider uppercase ${accentText}`}>
                       Master Watch Directory
                     </span>
-                    <h3 className="mt-0.5 font-display text-lg font-bold text-white">
-                      Direct Links to All Our Work ({allVideos.length})
+                    <h3 className={`mt-0.5 font-display text-lg font-extrabold ${textPrimary}`}>
+                      Direct Links to All Videos ({allVideos.length})
                     </h3>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleCopyLink('directory-all')}
-                    className="inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3 text-xs font-semibold text-white/85 transition hover:border-[#f5a524] hover:text-[#f5a524]"
+                    className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-xl border px-3 text-xs font-bold transition ${secondaryBtn}`}
                   >
                     {copiedKey === 'directory-all' ? (
                       <>
-                        <Check className="h-3.5 w-3.5 text-emerald-400" />
-                        <span className="text-emerald-300">Copied</span>
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                        <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>Copied</span>
                       </>
                     ) : (
                       <>
@@ -502,12 +598,12 @@ export default function WorkShowcasePage() {
                   </button>
                 </div>
 
-                <p className="mt-3 text-xs leading-relaxed text-white/60">
-                  Click any video link below to play it immediately in the screening player, or copy its view-only link to share with a client or teammate.
+                <p className={`mt-3 text-xs leading-relaxed ${textSecondary}`}>
+                  Select any reel below to play it in the screening player, or click the copy icon to share a direct view-only link to that video.
                 </p>
 
                 {/* Scrollable Watch Links List */}
-                <div className="mt-4 max-h-[460px] space-y-2 overflow-y-auto pr-1">
+                <div className="mt-4 max-h-[480px] space-y-2.5 overflow-y-auto pr-1">
                   {allVideos.map((item, idx) => {
                     const isCurrent = activeVideo?.id === item.id;
                     const copyId = `dir-${item.id}`;
@@ -516,8 +612,12 @@ export default function WorkShowcasePage() {
                         key={item.id}
                         className={`flex items-center justify-between gap-2.5 rounded-2xl border p-2.5 transition ${
                           isCurrent
-                            ? 'border-[#f5a524] bg-[#f5a524]/12'
-                            : 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
+                            ? isDark
+                              ? 'border-[#f5a524] bg-[#f5a524]/15'
+                              : 'border-[#f5a524] bg-[#fff8e6]'
+                            : isDark
+                              ? 'border-white/10 bg-white/[0.03] hover:border-white/25 hover:bg-white/[0.06]'
+                              : 'border-[#111412]/10 bg-[#fafaf6] hover:border-[#111412]/25 hover:bg-[#f3f4ef]'
                         }`}
                       >
                         <button
@@ -525,14 +625,14 @@ export default function WorkShowcasePage() {
                           onClick={() => handleSelectVideo(item, false)}
                           className="flex min-w-0 flex-1 items-center gap-3 text-left"
                         >
-                          <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-black">
+                          <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg bg-black ring-1 ring-black/10">
                             <img
                               src={ytThumb(item.youtubeId)}
                               alt=""
                               draggable={false}
                               className="h-full w-full object-cover"
                             />
-                            <span className="absolute inset-0 grid place-items-center bg-black/40">
+                            <span className="absolute inset-0 grid place-items-center bg-black/35">
                               <Play
                                 className={`h-3.5 w-3.5 fill-current ${
                                   isCurrent ? 'text-[#f5a524]' : 'text-white'
@@ -542,17 +642,17 @@ export default function WorkShowcasePage() {
                           </div>
 
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 text-[11px] text-white/55">
-                              <span className="font-mono font-bold text-[#f5a524] tabular-nums">
+                            <div className={`flex items-center gap-1.5 text-[11px] ${textMuted}`}>
+                              <span className={`font-mono font-extrabold tabular-nums ${accentText}`}>
                                 #{String(idx + 1).padStart(2, '0')}
                               </span>
                               <span aria-hidden="true">·</span>
-                              <span className="truncate">{item.category}</span>
+                              <span className="truncate font-medium">{item.category}</span>
                             </div>
-                            <p className="truncate font-display text-sm font-bold text-white">
+                            <p className={`truncate font-display text-sm font-bold ${textPrimary}`}>
                               {item.title}
                             </p>
-                            <p className="truncate text-[11px] text-white/60">
+                            <p className={`truncate text-[11px] ${textSecondary}`}>
                               {item.client}
                               {item.result ? ` · ${item.result}` : ''}
                             </p>
@@ -563,10 +663,12 @@ export default function WorkShowcasePage() {
                           <button
                             type="button"
                             onClick={() => handleSelectVideo(item, false)}
-                            className={`rounded-xl px-2.5 py-2 text-xs font-bold transition ${
+                            className={`rounded-xl px-3 py-2 text-xs font-extrabold transition ${
                               isCurrent
                                 ? 'bg-[#f5a524] text-[#111412]'
-                                : 'bg-white/10 text-white hover:bg-white/20'
+                                : isDark
+                                  ? 'bg-white/10 text-white hover:bg-white/20'
+                                  : 'bg-[#111412] text-white hover:bg-[#2a302b]'
                             }`}
                           >
                             {isCurrent && autoPlayStage ? 'Playing' : 'Watch'}
@@ -576,10 +678,10 @@ export default function WorkShowcasePage() {
                             onClick={() => handleCopyLink(copyId, item.id)}
                             title="Copy view-only watch link"
                             aria-label={`Copy watch link for ${item.title}`}
-                            className="grid h-8 w-8 place-items-center rounded-xl border border-white/15 bg-white/[0.04] text-white/75 transition hover:border-[#f5a524] hover:text-[#f5a524]"
+                            className={`grid h-9 w-9 place-items-center rounded-xl border transition ${secondaryBtn}`}
                           >
                             {copiedKey === copyId ? (
-                              <Check className="h-3.5 w-3.5 text-emerald-400" />
+                              <Check className="h-3.5 w-3.5 text-emerald-500" />
                             ) : (
                               <Copy className="h-3.5 w-3.5" />
                             )}
@@ -592,8 +694,9 @@ export default function WorkShowcasePage() {
               </div>
 
               {/* Protection Footer inside Directory */}
-              <div className="mt-5 border-t border-white/10 pt-4 text-xs text-white/55">
-                All links on this page open in view-only streaming mode. Right-click saving and file downloads are disabled.
+              <div className={`mt-5 flex items-center justify-between gap-2 border-t pt-4 text-xs ${dividerBorder} ${textMuted}`}>
+                <span>View-only streaming active · Right-click &amp; downloads disabled</span>
+                <span className="font-mono font-bold tabular-nums">{allVideos.length} Reels</span>
               </div>
             </div>
           </section>
@@ -601,26 +704,77 @@ export default function WorkShowcasePage() {
 
         {/* SECTION 2: COMPLETE VISUAL GALLERY OF ALL VIDEOS */}
         <section aria-label="All Studio Videos Visual Grid">
-          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div className="mb-6 flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
             <div>
-              <span className="font-mono text-xs font-bold tracking-wider text-[#f5a524] uppercase">
+              <span className={`font-mono text-xs font-bold tracking-wider uppercase ${accentText}`}>
                 Complete Video Library
               </span>
-              <h2 className="mt-1 font-display text-2xl font-extrabold text-white sm:text-3xl">
-                Browse & Watch All Studio Reels ({filteredVideos.length})
+              <h2 className={`mt-1 font-display text-2xl font-extrabold sm:text-3xl ${textPrimary}`}>
+                Browse &amp; Watch All Studio Reels ({filteredVideos.length})
               </h2>
             </div>
 
-            {/* Search Input */}
-            <div className="relative w-full sm:w-72">
-              <Search className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-white/40" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by title, client, or style…"
-                className="min-h-[42px] w-full rounded-xl border border-white/15 bg-white/[0.04] py-2 pr-3.5 pl-10 text-sm text-white placeholder:text-white/40 focus:border-[#f5a524] focus:outline-none"
-              />
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              {/* Format Segmented Filter */}
+              <div
+                className={`inline-flex items-center gap-1 rounded-xl border p-1 ${subtleSurface}`}
+                role="group"
+                aria-label="Filter by video orientation"
+              >
+                {(
+                  [
+                    { id: 'all', label: 'All Formats' },
+                    { id: 'vertical', label: '9:16 Vertical' },
+                    { id: 'horizontal', label: '16:9 Widescreen' },
+                  ] as const
+                ).map((fmt) => {
+                  const active = formatFilter === fmt.id;
+                  return (
+                    <button
+                      key={fmt.id}
+                      type="button"
+                      onClick={() => setFormatFilter(fmt.id)}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                        active
+                          ? 'bg-[#f5a524] text-[#111412] shadow-xs'
+                          : isDark
+                            ? 'text-white/70 hover:text-white'
+                            : 'text-[#525b53] hover:text-[#111412]'
+                      }`}
+                    >
+                      {fmt.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Search Input */}
+              <div className="relative w-full sm:w-72">
+                <Search
+                  className={`pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 ${textMuted}`}
+                />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by title, client, or style…"
+                  className={`min-h-[42px] w-full rounded-xl border py-2 pr-9 pl-10 text-sm transition focus:border-[#f5a524] focus:outline-none ${
+                    isDark
+                      ? 'border-white/15 bg-[#131822] text-white placeholder:text-white/45'
+                      : 'border-[#111412]/15 bg-white text-[#111412] placeholder:text-[#525b53]/70'
+                  }`}
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Clear search"
+                    className={`absolute top-1/2 right-2.5 -translate-y-1/2 rounded-md p-1 ${textMuted}`}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -641,8 +795,8 @@ export default function WorkShowcasePage() {
                   onClick={() => setActiveCategory(cat)}
                   className={`min-h-[40px] shrink-0 rounded-xl border px-4 py-2 text-xs font-bold transition ${
                     isSelected
-                      ? 'border-[#f5a524] bg-[#f5a524] text-[#111412]'
-                      : 'border-white/15 bg-white/[0.04] text-white/75 hover:border-white/30 hover:text-white'
+                      ? 'border-[#f5a524] bg-[#f5a524] text-[#111412] shadow-xs'
+                      : secondaryBtn
                   }`}
                 >
                   {cat}
@@ -653,20 +807,21 @@ export default function WorkShowcasePage() {
 
           {/* Video Cards Grid */}
           {filteredVideos.length === 0 ? (
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-12 text-center">
-              <p className="font-display text-lg font-bold text-white">No videos match your filter</p>
-              <p className="mt-1 text-sm text-white/60">
-                Try clearing your search or selecting "All" categories.
+            <div className={`rounded-3xl border p-12 text-center ${cardBg}`}>
+              <p className={`font-display text-lg font-bold ${textPrimary}`}>No videos match your filter</p>
+              <p className={`mt-1 text-sm ${textSecondary}`}>
+                Try clearing your search or selecting "All" categories and formats.
               </p>
               <button
                 type="button"
                 onClick={() => {
                   setActiveCategory('All');
+                  setFormatFilter('all');
                   setSearchQuery('');
                 }}
-                className="mt-4 rounded-xl bg-[#f5a524] px-4 py-2.5 text-xs font-bold text-[#111412]"
+                className="mt-4 rounded-xl bg-[#f5a524] px-4 py-2.5 text-xs font-extrabold text-[#111412]"
               >
-                Show All Videos
+                Reset All Filters
               </button>
             </div>
           ) : (
@@ -677,14 +832,16 @@ export default function WorkShowcasePage() {
                 return (
                   <article
                     key={item.id}
-                    className={`group flex flex-col justify-between overflow-hidden rounded-3xl border bg-[#11151c] transition duration-300 ${
+                    className={`group flex flex-col justify-between overflow-hidden rounded-3xl border transition duration-300 ${
                       isPlayingOnStage
-                        ? 'border-[#f5a524] shadow-[0_16px_40px_-15px_rgba(245,165,36,0.3)]'
-                        : 'border-white/12 hover:border-white/30'
+                        ? isDark
+                          ? 'border-[#f5a524] bg-[#131822] shadow-[0_18px_42px_-15px_rgba(245,165,36,0.35)]'
+                          : 'border-[#f5a524] bg-white shadow-[0_18px_42px_-15px_rgba(245,165,36,0.35)]'
+                        : `${cardBg} hover:-translate-y-1`
                     }`}
                   >
                     {/* Clickable Thumbnail */}
-                    <div className="relative aspect-[9/14] w-full overflow-hidden bg-black">
+                    <div className="keep-dark relative aspect-[9/13] w-full overflow-hidden bg-black">
                       <img
                         src={ytThumb(item.youtubeId)}
                         alt={item.title}
@@ -692,15 +849,15 @@ export default function WorkShowcasePage() {
                         draggable={false}
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#11151c] via-black/20 to-black/30" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/35" />
 
                       {/* Top index & View-only label */}
-                      <div className="pointer-events-none absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/80">
-                        <span className="rounded-md bg-black/70 px-2 py-0.5 font-bold text-[#f5a524] backdrop-blur-md tabular-nums">
+                      <div className="pointer-events-none absolute top-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white">
+                        <span className="rounded-md bg-black/75 px-2.5 py-0.5 font-bold text-[#f5a524] backdrop-blur-md tabular-nums">
                           #{String(idx + 1).padStart(2, '0')}
                         </span>
-                        <span className="rounded-md bg-black/70 px-2 py-0.5 backdrop-blur-md">
-                          View-Only
+                        <span className="rounded-md bg-black/75 px-2.5 py-0.5 text-white/90 backdrop-blur-md">
+                          {item.orientation === 'vertical' ? '9:16' : '16:9'} · View-Only
                         </span>
                       </div>
 
@@ -708,39 +865,45 @@ export default function WorkShowcasePage() {
                       <button
                         type="button"
                         onClick={() => setLightboxItem(item)}
-                        aria-label={`Watch ${item.title}`}
-                        className="absolute inset-0 flex flex-col items-center justify-center gap-2 focus:outline-none"
+                        aria-label={`Watch ${item.title} in fullscreen`}
+                        className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 focus:outline-none"
                       >
                         <span className="grid h-14 w-14 place-items-center rounded-full bg-[#f5a524] text-[#111412] shadow-xl transition duration-200 group-hover:scale-110">
                           <Play className="h-6 w-6 translate-x-0.5 fill-current" />
                         </span>
-                        <span className="rounded-lg bg-black/75 px-3 py-1 font-display text-[11px] font-bold text-white backdrop-blur-md">
+                        <span className="rounded-lg bg-black/80 px-3 py-1 font-display text-[11px] font-bold text-white backdrop-blur-md">
                           Watch Fullscreen
                         </span>
                       </button>
                     </div>
 
                     {/* Card Details + Watch & Link Actions */}
-                    <div className="flex flex-1 flex-col justify-between p-4">
+                    <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
                       <div>
-                        <div className="flex items-center gap-1.5 text-xs text-white/55">
-                          <span>{item.client}</span>
+                        <div className={`flex items-center gap-1.5 text-xs font-medium ${textMuted}`}>
+                          <span className={`font-semibold ${textSecondary}`}>{item.client}</span>
                           <span aria-hidden="true">·</span>
                           <span>{item.category}</span>
                         </div>
-                        <h3 className="mt-1 font-display text-base font-bold text-white">
+                        <h3 className={`mt-1.5 font-display text-base font-extrabold leading-snug ${textPrimary}`}>
                           {item.title}
                         </h3>
                         {item.result && (
-                          <p className="mt-1 text-xs text-white/65">{item.result}</p>
+                          <p className={`mt-1 text-xs leading-relaxed ${textSecondary}`}>{item.result}</p>
                         )}
                       </div>
 
-                      <div className="mt-4 flex items-center gap-2 border-t border-white/10 pt-3">
+                      <div className={`mt-4 flex items-center gap-2 border-t pt-3.5 ${dividerBorder}`}>
                         <button
                           type="button"
                           onClick={() => handleSelectVideo(item, true)}
-                          className="inline-flex min-h-[38px] flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#f5a524] px-3 text-xs font-extrabold text-[#111412] transition hover:brightness-110"
+                          className={`inline-flex min-h-[38px] flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-xs font-extrabold transition ${
+                            isPlayingOnStage
+                              ? 'bg-[#f5a524] text-[#111412]'
+                              : isDark
+                                ? 'bg-[#f5a524] text-[#111412] hover:brightness-105'
+                                : 'bg-[#111412] text-white hover:bg-[#2a302b]'
+                          }`}
                         >
                           <Play className="h-3.5 w-3.5 fill-current" />
                           <span>{isPlayingOnStage ? 'Playing Above' : 'Play on Stage'}</span>
@@ -750,12 +913,12 @@ export default function WorkShowcasePage() {
                           type="button"
                           onClick={() => handleCopyLink(cardCopyKey, item.id)}
                           title="Copy direct watch link to this video"
-                          className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.05] px-3 text-xs font-semibold text-white/85 transition hover:border-[#f5a524] hover:text-[#f5a524]"
+                          className={`inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-xl border px-3 text-xs font-bold transition ${secondaryBtn}`}
                         >
                           {copiedKey === cardCopyKey ? (
                             <>
-                              <Check className="h-3.5 w-3.5 text-emerald-400" />
-                              <span className="text-emerald-300">Copied</span>
+                              <Check className="h-3.5 w-3.5 text-emerald-500" />
+                              <span className={isDark ? 'text-emerald-300' : 'text-emerald-700'}>Copied</span>
                             </>
                           ) : (
                             <>
@@ -774,24 +937,30 @@ export default function WorkShowcasePage() {
         </section>
 
         {/* Closing CTA Banner */}
-        <section className="mt-20 rounded-3xl border border-white/12 bg-gradient-to-br from-[#141923] to-[#0d1016] p-8 text-center sm:p-12">
-          <span className="font-mono text-xs font-bold tracking-wider text-[#f5a524] uppercase">
+        <section
+          className={`mt-20 rounded-3xl border p-8 text-center sm:p-12 ${
+            isDark
+              ? 'border-white/14 bg-gradient-to-br from-[#151b26] to-[#0e1219]'
+              : 'border-[#111412]/12 bg-gradient-to-br from-[#fff5eb] to-[#fff9e6]'
+          }`}
+        >
+          <span className={`font-mono text-xs font-bold tracking-wider uppercase ${accentText}`}>
             Ready to Launch Your Campaign?
           </span>
           <h2
-            className="mx-auto mt-2 max-w-2xl font-display text-2xl font-extrabold text-white sm:text-4xl"
+            className={`mx-auto mt-2 max-w-2xl font-display text-2xl font-extrabold sm:text-4xl ${textPrimary}`}
             style={{ textWrap: 'balance' }}
           >
             Want Scroll-Stopping AI Video Ads Like These for Your Business?
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+          <p className={`mx-auto mt-3 max-w-xl text-sm leading-relaxed sm:text-base ${textSecondary}`}>
             Whether you need a single high-converting video ad, a 5-video testing pack, a 15-video monthly retainer, or an episodic brand mini-series, our studio handles script to screen in days.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3.5">
             <button
               type="button"
               onClick={() => setStrategyOpen(true)}
-              className="inline-flex min-h-[48px] items-center gap-2.5 rounded-2xl bg-[#f5a524] px-6 py-3 font-display text-sm font-extrabold text-[#111412] transition hover:brightness-110"
+              className="inline-flex min-h-[48px] items-center gap-2.5 rounded-2xl bg-[#f5a524] px-6 py-3 font-display text-sm font-extrabold text-[#111412] transition hover:brightness-105"
             >
               <span>Book a Free Strategy Session</span>
               <ArrowRight className="h-4 w-4" />
@@ -800,9 +969,9 @@ export default function WorkShowcasePage() {
               href={whatsappHref}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-[48px] items-center gap-2 rounded-2xl border border-white/20 bg-white/[0.05] px-6 py-3 font-display text-sm font-bold text-white transition hover:bg-white/10"
+              className={`inline-flex min-h-[48px] items-center gap-2 rounded-2xl border px-6 py-3 font-display text-sm font-bold no-underline transition ${secondaryBtn}`}
             >
-              <MessageCircle className="h-4 w-4 text-emerald-400" />
+              <MessageCircle className="h-4 w-4 text-emerald-500" />
               <span>Chat on WhatsApp</span>
             </a>
           </div>

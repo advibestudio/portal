@@ -43,6 +43,15 @@ function getRouteGroupKey(route: string): string {
   if (clean.startsWith('/client-admin')) return 'client-admin';
   if (clean.startsWith('/admin')) return 'admin';
   if (clean.startsWith('/apps') || clean.startsWith('/download/')) return 'apps';
+  if (
+    clean.startsWith('/our-work') ||
+    clean.startsWith('/portfolio') ||
+    clean.startsWith('/work-gallery') ||
+    clean.startsWith('/watch') ||
+    clean.startsWith('/showcase')
+  ) {
+    return 'our-work';
+  }
   if (clean.startsWith('/training')) return 'training';
   return 'main-site';
 }

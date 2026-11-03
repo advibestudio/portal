@@ -74,6 +74,14 @@ const DESTINATIONS: NavDestination[] = [
     group: 'website',
   },
   {
+    label: 'Our Work (Screening Room)',
+    sublabel: 'Watch all studio videos & copy view-only links',
+    href: '#/our-work',
+    badge: 'VIEW ONLY',
+    icon: Film,
+    group: 'website',
+  },
+  {
     label: 'Monthly Content Retainer',
     sublabel: '15 direct-response video ads every 30 days',
     href: '#/monthly-content',

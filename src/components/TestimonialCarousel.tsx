@@ -9,6 +9,7 @@ import {
   Play,
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { useTheme } from '@/lib/theme';
 import { SecHead } from '@/components/shared';
 import type { Testimonial } from '@/content/types';
 
@@ -26,6 +27,8 @@ interface TestimonialCarouselProps {
 
 export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
   const { content } = useStore();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const items = content.testimonials.filter((t) => t.visible);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -86,7 +89,7 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
   return (
     <section
       id="testimonials"
-      className="sec pt-4 pb-20 sm:pb-24"
+      className="sec theme-managed pt-4 pb-20 sm:pb-24"
       aria-label="Real Client Stories and Results"
       onKeyDown={handleKeyDown}
     >
@@ -120,8 +123,12 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
                     onClick={() => setActiveIndex(idx)}
                     className={`shrink-0 rounded-xl border px-4 py-2.5 font-display text-sm font-bold tracking-tight transition duration-200 ${
                       isSelected
-                        ? 'border-[#111412] bg-[#111412] text-white shadow-sm'
-                        : 'border-[#111412]/15 bg-white text-[#2a302b] hover:border-[#111412]/40 hover:bg-[#f3f4ef]'
+                        ? isDark
+                          ? 'border-[#f5a524] bg-[#f5a524] text-[#111412] shadow-sm'
+                          : 'border-[#111412] bg-[#111412] text-white shadow-sm'
+                        : isDark
+                          ? 'border-white/15 bg-[#161b24] text-[#f4f2ec] hover:border-white/35 hover:bg-white/10'
+                          : 'border-[#111412]/15 bg-white text-[#2a302b] hover:border-[#111412]/40 hover:bg-[#f3f4ef]'
                     }`}
                   >
                     {item.business}
@@ -132,7 +139,11 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
 
             {/* Simple Back / Next & Pause Controls */}
             <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
-              <span className="font-mono text-xs font-semibold text-[#586159] tabular-nums">
+              <span
+                className={`font-mono text-xs font-semibold tabular-nums ${
+                  isDark ? 'text-white/65' : 'text-[#586159]'
+                }`}
+              >
                 Story {safeIndex + 1} of {count}
               </span>
 
@@ -141,7 +152,11 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
                   type="button"
                   onClick={() => setIsAutoPlaying((prev) => !prev)}
                   aria-label={isAutoPlaying ? 'Pause automatic slide changes' : 'Play automatic slide changes'}
-                  className=" inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#111412]/15 bg-white text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border transition ${
+                    isDark
+                      ? 'border-white/15 bg-[#161b24] text-white hover:border-[#f5a524]'
+                      : 'border-[#111412]/15 bg-white text-[#111412] hover:border-[#111412] hover:bg-[#f3f4ef]'
+                  }`}
                   title={isAutoPlaying ? 'Pause auto-play' : 'Resume auto-play'}
                 >
                   {isAutoPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -151,7 +166,11 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
                   type="button"
                   onClick={handlePrev}
                   aria-label="Previous client story"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412]/15 bg-white px-3.5 text-xs font-bold text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
+                  className={`inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold transition ${
+                    isDark
+                      ? 'border-white/15 bg-[#161b24] text-white hover:border-[#f5a524]'
+                      : 'border-[#111412]/15 bg-white text-[#111412] hover:border-[#111412] hover:bg-[#f3f4ef]'
+                  }`}
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <span>Back</span>
@@ -161,7 +180,11 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
                   type="button"
                   onClick={handleNext}
                   aria-label="Next client story"
-                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412] bg-[#111412] px-3.5 text-xs font-bold text-white transition hover:bg-[#2a302b]"
+                  className={`inline-flex h-10 items-center gap-1.5 rounded-xl border px-3.5 text-xs font-bold transition ${
+                    isDark
+                      ? 'border-[#f5a524] bg-[#f5a524] text-[#111412] hover:brightness-110'
+                      : 'border-[#111412] bg-[#111412] text-white hover:bg-[#2a302b]'
+                  }`}
                 >
                   <span>Next</span>
                   <ArrowRight className="h-4 w-4" />
@@ -175,63 +198,110 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
         <div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="relative overflow-hidden rounded-[32px] border border-[#111412]/12 bg-white shadow-[0_24px_56px_-32px_rgba(17,20,18,0.22)]"
+          className={`relative overflow-hidden rounded-[32px] border ${
+            isDark
+              ? 'border-white/15 bg-[#141923] shadow-[0_24px_56px_-28px_rgba(0,0,0,0.85)]'
+              : 'border-[#111412]/12 bg-white shadow-[0_24px_56px_-32px_rgba(17,20,18,0.22)]'
+          }`}
         >
           <div
             key={current.id}
             className="anim-step grid grid-cols-1 lg:grid-cols-12"
           >
             {/* Left Column: Plain-English Story, Quote & 3 Clear Numbers */}
-            <div className="flex flex-col justify-between p-7 sm:p-10 lg:col-span-7 lg:border-r lg:border-[#111412]/10 lg:p-12">
+            <div
+              className={`flex flex-col justify-between p-7 sm:p-10 lg:col-span-7 lg:border-r lg:p-12 ${
+                isDark ? 'lg:border-white/12' : 'lg:border-[#111412]/10'
+              }`}
+            >
               <div>
                 {/* Simple Category & Package Line */}
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs font-bold uppercase tracking-wider text-[#b87508]">
+                <div
+                  className={`flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs font-bold uppercase tracking-wider ${
+                    isDark ? 'text-[#f5a524]' : 'text-[#b87508]'
+                  }`}
+                >
                   <span>{current.industry}</span>
                   {current.packageUsed && (
                     <>
-                      <span aria-hidden="true" className="text-[#111412]/30">·</span>
-                      <span className="text-[#586159]">
-                        Package used: <strong className="font-bold text-[#111412]">{current.packageUsed}</strong>
+                      <span aria-hidden="true" className={isDark ? 'text-white/30' : 'text-[#111412]/30'}>
+                        ·
+                      </span>
+                      <span className={isDark ? 'text-white/70' : 'text-[#586159]'}>
+                        Package used:{' '}
+                        <strong className={`font-bold ${isDark ? 'text-white' : 'text-[#111412]'}`}>
+                          {current.packageUsed}
+                        </strong>
                       </span>
                     </>
                   )}
                 </div>
 
                 {/* Clear Outcome Headline */}
-                <h3 className="mt-3.5 font-display text-2xl font-extrabold leading-[1.16] tracking-tight text-[#111412] sm:text-3xl lg:text-[34px]">
+                <h3
+                  className={`mt-3.5 font-display text-2xl font-extrabold leading-[1.16] tracking-tight sm:text-3xl lg:text-[34px] ${
+                    isDark ? 'text-white' : 'text-[#111412]'
+                  }`}
+                >
                   {current.roiHeadline || `${current.business} Grew Their Sales with Our Videos`}
                 </h3>
 
                 {current.timeframe && (
-                  <p className="mt-2.5 flex items-center gap-1.5 text-sm font-medium text-[#586159]">
-                    <Clock className="h-4 w-4 shrink-0 text-[#b87508]" />
+                  <p
+                    className={`mt-2.5 flex items-center gap-1.5 text-sm font-medium ${
+                      isDark ? 'text-white/70' : 'text-[#586159]'
+                    }`}
+                  >
+                    <Clock className={`h-4 w-4 shrink-0 ${isDark ? 'text-[#f5a524]' : 'text-[#b87508]'}`} />
                     <span>Result seen in: {current.timeframe}</span>
                   </p>
                 )}
 
                 {/* Open, Uncluttered Client Quote */}
-                <blockquote className="mt-7 text-lg leading-[1.7] text-[#2a302b] sm:text-[19px]">
+                <blockquote
+                  className={`mt-7 text-lg leading-[1.7] sm:text-[19px] ${
+                    isDark ? 'text-white/90' : 'text-[#2a302b]'
+                  }`}
+                >
                   “{current.quote}”
                 </blockquote>
 
                 {/* Client Attribution Row */}
-                <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-[#111412]/10 pt-6">
+                <div
+                  className={`mt-7 flex flex-wrap items-center justify-between gap-4 border-t pt-6 ${
+                    isDark ? 'border-white/12' : 'border-[#111412]/10'
+                  }`}
+                >
                   <div className="flex items-center gap-3.5">
-                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#111412] font-display text-sm font-extrabold text-[#f5a524]">
+                    <span
+                      className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl font-display text-sm font-extrabold ${
+                        isDark ? 'bg-[#f5a524] text-[#111412]' : 'bg-[#111412] text-[#f5a524]'
+                      }`}
+                    >
                       {getInitials(current.name)}
                     </span>
                     <div>
-                      <span className="block font-display text-base font-bold text-[#111412]">
+                      <span
+                        className={`block font-display text-base font-bold ${
+                          isDark ? 'text-white' : 'text-[#111412]'
+                        }`}
+                      >
                         {current.name}
                       </span>
-                      <span className="block text-sm text-[#586159]">
+                      <span className={`block text-sm ${isDark ? 'text-white/65' : 'text-[#586159]'}`}>
                         {current.role ? `${current.role}, ` : ''}
-                        <strong className="font-semibold text-[#111412]">{current.business}</strong>
+                        <strong className={`font-semibold ${isDark ? 'text-white' : 'text-[#111412]'}`}>
+                          {current.business}
+                        </strong>
                       </span>
                     </div>
                   </div>
 
-                  <div className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#0d8a5a]">
+                  <div
+                    className={`inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider ${
+                      isDark ? 'text-emerald-400' : 'text-[#0d8a5a]'
+                    }`}
+                  >
                     <CheckCircle2 className="h-4 w-4 shrink-0" />
                     <span>Verified Client</span>
                   </div>
@@ -239,20 +309,36 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
               </div>
 
               {/* 3 Big, Easy-to-Read Result Numbers */}
-              <div className="mt-8 grid grid-cols-1 gap-3.5 border-t border-[#111412]/10 pt-7 sm:grid-cols-3 sm:gap-4">
+              <div
+                className={`mt-8 grid grid-cols-1 gap-3.5 border-t pt-7 sm:grid-cols-3 sm:gap-4 ${
+                  isDark ? 'border-white/12' : 'border-[#111412]/10'
+                }`}
+              >
                 {highlights.map((stat, i) => (
                   <div
                     key={stat.label}
                     className={`rounded-2xl border p-4 sm:p-5 ${
                       i === 0
-                        ? 'border-[#f5a524]/50 bg-[#fff8e6]'
-                        : 'border-[#111412]/10 bg-[#fafaf6]'
+                        ? isDark
+                          ? 'border-[#f5a524]/45 bg-[#f5a524]/15'
+                          : 'border-[#f5a524]/50 bg-[#fff8e6]'
+                        : isDark
+                          ? 'border-white/12 bg-white/[0.04]'
+                          : 'border-[#111412]/10 bg-[#fafaf6]'
                     }`}
                   >
-                    <p className="font-display text-2xl font-extrabold tracking-tight text-[#111412] tabular-nums sm:text-[28px]">
+                    <p
+                      className={`font-display text-2xl font-extrabold tracking-tight tabular-nums sm:text-[28px] ${
+                        isDark ? 'text-white' : 'text-[#111412]'
+                      }`}
+                    >
                       {stat.value}
                     </p>
-                    <p className="mt-1 text-xs font-semibold leading-snug text-[#586159] sm:text-sm">
+                    <p
+                      className={`mt-1 text-xs font-semibold leading-snug sm:text-sm ${
+                        isDark ? 'text-white/70' : 'text-[#586159]'
+                      }`}
+                    >
                       {stat.label}
                     </p>
                   </div>
@@ -261,14 +347,30 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
             </div>
 
             {/* Right Column: Two Simple Boxes for Before & After */}
-            <div className="flex flex-col justify-between bg-[#fafaf6] p-7 sm:p-10 lg:col-span-5 lg:p-12">
+            <div
+              className={`flex flex-col justify-between p-7 sm:p-10 lg:col-span-5 lg:p-12 ${
+                isDark ? 'bg-[#0f131b]' : 'bg-[#fafaf6]'
+              }`}
+            >
               <div>
-                <div className="flex items-center justify-between border-b border-[#111412]/10 pb-4">
-                  <span className="font-display text-base font-bold text-[#111412]">
+                <div
+                  className={`flex items-center justify-between border-b pb-4 ${
+                    isDark ? 'border-white/12' : 'border-[#111412]/10'
+                  }`}
+                >
+                  <span
+                    className={`font-display text-base font-bold ${
+                      isDark ? 'text-white' : 'text-[#111412]'
+                    }`}
+                  >
                     Before &amp; After AdVibe
                   </span>
                   {current.roiMultiplier && (
-                    <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-[#0d8a5a] tabular-nums">
+                    <span
+                      className={`inline-flex items-center gap-1.5 font-mono text-xs font-bold tabular-nums ${
+                        isDark ? 'text-emerald-400' : 'text-[#0d8a5a]'
+                      }`}
+                    >
                       <TrendingUp className="h-4 w-4" />
                       {current.roiMultiplier}
                     </span>
@@ -277,17 +379,37 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
 
                 <div className="mt-6 space-y-5">
                   {/* Box 1: Before AdVibe */}
-                  <div className="rounded-2xl border border-[#111412]/10 bg-white p-5 sm:p-6">
-                    <span className="inline-block font-mono text-xs font-bold uppercase tracking-wider text-[#a52114]">
+                  <div
+                    className={`rounded-2xl border p-5 sm:p-6 ${
+                      isDark
+                        ? 'border-red-500/25 bg-red-950/20 text-white'
+                        : 'border-[#111412]/10 bg-white text-[#2a302b]'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block font-mono text-xs font-bold uppercase tracking-wider ${
+                        isDark ? 'text-red-400' : 'text-[#a52114]'
+                      }`}
+                    >
                       Before AdVibe
                     </span>
-                    <p className="mt-2.5 text-[15px] leading-relaxed text-[#2a302b] sm:text-base">
+                    <p
+                      className={`mt-2.5 text-[15px] leading-relaxed sm:text-base ${
+                        isDark ? 'text-white/85' : 'text-[#2a302b]'
+                      }`}
+                    >
                       {beforeText}
                     </p>
                   </div>
 
                   {/* Box 2: After AdVibe */}
-                  <div className="rounded-2xl border border-[#111412] bg-[#111412] p-5 text-white shadow-md sm:p-6">
+                  <div
+                    className={`rounded-2xl border p-5 shadow-md sm:p-6 ${
+                      isDark
+                        ? 'border-emerald-500/35 bg-emerald-950/25 text-white'
+                        : 'border-[#111412] bg-[#111412] text-white'
+                    }`}
+                  >
                     <span className="inline-block font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
                       After AdVibe
                     </span>
@@ -300,14 +422,19 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
 
               {/* Simple Action Button */}
               {onStrategy && (
-                <div className="mt-8 border-t border-[#111412]/10 pt-6">
+                <div
+                  className={`mt-8 border-t pt-6 ${
+                    isDark ? 'border-white/12' : 'border-[#111412]/10'
+                  }`}
+                >
                   <button
                     type="button"
                     onClick={onStrategy}
-                    className="btn btn-acc w-full justify-between"
+                    className="btn-studio is-sm w-full"
+                    style={{ width: '100%', justifyContent: 'space-between' }}
                   >
                     <span>Get Results Like This for Your Business</span>
-                    <span className="arr">
+                    <span className="btn-arrow">
                       <ArrowRight className="h-4 w-4" />
                     </span>
                   </button>

@@ -135,67 +135,82 @@
    ========================================================================== */
 
 /* 1. WHITE (LIGHT) MODE ADAPTATION FOR DARK-AUTHORED SURFACES */
-html[data-theme="light"] .theme-adaptive .bg-\[\#0b0e12\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#0a0d12\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#0b0d11\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#07090c\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#0b0b0c\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#090b0e\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#0d1117\] {
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+  .bg-\[\#0b0e12\],
+  .bg-\[\#090c10\],
+  .bg-\[\#0a0c0f\],
+  .bg-\[\#0a0d12\],
+  .bg-\[\#0b0d11\],
+  .bg-\[\#07090c\],
+  .bg-\[\#0b0b0c\],
+  .bg-\[\#090b0e\],
+  .bg-\[\#0d1117\]
+) {
   background-color: #faf9f5 !important;
   color: #111412 !important;
 }
 
-html[data-theme="light"] .theme-adaptive .bg-\[\#0b0e12\]\/95,
-html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\]\/95,
-html[data-theme="light"] .theme-adaptive .bg-\[\#090c10\]\/98,
-html[data-theme="light"] .theme-adaptive .bg-\[\#0a0d12\]\/95,
-html[data-theme="light"] .theme-adaptive .bg-\[\#0b0d11\]\/95,
-html[data-theme="light"] .theme-adaptive .bg-\[\#07090c\]\/90,
-html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\]\/95,
-html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\]\/98 {
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+  .bg-\[\#0b0e12\]\/95,
+  .bg-\[\#0a0c0f\]\/90,
+  .bg-\[\#0a0c0f\]\/95,
+  .bg-\[\#090c10\]\/95,
+  .bg-\[\#090c10\]\/98,
+  .bg-\[\#0a0d12\]\/95,
+  .bg-\[\#0b0d11\]\/95,
+  .bg-\[\#07090c\]\/90,
+  .bg-\[\#0e1114\]\/95,
+  .bg-\[\#0e1114\]\/98
+) {
   background-color: rgba(250, 249, 245, 0.95) !important;
   color: #111412 !important;
 }
 
-html[data-theme="light"] .theme-adaptive .bg-\[\#12161d\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#12161f\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#121518\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#0e1114\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#141922\],
-html[data-theme="light"] .theme-adaptive .bg-\[\#161b22\] {
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+  .bg-\[\#11151c\],
+  .bg-\[\#12161d\],
+  .bg-\[\#12161f\],
+  .bg-\[\#121518\],
+  .bg-\[\#0e1114\],
+  .bg-\[\#141922\],
+  .bg-\[\#161b22\]
+) {
   background-color: #ffffff !important;
   color: #111412 !important;
   border-color: rgba(17, 20, 18, 0.12) !important;
   box-shadow: 0 12px 32px -18px rgba(17, 20, 18, 0.08);
 }
 
-html[data-theme="light"] .theme-adaptive .bg-black\/30,
-html[data-theme="light"] .theme-adaptive .bg-black\/40,
-html[data-theme="light"] .theme-adaptive .bg-black\/50,
-html[data-theme="light"] .theme-adaptive .bg-black\/60,
-html[data-theme="light"] .theme-adaptive .bg-black\/70,
-html[data-theme="light"] .theme-adaptive .bg-white\/5,
-html[data-theme="light"] .theme-adaptive .bg-white\/10,
-html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.02\],
-html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.03\],
-html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.04\],
-html[data-theme="light"] .theme-adaptive .bg-white\/\[0\.06\] {
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):not(.keep-dark):not(.keep-dark *):is(
+  .bg-black\/30,
+  .bg-black\/40,
+  .bg-black\/50,
+  .bg-black\/60,
+  .bg-black\/70,
+  .bg-white\/5,
+  .bg-white\/10,
+  .bg-white\/\[0\.02\],
+  .bg-white\/\[0\.03\],
+  .bg-white\/\[0\.04\],
+  .bg-white\/\[0\.05\],
+  .bg-white\/\[0\.06\]
+) {
   background-color: #f3f4ef !important;
   color: #111412 !important;
 }
 
-html[data-theme="light"] .theme-adaptive .border-white\/5,
-html[data-theme="light"] .theme-adaptive .border-white\/10,
-html[data-theme="light"] .theme-adaptive .border-white\/12,
-html[data-theme="light"] .theme-adaptive .border-white\/15,
-html[data-theme="light"] .theme-adaptive .border-white\/20,
-html[data-theme="light"] .theme-adaptive .border-white\/25 {
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):not(.keep-dark):not(.keep-dark *):is(
+  .border-white\/5,
+  .border-white\/10,
+  .border-white\/12,
+  .border-white\/15,
+  .border-white\/20,
+  .border-white\/25
+) {
   border-color: rgba(17, 20, 18, 0.14) !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white:where(:not(.bg-\[\#111412\]):not(.bg-red-500):not(.bg-emerald-600):not(.keep-white):not(.keep-dark):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
+html[data-theme="light"] .theme-adaptive .text-white:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\]):not(.bg-red-500):not(.bg-emerald-600):not(.keep-white):not(.keep-dark):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #111412 !important;
 }
 html[data-theme="light"] .theme-adaptive .bg-\[\#111412\] .text-white,
@@ -207,25 +222,25 @@ html[data-theme="light"] .theme-adaptive .keep-white {
   color: #ffffff !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/90:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/85:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/80:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/75:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/70:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
+html[data-theme="light"] .theme-adaptive .text-white\/90:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/85:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/80:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/75:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/70:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #2a302b !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/65:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/60:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/55:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/50:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
+html[data-theme="light"] .theme-adaptive .text-white\/65:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/60:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/55:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/50:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #525b53 !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/45:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/40:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/35:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
-html[data-theme="light"] .theme-adaptive .text-white\/30:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
+html[data-theme="light"] .theme-adaptive .text-white\/45:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/40:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/35:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/30:where(:not(.theme-managed):not(.theme-managed *):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #6e776f !important;
 }
 
@@ -279,14 +294,15 @@ html[data-theme="dark"] .theme-adaptive .bg-white\/95 {
   color: #f4f2ec !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .bg-white:not(.btn-studio):not(button):not(.bg-\[\#f5a524\]) {
-  background-color: #12161d !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .bg-white:not(.btn-studio):not(.bg-\[\#f5a524\]) {
+  background-color: #141922 !important;
   color: #f4f2ec !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .bg-\[\#fff8e6\] {
-  background-color: rgba(245, 165, 36, 0.12) !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .bg-\[\#fff8e6\] {
+  background-color: rgba(245, 165, 36, 0.14) !important;
+  border-color: rgba(245, 165, 36, 0.45) !important;
   color: #f4f2ec !important;
 }
 
@@ -294,7 +310,7 @@ html[data-theme="dark"] .theme-adaptive .bg-red-50,
 html[data-theme="dark"] .theme-adaptive .bg-red-50\/50,
 html[data-theme="dark"] .theme-adaptive .bg-red-50\/80,
 html[data-theme="dark"] .theme-adaptive .bg-\[\#fff5f5\] {
-  background-color: rgba(127, 29, 29, 0.22) !important;
+  background-color: rgba(127, 29, 29, 0.24) !important;
   border-color: rgba(248, 113, 113, 0.35) !important;
   color: #fef2f2 !important;
 }
@@ -303,7 +319,7 @@ html[data-theme="dark"] .theme-adaptive .bg-emerald-50,
 html[data-theme="dark"] .theme-adaptive .bg-emerald-50\/50,
 html[data-theme="dark"] .theme-adaptive .bg-emerald-50\/80,
 html[data-theme="dark"] .theme-adaptive .bg-\[\#f0fdf4\] {
-  background-color: rgba(6, 78, 59, 0.25) !important;
+  background-color: rgba(6, 78, 59, 0.28) !important;
   border-color: rgba(52, 211, 153, 0.35) !important;
   color: #ecfdf5 !important;
 }
@@ -315,7 +331,8 @@ html[data-theme="dark"] .theme-adaptive .text-red-900 {
 }
 
 html[data-theme="dark"] .theme-adaptive .text-red-700,
-html[data-theme="dark"] .theme-adaptive .text-red-800 {
+html[data-theme="dark"] .theme-adaptive .text-red-800,
+html[data-theme="dark"] .theme-adaptive .text-\[\#a52114\] {
   color: #f87171 !important;
 }
 
@@ -326,44 +343,47 @@ html[data-theme="dark"] .theme-adaptive .text-emerald-900 {
 }
 
 html[data-theme="dark"] .theme-adaptive .text-emerald-700,
-html[data-theme="dark"] .theme-adaptive .text-emerald-800 {
+html[data-theme="dark"] .theme-adaptive .text-emerald-800,
+html[data-theme="dark"] .theme-adaptive .text-\[\#0d8a5a\] {
   color: #34d399 !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .text-\[\#a06200\] {
+html[data-theme="dark"] .theme-adaptive .text-\[\#a06200\],
+html[data-theme="dark"] .theme-adaptive .text-\[\#b87508\],
+html[data-theme="dark"] .theme-adaptive .text-\[\#9e6203\] {
   color: #f5a524 !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]:not(button):not(.bg-\[\#f5a524\]):not(.bg-emerald-500):not(.bg-white),
-html[data-theme="dark"] .theme-adaptive .text-\[\#2a302b\] {
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]:not(.bg-\[\#f5a524\]):not(.bg-emerald-500):not(.bg-\[\#f5a524\] *),
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#2a302b\] {
   color: #f4f2ec !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .text-\[\#586159\] {
-  color: rgba(244, 242, 236, 0.65) !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#586159\] {
+  color: rgba(244, 242, 236, 0.72) !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/80,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/75,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/70 {
-  color: rgba(244, 242, 236, 0.8) !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/80,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/75,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/70 {
+  color: rgba(244, 242, 236, 0.82) !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/65,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/60,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/55,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/50,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/40,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/30,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/20 {
-  color: rgba(244, 242, 236, 0.58) !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/65,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/60,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/55,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/50,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/40,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/30,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .text-\[\#111412\]\/20 {
+  color: rgba(244, 242, 236, 0.62) !important;
 }
 
-html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/10,
-html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/12,
-html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/15,
-html[data-theme="dark"] .theme-adaptive .border-\[\#111412\]\/20 {
-  border-color: rgba(255, 255, 255, 0.14) !important;
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .border-\[\#111412\]\/10,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .border-\[\#111412\]\/12,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .border-\[\#111412\]\/15,
+html[data-theme="dark"] .theme-adaptive :not(.theme-managed):not(.theme-managed *) .border-\[\#111412\]\/20 {
+  border-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 html[data-theme="dark"] .theme-adaptive select option {

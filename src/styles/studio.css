@@ -171,6 +171,40 @@
   color: #f5f3ec;
   box-shadow: inset 0 0 0 2px rgb(var(--brand));
 }
+[data-theme="dark"] .offer.is-featured .btn-studio {
+  background: rgb(var(--brand));
+  color: #111412;
+}
+[data-theme="dark"] .offer.is-featured .btn-studio .btn-arrow {
+  background: #111412;
+  color: #ffffff;
+}
+[data-theme="dark"] .event-clock {
+  background: rgb(var(--brand));
+  color: #111412;
+}
+[data-theme="dark"] .circle-btn {
+  background: rgb(var(--surface));
+  color: rgb(var(--ink));
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.18);
+}
+[data-theme="dark"] .circle-btn:hover {
+  background: rgb(var(--brand));
+  color: #111412;
+}
+[data-theme="dark"] .retainer-callout {
+  background: linear-gradient(135deg, rgba(245, 165, 36, 0.14), rgba(20, 24, 31, 0.9));
+  border-color: rgba(245, 165, 36, 0.4);
+}
+[data-theme="dark"] .quote.is-lead {
+  background: #1e232e;
+  color: #f5f3ec;
+  box-shadow: inset 0 0 0 1.5px rgba(245, 165, 36, 0.35);
+}
+[data-theme="dark"] .quote.is-lead .quote-avatar {
+  background: rgb(var(--brand));
+  color: #111412;
+}
 [data-theme="dark"] .goal[aria-selected="true"],
 [data-theme="dark"] .filter[aria-selected="true"] {
   background: rgb(var(--brand));
