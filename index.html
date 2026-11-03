@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="AI video ads for Facebook, Instagram, TikTok and WhatsApp Status — ready in 5 days, so you are never late for a sales season." />
     <meta property="og:title" content="AdVibe Studio — AI Video Ads Agency" />
     <meta property="og:description" content="AI video ads for Facebook, Instagram, TikTok and WhatsApp Status — ready in 5 days, so you are never late for a sales season." />
@@ -13,8 +13,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="AdVibe" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
     <title>AdVibe Studio — AI Video Ads Agency</title>
     <!-- Preconnect to YouTube & Google Drive servers early so video players boot with zero lag. -->
     <link rel="preconnect" href="https://i.ytimg.com" crossorigin />
@@ -52,21 +52,69 @@
         <div class="bar"><span class="mark"><i></i></span><span class="name" id="boot-b">AdVibe Studio</span></div>
         <h1 id="boot-h">Ads that turn attention into orders.</h1>
         <div class="dots" aria-hidden="true"><b></b><b></b><b></b></div>
-        <div id="boot-slow">Your connection looks slow, so this is taking longer than usual.<br /><a href="" onclick="location.reload();return false">Tap to try again</a></div>
+        <div id="boot-slow">Your connection looks slow, so this is taking longer than usual.<br /><a href="" onclick="window.__advibeResetAndReload && window.__advibeResetAndReload(); return false">Tap to refresh cleanly</a></div>
         <noscript><p style="text-align:center;margin-top:24px">Please turn on JavaScript to view this website.</p></noscript>
       </div>
     </div>
     <script>
-      // Show the last headline/brand we saw (so returning visitors never see stale placeholder text),
-      // and reveal a "try again" note if the site still hasn't appeared after 10 seconds.
       (function () {
+        // Self-healing function that clears any outdated Service Worker precache and reloads cleanly
+        window.__advibeResetAndReload = function () {
+          try {
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistrations().then(function (regs) {
+                return Promise.all(regs.map(function (r) { return r.unregister(); }));
+              }).then(function () {
+                if ('caches' in window) {
+                  return caches.keys().then(function (keys) {
+                    return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+                  });
+                }
+              }).finally(function () {
+                window.location.reload();
+              });
+              return;
+            }
+          } catch (e) {}
+          window.location.reload();
+        };
+
+        // One-time cleanup of legacy broken root-scoped service worker caches (v1 -> v2)
+        try {
+          var swFixed = localStorage.getItem('advibe.sw.v2.fixed');
+          if (!swFixed && 'serviceWorker' in navigator) {
+            localStorage.setItem('advibe.sw.v2.fixed', '1');
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              regs.forEach(function (r) { r.update(); });
+            });
+            if ('caches' in window) {
+              caches.keys().then(function (keys) {
+                keys.forEach(function (k) {
+                  if (k.indexOf('workbox-precache') !== -1) caches.delete(k);
+                });
+              });
+            }
+          }
+        } catch (e) {}
+
+        // Auto-recover if a lazy-loaded Vite chunk fails after a new deployment
+        window.addEventListener('vite:preloadError', function () {
+          try {
+            var reloaded = sessionStorage.getItem('advibe.chunk.reloaded');
+            if (!reloaded) {
+              sessionStorage.setItem('advibe.chunk.reloaded', '1');
+              window.__advibeResetAndReload();
+            }
+          } catch (e) {}
+        });
+
         try {
           var raw = localStorage.getItem('advibe.content.cache.v1') || localStorage.getItem('advibe.content.v1');
           var c = raw ? JSON.parse(raw) : null;
           if (c && c.hero && c.hero.headline) document.getElementById('boot-h').textContent = c.hero.headline;
           if (c && c.brand && c.brand.name) document.getElementById('boot-b').textContent = c.brand.name;
         } catch (e) {}
-        setTimeout(function () { var n = document.getElementById('boot-slow'); if (n) n.style.display = 'block'; }, 10000);
+        setTimeout(function () { var n = document.getElementById('boot-slow'); if (n) n.style.display = 'block'; }, 8000);
       })();
     </script>
     <script type="module" src="/src/main.tsx"></script>

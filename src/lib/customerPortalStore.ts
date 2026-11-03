@@ -317,320 +317,58 @@ export function parseGoogleDriveVideoUrl(rawUrl: string): {
   };
 }
 
-export const SEEDED_PROJECTS: CustomerProject[] = [
-  {
-    id: 'proj_test_1_retainer',
-    ref: 'AV-TST-101',
-    customerId: 'cust_test_1',
-    customerName: 'Test Client 01 (CirclesFundMe Demo)',
-    customerEmail: 'test1@advibestudio.com',
-    customerPhone: '+2348000000001',
-    businessName: 'CirclesFundMe Cooperative (Test Account 1)',
-    packageType: 'retainer_15',
-    packageName: 'Monthly Content Retainer (15 Videos)',
-    totalVideos: 15,
-    totalPrice: 250000,
-    currency: 'NGN',
-    paidPercent: 40,
-    amountPaid: 100000,
-    paymentNotes: '40% Initial Retainer Deposit Confirmed — 6 of 15 videos unlocked for download; remaining ready videos are View-Only.',
-    status: 'Ready for Review',
-    unreadScriptAlert: true,
-    createdAt: new Date(Date.now() - 86400000 * 4).toISOString(),
-    updatedAt: new Date().toISOString(),
-    scripts: [
-      {
-        id: 'scr_1',
-        episodeNumber: 1,
-        title: 'Episode 01 — Cooperative Savings Without Stress',
-        hook: '0–3s Hook: "Why do traditional contribution groups always end in drama when it is your turn to collect?"',
-        scriptBody:
-          'Scene 1: Protagonist checks phone anxiously while waiting for group payout.\nScene 2: CirclesFundMe automated contribution shield appears with verified background checks.\nScene 3: Instant payout notification lands with zero friction.',
-        visualNotes: '9:16 vertical reel · Green branded cap & polo · Warm Lagos street lighting.',
-        status: 'approved',
-        clientAssetLinks: ['https://drive.google.com/drive/folders/1CirclesFundMeBrandKit'],
-        clientRecommendations: 'Keep the green cap logo clearly visible in Scene 2.',
-        updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-      },
-      {
-        id: 'scr_2',
-        episodeNumber: 2,
-        title: 'Episode 02 — CNG Conversion Financing Reel',
-        hook: '0–3s Hook: "Fuel costs doubled, but converting your vehicle to CNG does not have to drain your savings."',
-        scriptBody:
-          'Scene 1: Auto workshop technician showing the CNG conversion kit installation.\nScene 2: Step-by-step breakdown of how CirclesFundMe spreads the cost effortlessly.\nScene 3: Call to action to apply in 3 minutes.',
-        visualNotes: '9:16 vertical reel · Workshop cutaway graphics.',
-        status: 'pending_review',
-        clientAssetLinks: [],
-        clientRecommendations: '',
-        updatedAt: new Date().toISOString(),
-      },
-    ],
-    videos: [
-      {
-        id: 'vid_1',
-        index: 1,
-        title: 'CirclesFundMe Campaign Reel 01 — Service Ad',
-        category: 'Service Ads',
-        duration: '0:45',
-        driveUrl: 'YSTvgHJ9vRU',
-        status: 'ready',
-        uploadedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-      },
-      {
-        id: 'vid_2',
-        index: 2,
-        title: 'CirclesFundMe Campaign Reel 02 — Story Ad',
-        category: 'Story Ads',
-        duration: '0:52',
-        driveUrl: 'NuUviJm2DLo',
-        status: 'ready',
-        uploadedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-      },
-      {
-        id: 'vid_3',
-        index: 3,
-        title: 'CirclesFundMe Campaign Reel 03 — Launch Ad',
-        category: 'Launch Ads',
-        duration: '0:48',
-        driveUrl: 'XUn7L2s-Bqk',
-        status: 'ready',
-        uploadedAt: new Date(Date.now() - 86400000 * 1).toISOString(),
-      },
-      {
-        id: 'vid_4',
-        index: 4,
-        title: 'CirclesFundMe Campaign Reel 04 — Brand Film',
-        category: 'Brand Films',
-        duration: '1:05',
-        driveUrl: 'QsqKNOo1uDQ',
-        status: 'ready',
-        uploadedAt: new Date(Date.now() - 86400000 * 1).toISOString(),
-      },
-      {
-        id: 'vid_5',
-        index: 5,
-        title: 'CirclesFundMe Campaign Reel 05 — Direct Offer',
-        category: 'Service Ads',
-        duration: '0:50',
-        driveUrl: 'JecWfFOuUp0',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-      {
-        id: 'vid_6',
-        index: 6,
-        title: 'CirclesFundMe Campaign Reel 06 — Community Story',
-        category: 'Story Ads',
-        duration: '0:55',
-        driveUrl: 'lE5JSLxRCU4',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-      {
-        id: 'vid_7',
-        index: 7,
-        title: 'CirclesFundMe Campaign Reel 07 — Promo Cut (View-Only at 40% Paid)',
-        category: 'Promo Videos',
-        duration: '0:46',
-        driveUrl: 'sbirMUA3WNU',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-      {
-        id: 'vid_8',
-        index: 8,
-        title: 'CirclesFundMe Campaign Reel 08 — Product Spotlight (View-Only at 40% Paid)',
-        category: 'Product Ads',
-        duration: '0:58',
-        driveUrl: '1nUi3LNvFHs',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'proj_test_1_pack5',
-    ref: 'AV-TST-102',
-    customerId: 'cust_test_1',
-    customerName: 'Test Client 01 (CirclesFundMe Demo)',
-    customerEmail: 'test1@advibestudio.com',
-    customerPhone: '+2348000000001',
-    businessName: 'CirclesFundMe Cooperative (Test Account 1)',
-    packageType: 'pack_5',
-    packageName: '5 Creative Test Pack',
-    totalVideos: 5,
-    totalPrice: 95000,
-    currency: 'NGN',
-    paidPercent: 50,
-    amountPaid: 47500,
-    paymentNotes: '50% Deposit Confirmed — 2 of 5 videos unlocked for download, 3 videos in View-Only mode.',
-    status: 'Ready for Review',
-    unreadScriptAlert: false,
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    updatedAt: new Date().toISOString(),
-    scripts: [
-      {
-        id: 'scr_p5_1',
-        episodeNumber: 1,
-        title: 'Creative 01 — Fast Hook Variation A',
-        hook: '0–3s Hook: "Stop losing customers to slow checkout pages—watch how 3 seconds changes everything."',
-        scriptBody: 'Scene 1: Split-screen comparison.\nScene 2: Social proof overlay.\nScene 3: Direct WhatsApp CTA.',
-        visualNotes: '9:16 Vertical · High-contrast captions.',
-        status: 'approved',
-        clientAssetLinks: [],
-        clientRecommendations: '',
-        updatedAt: new Date().toISOString(),
-      },
-    ],
-    videos: [
-      {
-        id: 'vid_p5_1',
-        index: 1,
-        title: 'Test Pack Video 01 — Hook Angle A (Download Unlocked)',
-        category: 'Service Ads',
-        duration: '0:42',
-        driveUrl: 'YSTvgHJ9vRU',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-      {
-        id: 'vid_p5_2',
-        index: 2,
-        title: 'Test Pack Video 02 — Hook Angle B (Download Unlocked)',
-        category: 'Story Ads',
-        duration: '0:49',
-        driveUrl: 'NuUviJm2DLo',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-      {
-        id: 'vid_p5_3',
-        index: 3,
-        title: 'Test Pack Video 03 — Hook Angle C (View-Only at 50% Paid)',
-        category: 'Launch Ads',
-        duration: '0:45',
-        driveUrl: 'XUn7L2s-Bqk',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-    ],
-  },
-  {
-    id: 'proj_test_2_single',
-    ref: 'AV-TST-201',
-    customerId: 'cust_test_2',
-    customerName: 'Test Client 02 (Single & 10-Pack Tester)',
-    customerEmail: 'test2@advibestudio.com',
-    customerPhone: '+2348000000002',
-    businessName: 'AdVibe Sandbox Brand (Test Account 2)',
-    packageType: 'single',
-    packageName: 'Single Video Ad (Up to 2m 30s)',
-    totalVideos: 1,
-    totalPrice: 35000,
-    currency: 'NGN',
-    paidPercent: 60,
-    amountPaid: 21000,
-    paymentNotes: '60% Deposit Confirmed — Video is available in View-Only streaming mode until 100% balance is completed.',
-    status: 'Ready for Review',
-    unreadScriptAlert: true,
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-    updatedAt: new Date().toISOString(),
-    scripts: [
-      {
-        id: 'scr_t2_1',
-        episodeNumber: 1,
-        title: 'Single Commercial — Flagship Brand Story & Offer',
-        hook: '0–3s Hook: "Most customers scroll past flyers in 0.8 seconds—here is how to make them stop and order."',
-        scriptBody:
-          'Scene 1: Relatable customer pain point in everyday setting.\nScene 2: Product demonstration with photorealistic AI cinematography.\nScene 3: Clear offer & guarantee end-card.',
-        visualNotes: '9:16 + 16:9 Dual Format · Studio Voiceover & Foley.',
-        status: 'pending_review',
-        clientAssetLinks: [],
-        clientRecommendations: '',
-        updatedAt: new Date().toISOString(),
-      },
-    ],
-    videos: [
-      {
-        id: 'vid_t2_1',
-        index: 1,
-        title: 'Flagship Single Video Ad — Master Preview (View-Only at 60% Paid)',
-        category: 'Brand Films',
-        duration: '1:15',
-        driveUrl: 'QsqKNOo1uDQ',
-        status: 'ready',
-        uploadedAt: new Date().toISOString(),
-      },
-    ],
-  },
-];
+export const SEEDED_PROJECTS: CustomerProject[] = [];
 
-export const SEEDED_ACCOUNTS: CustomerAccount[] = [
-  {
-    id: 'cust_test_1',
-    username: 'testclient1',
-    name: 'Test Client 01',
-    email: 'test1@advibestudio.com',
-    phone: '+2348000000001',
-    business: 'CirclesFundMe Cooperative (Test Account 1)',
-    country: 'NG',
-    password: 'advibe-test-1',
-    passwordSet: true,
-    isTestAccount: true,
-    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-  },
-  {
-    id: 'cust_test_2',
-    username: 'testclient2',
-    name: 'Test Client 02',
-    email: 'test2@advibestudio.com',
-    phone: '+2348000000002',
-    business: 'AdVibe Sandbox Brand (Test Account 2)',
-    country: 'NG',
-    password: 'advibe-test-2',
-    passwordSet: true,
-    isTestAccount: true,
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-  },
-];
+export const SEEDED_ACCOUNTS: CustomerAccount[] = [];
 
-function isLegacyDemoAccount(a?: Partial<CustomerAccount> | null): boolean {
+function isLegacyOrTestAccount(a?: Partial<CustomerAccount> | null): boolean {
   if (!a) return false;
   const email = (a.email || '').toLowerCase();
   return (
     a.id === 'cust_circlesfundme' ||
     a.id === 'cust_demo_cfm' ||
-    email === 'demo@circlesfundme.com'
+    a.id === 'cust_test_1' ||
+    a.id === 'cust_test_2' ||
+    Boolean(a.isTestAccount) ||
+    email === 'demo@circlesfundme.com' ||
+    email === 'test1@advibestudio.com' ||
+    email === 'test2@advibestudio.com'
+  );
+}
+
+function isLegacyOrTestProject(p?: Partial<CustomerProject> | null): boolean {
+  if (!p) return false;
+  const email = (p.customerEmail || '').toLowerCase();
+  return (
+    p.id === 'proj_cfm_retainer' ||
+    p.id === 'proj_test_1_retainer' ||
+    p.id === 'proj_test_1_pack5' ||
+    p.id === 'proj_test_2_single' ||
+    p.customerId === 'cust_circlesfundme' ||
+    p.customerId === 'cust_demo_cfm' ||
+    p.customerId === 'cust_test_1' ||
+    p.customerId === 'cust_test_2' ||
+    email === 'demo@circlesfundme.com' ||
+    email === 'test1@advibestudio.com' ||
+    email === 'test2@advibestudio.com'
   );
 }
 
 export function loadCustomerAccounts(): CustomerAccount[] {
   try {
     const raw = localStorage.getItem(ACCOUNTS_KEY);
-    if (!raw) {
-      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(SEEDED_ACCOUNTS));
-      return SEEDED_ACCOUNTS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as CustomerAccount[];
-    const realAccounts = Array.isArray(parsed)
-      ? parsed.filter(
-          (a) =>
-            !isLegacyDemoAccount(a) &&
-            a.id !== 'cust_test_1' &&
-            a.id !== 'cust_test_2',
-        )
-      : [];
-    const merged = [...SEEDED_ACCOUNTS, ...realAccounts];
-    return merged;
+    return Array.isArray(parsed) ? parsed.filter((a) => !isLegacyOrTestAccount(a)) : [];
   } catch {
-    return SEEDED_ACCOUNTS;
+    return [];
   }
 }
 
 export function saveCustomerAccounts(accounts: CustomerAccount[]) {
   try {
-    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    const cleaned = accounts.filter((a) => !isLegacyOrTestAccount(a));
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(cleaned));
     window.dispatchEvent(new CustomEvent('advibe-portal-updated'));
   } catch {
     // ignore
@@ -640,34 +378,47 @@ export function saveCustomerAccounts(accounts: CustomerAccount[]) {
 export function loadCustomerProjects(): CustomerProject[] {
   try {
     const raw = localStorage.getItem(PROJECTS_KEY);
-    if (!raw) {
-      localStorage.setItem(PROJECTS_KEY, JSON.stringify(SEEDED_PROJECTS));
-      return SEEDED_PROJECTS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as CustomerProject[];
-    if (!Array.isArray(parsed) || parsed.length === 0) return SEEDED_PROJECTS;
-    // Remove legacy demo projects and ensure our 2 test accounts' projects exist
-    const filtered = parsed.filter(
-      (p) =>
-        p.id !== 'proj_cfm_retainer' &&
-        p.customerId !== 'cust_circlesfundme' &&
-        p.customerId !== 'cust_demo_cfm' &&
-        (p.customerEmail || '').toLowerCase() !== 'demo@circlesfundme.com',
-    );
-    const existingIds = new Set(filtered.map((p) => p.id));
-    const missingSeeds = SEEDED_PROJECTS.filter((sp) => !existingIds.has(sp.id));
-    return [...filtered, ...missingSeeds];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((p) => !isLegacyOrTestProject(p));
   } catch {
-    return SEEDED_PROJECTS;
+    return [];
   }
 }
 
 export function saveCustomerProjects(projects: CustomerProject[]) {
   try {
-    localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+    const cleaned = projects.filter((p) => !isLegacyOrTestProject(p));
+    localStorage.setItem(PROJECTS_KEY, JSON.stringify(cleaned));
     window.dispatchEvent(new CustomEvent('advibe-portal-updated'));
   } catch {
     // ignore
+  }
+}
+
+export async function clearAllCustomerPortalData(): Promise<void> {
+  try {
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([]));
+    localStorage.setItem(PROJECTS_KEY, JSON.stringify([]));
+    localStorage.removeItem(ACTIVE_CUSTOMER_KEY);
+    window.dispatchEvent(new CustomEvent('advibe-portal-updated'));
+  } catch {
+    // ignore
+  }
+
+  try {
+    const { deleteDoc } = await import('firebase/firestore');
+    const [accSnap, projSnap] = await Promise.all([
+      getDocs(collection(db, 'customer_accounts')),
+      getDocs(collection(db, 'customer_projects')),
+    ]);
+    await Promise.all([
+      ...accSnap.docs.map((d) => deleteDoc(doc(db, 'customer_accounts', d.id)).catch(() => {})),
+      ...projSnap.docs.map((d) => deleteDoc(doc(db, 'customer_projects', d.id)).catch(() => {})),
+    ]);
+  } catch {
+    // ignore if offline or unauthenticated
   }
 }
 
@@ -722,17 +473,25 @@ export async function fetchAllPortalDataFromFirestore(): Promise<{
     ]);
 
     const accMap = new Map<string, CustomerAccount>();
-    localAccounts.forEach((a) => accMap.set(a.id, a));
+    localAccounts.forEach((a) => {
+      if (!isLegacyOrTestAccount(a)) accMap.set(a.id, a);
+    });
     accSnap.docs.forEach((d) => {
       const data = d.data() as CustomerAccount;
-      if (data?.id) accMap.set(data.id, { ...accMap.get(data.id), ...data });
+      if (data?.id && !isLegacyOrTestAccount(data)) {
+        accMap.set(data.id, { ...accMap.get(data.id), ...data });
+      }
     });
 
     const projMap = new Map<string, CustomerProject>();
-    localProjects.forEach((p) => projMap.set(p.id, p));
+    localProjects.forEach((p) => {
+      if (!isLegacyOrTestProject(p)) projMap.set(p.id, p);
+    });
     projSnap.docs.forEach((d) => {
       const data = d.data() as CustomerProject;
-      if (data?.id) projMap.set(data.id, { ...projMap.get(data.id), ...data });
+      if (data?.id && !isLegacyOrTestProject(data)) {
+        projMap.set(data.id, { ...projMap.get(data.id), ...data });
+      }
     });
 
     const accounts = Array.from(accMap.values());
@@ -874,10 +633,9 @@ export function getActiveCustomerSession(): CustomerAccount | null {
     const raw = localStorage.getItem(ACTIVE_CUSTOMER_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CustomerAccount;
-    if (isLegacyDemoAccount(parsed)) {
-      const cleanTestAccount = SEEDED_ACCOUNTS[0];
-      localStorage.setItem(ACTIVE_CUSTOMER_KEY, JSON.stringify(cleanTestAccount));
-      return cleanTestAccount;
+    if (isLegacyOrTestAccount(parsed)) {
+      localStorage.removeItem(ACTIVE_CUSTOMER_KEY);
+      return null;
     }
     const latest = loadCustomerAccounts().find((a) => a.id === parsed.id);
     return latest || parsed;

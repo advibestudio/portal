@@ -716,7 +716,7 @@ export default function AffiliatePortalPage() {
       {/* MOBILE BOTTOM NAVIGATION BAR */}
       <nav
         aria-label="Affiliate Mobile Navigation"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0d11]/95 px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden"
+        className="bottom-navigation-bar fixed inset-x-0 bottom-0 z-[9999] border-t border-white/10 bg-[#0b0d11]/95 backdrop-blur-xl md:hidden"
       >
         <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
           <button

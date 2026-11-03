@@ -719,8 +719,8 @@ export default function MobileClientAdminApp() {
 
       {/* THUMB-FRIENDLY 4-TAB MOBILE BOTTOM BAR */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-white/12 bg-[#0b0e14]/95 backdrop-blur-md"
-        style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))' }}
+        aria-label="Mobile Admin Navigation"
+        className="bottom-navigation-bar fixed inset-x-0 bottom-0 z-[9999] grid grid-cols-4 border-t border-white/12 bg-[#0b0e14]/95 backdrop-blur-md"
       >
         <button
           type="button"

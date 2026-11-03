@@ -1,6 +1,6 @@
 {
-  "summary":  "Implementation plan to fix the mobile tab clipping and asset input overflow in the Client Portal WebApp (#/client-portal), and add direct file upload (photos, logos, video clips, voice notes, PDFs) to the Brand Assets section alongside Google Drive/Cloud links, with Admin visibility and download support.",
-  "updatedAt":  "2026-11-01T21:37:12.354163784Z",
-  "requestFeedback":  true,
-  "userFacing":  true
+  "summary": "Implementation plan to fix the visual contrast, invisible text, muddy card backgrounds, and light/dark theme adaptation issues on the Promotional Mini-Series page (/commercial/promotional-mini-series).",
+  "updatedAt": "2026-11-03T12:55:57.926060493Z",
+  "requestFeedback": true,
+  "userFacing": true
 }

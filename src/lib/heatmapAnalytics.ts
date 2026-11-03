@@ -26,187 +26,73 @@ export interface PageViewSummary {
   lastVisitedAt: string;
 }
 
-const DEFAULT_HEATMAP_SECTIONS: SectionHeatmapRecord[] = [
-  {
-    id: 'home_hero',
-    page: 'Homepage',
-    sectionId: 'hero',
-    label: 'Hero & 3D Rotating Video Cylinder',
-    views: 428,
-    totalDwellSeconds: 11984, // ~28s avg
-    clicks: 194,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_work',
-    page: 'Homepage',
-    sectionId: 'work',
-    label: 'Our Work Video Showcase (CirclesFundMe Reels)',
-    views: 382,
-    totalDwellSeconds: 16808, // ~44s avg
-    clicks: 246,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_clients',
-    page: 'Homepage',
-    sectionId: 'clients',
-    label: 'Client Spotlight — CirclesFundMe Case Study',
-    views: 345,
-    totalDwellSeconds: 11040, // ~32s avg
-    clicks: 142,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_pricing',
-    page: 'Homepage',
-    sectionId: 'pricing',
-    label: 'Packages & Pricing Comparison',
-    views: 318,
-    totalDwellSeconds: 15582, // ~49s avg
-    clicks: 168,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_services',
-    page: 'Homepage',
-    sectionId: 'services',
-    label: 'What We Create (6 Ad Categories)',
-    views: 290,
-    totalDwellSeconds: 6090, // ~21s avg
-    clicks: 64,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_process',
-    page: 'Homepage',
-    sectionId: 'process',
-    label: '5-Day Production Process',
-    views: 254,
-    totalDwellSeconds: 4572, // ~18s avg
-    clicks: 39,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'home_faq',
-    page: 'Homepage',
-    sectionId: 'faq',
-    label: 'Questions & AI Production Note',
-    views: 215,
-    totalDwellSeconds: 5160, // ~24s avg
-    clicks: 88,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'miniseries_hero',
-    page: 'AI Mini-Series',
-    sectionId: 'ms-hero',
-    label: 'Chapter 1: Attention Paradox & Second Hook',
-    views: 196,
-    totalDwellSeconds: 7056, // ~36s avg
-    clicks: 92,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'miniseries_formats',
-    page: 'AI Mini-Series',
-    sectionId: 'ms-formats',
-    label: 'Chapter 5: 5 Episodic Story Formats & Clapperboard',
-    views: 174,
-    totalDwellSeconds: 9048, // ~52s avg
-    clicks: 134,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'miniseries_offer',
-    page: 'AI Mini-Series',
-    sectionId: 'ms-offer',
-    label: 'Chapter 8: Master Production Agreement (15 Videos)',
-    views: 158,
-    totalDwellSeconds: 7426, // ~47s avg
-    clicks: 81,
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: 'retainer_deliverables',
-    page: 'Monthly Retainer',
-    sectionId: 'ret-deliverables',
-    label: 'Monthly Retainer 4 Core Deliverables & Reels',
-    views: 164,
-    totalDwellSeconds: 6888, // ~42s avg
-    clicks: 76,
-    updatedAt: new Date().toISOString(),
-  },
-];
+const LEGACY_SEED_HEATMAP_IDS = new Set([
+  'home_hero',
+  'home_work',
+  'home_clients',
+  'home_pricing',
+  'home_services',
+  'home_process',
+  'home_faq',
+  'miniseries_hero',
+  'miniseries_formats',
+  'miniseries_offer',
+  'retainer_deliverables',
+]);
 
-const DEFAULT_PAGEVIEWS: PageViewSummary[] = [
-  {
-    page: 'Homepage',
-    label: 'Main Studio Funnel (/)',
-    views: 428,
-    uniqueVisitors: 312,
-    avgTimeOnPageSec: 142,
-    lastVisitedAt: new Date().toISOString(),
-  },
-  {
-    page: 'AI Mini-Series',
-    label: 'AI Promotional Mini-Series (#/promotional-mini-series)',
-    views: 196,
-    uniqueVisitors: 148,
-    avgTimeOnPageSec: 168,
-    lastVisitedAt: new Date().toISOString(),
-  },
-  {
-    page: 'Monthly Retainer',
-    label: 'Monthly Content Retainer (#/monthly-content)',
-    views: 164,
-    uniqueVisitors: 121,
-    avgTimeOnPageSec: 134,
-    lastVisitedAt: new Date().toISOString(),
-  },
-  {
-    page: 'Training',
-    label: 'AI Filmmaking Academy (#/training)',
-    views: 138,
-    uniqueVisitors: 104,
-    avgTimeOnPageSec: 118,
-    lastVisitedAt: new Date().toISOString(),
-  },
-  {
-    page: 'Client Portal',
-    label: 'Customer Project WebApp (#/portal)',
-    views: 84,
-    uniqueVisitors: 46,
-    avgTimeOnPageSec: 215,
-    lastVisitedAt: new Date().toISOString(),
-  },
-];
+const DEFAULT_HEATMAP_SECTIONS: SectionHeatmapRecord[] = [];
+const DEFAULT_PAGEVIEWS: PageViewSummary[] = [];
 
 export function loadHeatmapRecords(): SectionHeatmapRecord[] {
   try {
     const raw = localStorage.getItem(HEATMAP_STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(HEATMAP_STORAGE_KEY, JSON.stringify(DEFAULT_HEATMAP_SECTIONS));
-      return DEFAULT_HEATMAP_SECTIONS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as SectionHeatmapRecord[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_HEATMAP_SECTIONS;
+    return Array.isArray(parsed)
+      ? parsed.filter((r) => r && !LEGACY_SEED_HEATMAP_IDS.has(r.id))
+      : [];
   } catch {
-    return DEFAULT_HEATMAP_SECTIONS;
+    return [];
   }
 }
 
 export function loadPageViewSummaries(): PageViewSummary[] {
   try {
     const raw = localStorage.getItem(PAGEVIEWS_STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(PAGEVIEWS_STORAGE_KEY, JSON.stringify(DEFAULT_PAGEVIEWS));
-      return DEFAULT_PAGEVIEWS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as PageViewSummary[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_PAGEVIEWS;
+    if (!Array.isArray(parsed)) return [];
+    // Filter out legacy seeded fake totals (e.g. 428, 196, 164, 138, 84)
+    return parsed.filter(
+      (p) =>
+        !(
+          (p.page === 'Homepage' && p.views >= 428) ||
+          (p.page === 'AI Mini-Series' && p.views >= 196) ||
+          (p.page === 'Monthly Retainer' && p.views >= 164) ||
+          (p.page === 'Training' && p.views >= 138) ||
+          (p.page === 'Client Portal' && p.views >= 84)
+        ),
+    );
   } catch {
-    return DEFAULT_PAGEVIEWS;
+    return [];
+  }
+}
+
+export async function clearAllHeatmapAndPageviews(): Promise<void> {
+  try {
+    localStorage.setItem(HEATMAP_STORAGE_KEY, JSON.stringify([]));
+    localStorage.setItem(PAGEVIEWS_STORAGE_KEY, JSON.stringify([]));
+  } catch {
+    // ignore
+  }
+  try {
+    const { deleteDoc } = await import('firebase/firestore');
+    const snap = await getDocs(collection(db, 'section_heatmap'));
+    await Promise.all(
+      snap.docs.map((d) => deleteDoc(doc(db, 'section_heatmap', d.id)).catch(() => {})),
+    );
+  } catch {
+    // ignore
   }
 }
 

@@ -65,220 +65,44 @@ export function getQuizSessionId(): string {
 }
 
 /* ---------- SEED ASSESSMENTS FOR INITIAL PIPELINE & ANALYTICS ---------- */
-const SEED_ASSESSMENTS: BusinessAssessment[] = [
-  {
-    assessmentId: 'ADV-QUIZ-8491',
-    timestampSubmitted: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
-    entryPage: 'homepage',
-    originalAcquisitionChannel: 'affiliate',
-    fullName: 'Adaeze Nwosu',
-    businessName: 'Zuri Luxe Hair & Beauty',
-    whatsappNumber: '+2348034567890',
-    email: 'adaeze@zuriluxe.ng',
-    websiteOrSocial: '@zuriluxehair',
-    whatBusinessSells: 'Luxury raw virgin hair extensions and wig installations in Lagos',
-    howDidYouHear: 'Advibe Affiliate Partner Link',
-    socialMediaStatus: 'Yes, but inconsistently',
-    platformsUsed: ['Instagram', 'TikTok', 'WhatsApp Business / Status'],
-    postingFrequency: '1–2 times a week',
-    wantsMoreConsistency: "Yes, if we didn't have to manage the whole creative process ourselves",
-    biggestChallenges: [
-      "We don't have enough time to plan and create content consistently",
-      'Our posts look like ordinary flyers or repetitive sales posts',
-    ],
-    storytellingInterest: 'Very interested — I love the idea of stories people actually want to watch',
-    aiSeriesFamiliarity: 'Yes, a few, but I was not sure how a business could use them',
-    sawEducationalInterlude: true,
-    aiMiniSeriesInterest: 'Very interested — I would love to see ideas for our business',
-    monthlyAdSpendRange: '₦150,000 – ₦500,000',
-    monthlyContentSpendRange: '₦150,000 – ₦300,000',
-    primaryGoal: 'Show up consistently on social media without the stress of creating everything ourselves',
-    primaryRecommendedService: 'Advibe Monthly Video Content Retainer',
-    primaryRecommendedPackageId: 'monthly-content',
-    primaryRecommendedPackageName: 'Monthly AI Video Content Retainer',
-    primaryRecommendedPrice: 190000,
-    secondaryRecommendation: 'AI Promotional Mini-Series & Branded Entertainment',
-    secondaryPackageId: 'promotional-mini-series',
-    secondaryPackageName: 'AI Promotional Mini Series',
-    monthlyRetainerOpportunity: true,
-    aiMiniSeriesOpportunity: true,
-    categoryScores: {
-      'regular-ads': 54,
-      'monthly-retainer': 142,
-      'ai-mini-series': 118,
-      'explainer-educational': 32,
-      'brand-storytelling': 76,
-    },
-    referralSource: 'affiliate_link',
-    affiliateId: 'aff-1',
-    affiliateCode: 'ADV-JOHN',
-    eligibleFor5PercentDiscount: true,
-    claimed5PercentDiscount: true,
-    discountAmount: 10000,
-    utmSource: 'instagram',
-    utmMedium: 'partner_bio',
-    utmCampaign: 'q4_retainer',
-    countryCode: 'NG',
-    currencyCode: 'NGN',
-    quizCompletionStatus: 'completed',
-    whatsappCtaClicked: true,
-    whatsappCtaClickedAt: new Date(Date.now() - 35.8 * 3600 * 1000).toISOString(),
-    leadStatus: 'Conversation ongoing',
-    salesNotes: 'Loved the CirclesFundMe example during the quiz. Wants 15 videos/mo starting next Monday.',
-    syncStatus: 'synced',
-    lastSyncAttemptAt: new Date(Date.now() - 35.8 * 3600 * 1000).toISOString(),
-  },
-  {
-    assessmentId: 'ADV-QUIZ-8498',
-    timestampSubmitted: new Date(Date.now() - 14 * 3600 * 1000).toISOString(),
-    entryPage: 'ai-mini-series-page',
-    entryContextOfferId: 'promotional-mini-series',
-    entryContextOfferName: 'AI Promotional Mini Series',
-    originalAcquisitionChannel: 'ai-mini-series',
-    fullName: 'Tunde Bakare',
-    businessName: 'PaySwift Microfinance',
-    whatsappNumber: '+2348091122334',
-    email: 'tunde@payswift.io',
-    websiteOrSocial: 'https://payswift.io',
-    whatBusinessSells: 'Instant SME working capital loans and automated cooperative savings',
-    howDidYouHear: 'Instagram',
-    socialMediaStatus: 'Yes, actively',
-    platformsUsed: ['Instagram', 'Facebook', 'TikTok', 'YouTube / YouTube Shorts', 'LinkedIn'],
-    postingFrequency: '3–5 times a week',
-    wantsMoreConsistency: 'We already post enough, but we want better quality and better results',
-    biggestChallenges: [
-      'We run out of fresh creative ideas',
-      'We want our brand to look more memorable and professional',
-    ],
-    storytellingInterest: 'Very interested — I love the idea of stories people actually want to watch',
-    aiSeriesFamiliarity: 'Yes, and some of them are very impressive',
-    sawEducationalInterlude: false,
-    aiMiniSeriesInterest: 'Extremely interested — this could set our brand apart',
-    monthlyAdSpendRange: '₦500,000 – ₦1,000,000',
-    monthlyContentSpendRange: '₦300,000 – ₦500,000',
-    primaryGoal: 'Build a stronger, more memorable brand through storytelling or an AI mini-series',
-    primaryRecommendedService: 'AI Promotional Mini-Series & Branded Entertainment',
-    primaryRecommendedPackageId: 'promotional-mini-series',
-    primaryRecommendedPackageName: 'AI Promotional Mini Series',
-    primaryRecommendedPrice: 200000,
-    secondaryRecommendation: 'Advibe Monthly Video Content Retainer',
-    secondaryPackageId: 'monthly-content',
-    secondaryPackageName: 'Monthly AI Video Content Retainer',
-    monthlyRetainerOpportunity: true,
-    aiMiniSeriesOpportunity: true,
-    categoryScores: {
-      'regular-ads': 62,
-      'monthly-retainer': 115,
-      'ai-mini-series': 168,
-      'explainer-educational': 48,
-      'brand-storytelling': 112,
-    },
-    referralSource: 'direct',
-    affiliateId: '',
-    affiliateCode: '',
-    eligibleFor5PercentDiscount: false,
-    claimed5PercentDiscount: false,
-    discountAmount: 0,
-    utmSource: 'meta_ads',
-    utmMedium: 'cpc',
-    utmCampaign: 'mini_series_launch',
-    countryCode: 'NG',
-    currencyCode: 'NGN',
-    quizCompletionStatus: 'completed',
-    whatsappCtaClicked: true,
-    whatsappCtaClickedAt: new Date(Date.now() - 13.9 * 3600 * 1000).toISOString(),
-    leadStatus: 'Proposal sent',
-    salesNotes: 'Sent 5-episode fintech drama treatment. Reviewing with CEO.',
-    syncStatus: 'synced',
-    lastSyncAttemptAt: new Date(Date.now() - 13.9 * 3600 * 1000).toISOString(),
-  },
-  {
-    assessmentId: 'ADV-QUIZ-8504',
-    timestampSubmitted: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
-    entryPage: 'homepage',
-    originalAcquisitionChannel: 'homepage',
-    fullName: 'Kwame Mensah',
-    businessName: 'Accra Solar Homes',
-    whatsappNumber: '+233245678901',
-    email: 'kwame@accrasolar.gh',
-    websiteOrSocial: 'accrasolar.gh',
-    whatBusinessSells: 'Residential solar inverter installations for homes and offices in Accra',
-    howDidYouHear: 'Google Search',
-    socialMediaStatus: 'We have pages, but we barely post',
-    platformsUsed: ['Facebook', 'Instagram', 'WhatsApp Business / Status'],
-    postingFrequency: 'Once a month or less',
-    wantsMoreConsistency: 'Yes, if the cost made sense for our business',
-    biggestChallenges: [
-      'Our product or service is hard to explain quickly',
-      'We get views or likes, but our content does not convert well enough',
-    ],
-    storytellingInterest: 'I prefer direct promotional ads for now',
-    aiSeriesFamiliarity: 'No, this is new to me',
-    sawEducationalInterlude: true,
-    aiMiniSeriesInterest: 'Maybe later — right now we need simpler promotional ads',
-    monthlyAdSpendRange: 'GH₵600 – GH₵1,800 (≈ ₦50k – ₦150k)',
-    monthlyContentSpendRange: 'GH₵600 – GH₵1,800',
-    primaryGoal: 'Get more leads, enquiries and sales from our ads',
-    primaryRecommendedService: 'Direct-Response Video Advertisements',
-    primaryRecommendedPackageId: 'bundle-5',
-    primaryRecommendedPackageName: '5 Creative Test Pack',
-    primaryRecommendedPrice: 950,
-    secondaryRecommendation: 'Explainer & Educational Video Production',
-    secondaryPackageId: 'single-60',
-    secondaryPackageName: 'Single 60s Video',
-    monthlyRetainerOpportunity: false,
-    aiMiniSeriesOpportunity: false,
-    categoryScores: {
-      'regular-ads': 128,
-      'monthly-retainer': 48,
-      'ai-mini-series': 20,
-      'explainer-educational': 94,
-      'brand-storytelling': 45,
-    },
-    referralSource: 'direct',
-    affiliateId: '',
-    affiliateCode: '',
-    eligibleFor5PercentDiscount: false,
-    claimed5PercentDiscount: false,
-    discountAmount: 0,
-    utmSource: 'google',
-    utmMedium: 'organic',
-    utmCampaign: '',
-    countryCode: 'GH',
-    currencyCode: 'GHS',
-    quizCompletionStatus: 'completed',
-    whatsappCtaClicked: false,
-    leadStatus: 'New lead',
-    salesNotes: 'Completed assessment; follow up on WhatsApp with solar explainer sample.',
-    syncStatus: 'synced',
-    lastSyncAttemptAt: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
-  },
-];
+const SEED_ASSESSMENT_IDS = new Set(['ADV-QUIZ-8491', 'ADV-QUIZ-8498', 'ADV-QUIZ-8504']);
+const SEED_ASSESSMENTS: BusinessAssessment[] = [];
 
 /* ---------- LOAD & SAVE ASSESSMENTS ---------- */
 
 export function loadAssessments(): BusinessAssessment[] {
-  if (typeof window === 'undefined') return SEED_ASSESSMENTS;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(LS_ASSESSMENTS);
-    if (!raw) {
-      localStorage.setItem(LS_ASSESSMENTS, JSON.stringify(SEED_ASSESSMENTS));
-      return SEED_ASSESSMENTS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as BusinessAssessment[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SEED_ASSESSMENTS;
+    return Array.isArray(parsed)
+      ? parsed.filter((a) => a && !SEED_ASSESSMENT_IDS.has(a.assessmentId))
+      : [];
   } catch {
-    return SEED_ASSESSMENTS;
+    return [];
   }
 }
 
 export function saveAssessments(list: BusinessAssessment[]): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(LS_ASSESSMENTS, JSON.stringify(list));
+    const cleaned = list.filter((a) => a && !SEED_ASSESSMENT_IDS.has(a.assessmentId));
+    localStorage.setItem(LS_ASSESSMENTS, JSON.stringify(cleaned));
     window.dispatchEvent(new CustomEvent('advibe-assessments-updated'));
   } catch {
     /* ignore storage quota errors */
+  }
+}
+
+export function clearAllAssessmentsAndEvents(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LS_ASSESSMENTS, JSON.stringify([]));
+    localStorage.setItem(LS_FUNNEL_EVENTS, JSON.stringify([]));
+    window.dispatchEvent(new CustomEvent('advibe-assessments-updated'));
+  } catch {
+    /* ignore */
   }
 }
 
@@ -965,36 +789,20 @@ export function exportAssessmentsTabCsv(
    FUNNEL ANALYTICS EVENT TRACKER & AGGREGATOR (PART 13)
    ========================================================================== */
 
-const SEED_EVENTS: QuizFunnelAnalyticsEvent[] = [
-  { id: 'ev-1', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 40 * 3600 * 1000).toISOString(), type: 'quiz_started', entryPage: 'homepage', channel: 'affiliate', affiliateCode: 'ADV-JOHN' },
-  { id: 'ev-2', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 39.9 * 3600 * 1000).toISOString(), type: 'question_answered', questionId: 'q1', stepNumber: 1 },
-  { id: 'ev-3', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 39.8 * 3600 * 1000).toISOString(), type: 'question_answered', questionId: 'q7', stepNumber: 7 },
-  { id: 'ev-4', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 39.7 * 3600 * 1000).toISOString(), type: 'interlude_viewed', questionId: 'q7', stepNumber: 7 },
-  { id: 'ev-5', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 36 * 3600 * 1000).toISOString(), type: 'quiz_completed', entryPage: 'homepage', channel: 'affiliate', affiliateCode: 'ADV-JOHN' },
-  { id: 'ev-6', sessionId: 'SES-SEED1', timestamp: new Date(Date.now() - 35.8 * 3600 * 1000).toISOString(), type: 'whatsapp_cta_clicked', entryPage: 'homepage', channel: 'affiliate', affiliateCode: 'ADV-JOHN' },
-  { id: 'ev-7', sessionId: 'SES-SEED2', timestamp: new Date(Date.now() - 15 * 3600 * 1000).toISOString(), type: 'quiz_started', entryPage: 'ai-mini-series-page', channel: 'ai-mini-series' },
-  { id: 'ev-8', sessionId: 'SES-SEED2', timestamp: new Date(Date.now() - 14 * 3600 * 1000).toISOString(), type: 'quiz_completed', entryPage: 'ai-mini-series-page', channel: 'ai-mini-series' },
-  { id: 'ev-9', sessionId: 'SES-SEED2', timestamp: new Date(Date.now() - 13.9 * 3600 * 1000).toISOString(), type: 'whatsapp_cta_clicked', entryPage: 'ai-mini-series-page', channel: 'ai-mini-series' },
-  { id: 'ev-10', sessionId: 'SES-SEED3', timestamp: new Date(Date.now() - 5 * 3600 * 1000).toISOString(), type: 'quiz_started', entryPage: 'homepage', channel: 'homepage' },
-  { id: 'ev-11', sessionId: 'SES-SEED3', timestamp: new Date(Date.now() - 4 * 3600 * 1000).toISOString(), type: 'quiz_completed', entryPage: 'homepage', channel: 'homepage' },
-  { id: 'ev-12', sessionId: 'SES-SEED4', timestamp: new Date(Date.now() - 2 * 3600 * 1000).toISOString(), type: 'quiz_started', entryPage: 'homepage', channel: 'homepage' },
-  { id: 'ev-13', sessionId: 'SES-SEED4', timestamp: new Date(Date.now() - 1.9 * 3600 * 1000).toISOString(), type: 'question_answered', questionId: 'q1', stepNumber: 1 },
-  { id: 'ev-14', sessionId: 'SES-SEED4', timestamp: new Date(Date.now() - 1.8 * 3600 * 1000).toISOString(), type: 'question_answered', questionId: 'q2', stepNumber: 2 },
-  { id: 'ev-15', sessionId: 'SES-SEED4', timestamp: new Date(Date.now() - 1.7 * 3600 * 1000).toISOString(), type: 'question_answered', questionId: 'q3', stepNumber: 3 },
-];
+const SEED_EVENT_SESSIONS = new Set(['SES-SEED1', 'SES-SEED2', 'SES-SEED3', 'SES-SEED4']);
+const SEED_EVENTS: QuizFunnelAnalyticsEvent[] = [];
 
 export function loadQuizAnalyticsEvents(): QuizFunnelAnalyticsEvent[] {
-  if (typeof window === 'undefined') return SEED_EVENTS;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(LS_FUNNEL_EVENTS);
-    if (!raw) {
-      localStorage.setItem(LS_FUNNEL_EVENTS, JSON.stringify(SEED_EVENTS));
-      return SEED_EVENTS;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as QuizFunnelAnalyticsEvent[];
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : SEED_EVENTS;
+    return Array.isArray(parsed)
+      ? parsed.filter((ev) => ev && !SEED_EVENT_SESSIONS.has(ev.sessionId))
+      : [];
   } catch {
-    return SEED_EVENTS;
+    return [];
   }
 }
 

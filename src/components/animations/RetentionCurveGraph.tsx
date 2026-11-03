@@ -102,15 +102,15 @@ export function RetentionCurveGraph({ className = '' }: { className?: string }) 
           {/* Node 2: Gold series retention */}
           <circle cx="420" cy="50" r="5" fill="#f5a524" className="animate-ping" opacity="0.6" />
           <circle cx="420" cy="50" r="5" fill="#10b981" stroke="#ffffff" strokeWidth="1.5" />
-          <text x="430" y="45" fill="#047857" fontSize="10" fontFamily="monospace" fontWeight="bold">
+          <text x="430" y="45" fill="#10b981" fontSize="10" fontFamily="monospace" fontWeight="bold">
             88% Sustained Attention (Story Hook)
           </text>
         </svg>
       </div>
 
-      <div className="mt-4 rounded-2xl bg-[#f3f4ef] p-4 text-xs font-mono text-[#586159] flex items-center justify-between">
+      <div className="mt-4 rounded-2xl bg-[#f3f4ef] p-4 text-xs font-mono text-[#586159] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <span>*Based on digital campaign retention benchmarks across narrative vs direct-response video</span>
-        <span className="text-[#a06200] font-bold">AdVibe Episodic Engine</span>
+        <span className="text-[#a06200] font-bold shrink-0">AdVibe Episodic Engine</span>
       </div>
     </div>
   );

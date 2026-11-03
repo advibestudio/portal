@@ -157,6 +157,28 @@ export function clearBackupSyncLogs(): void {
   }
 }
 
+export function clearAllBackupQueuesAndLogs(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(LS_OUTBOX_KEY, JSON.stringify([]));
+    localStorage.setItem(LS_SYNC_LOG_KEY, JSON.stringify([]));
+    localStorage.setItem(
+      LS_DAEMON_STATE_KEY,
+      JSON.stringify({
+        enabled: true,
+        isRunning: false,
+        lastRunAt: null,
+        lastSuccessAt: null,
+        totalBackedUp: 0,
+        pendingOutboxCount: 0,
+      })
+    );
+    window.dispatchEvent(new CustomEvent('advibe-backup-sync-updated'));
+  } catch {
+    /* ignore */
+  }
+}
+
 /* ---------- DAEMON STATE ---------- */
 
 export function getAutoBackupDaemonState(): AutoBackupDaemonState {

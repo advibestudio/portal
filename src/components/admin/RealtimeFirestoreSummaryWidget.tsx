@@ -65,6 +65,14 @@ export function RealtimeFirestoreSummaryWidget({
   const [activeFeedTab, setActiveFeedTab] = useState<'strategy' | 'orders' | 'referrals'>('strategy');
   const [quotaStats, setQuotaStats] = useState(() => getFirestoreQuotaStats());
 
+  useEffect(() => {
+    const onAssessmentsUpdated = () => {
+      setLiveAssessments(loadAssessments());
+    };
+    window.addEventListener('advibe-assessments-updated', onAssessmentsUpdated);
+    return () => window.removeEventListener('advibe-assessments-updated', onAssessmentsUpdated);
+  }, []);
+
   // Attach real-time Firestore onSnapshot listeners when authenticated with Firebase Auth
   useEffect(() => {
     if (!isFirebaseConfigured || !realtimeEnabled || !auth.currentUser) {
@@ -98,11 +106,9 @@ export function RealtimeFirestoreSummaryWidget({
           }
           initialLeadsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as Lead);
-          if (docs.length > 0) {
-            setLiveLeads(
-              docs.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-            );
-          }
+          setLiveLeads(
+            docs.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+          );
           setStreamConnected(true);
           setLastSyncedAt(new Date().toLocaleTimeString());
           setQuotaStats(getFirestoreQuotaStats());
@@ -135,13 +141,11 @@ export function RealtimeFirestoreSummaryWidget({
           }
           initialAssessmentsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as BusinessAssessment);
-          if (docs.length > 0) {
-            const sorted = docs.sort((a, b) =>
-              (b.timestampSubmitted || '').localeCompare(a.timestampSubmitted || '')
-            );
-            setLiveAssessments(sorted);
-            saveAssessments(sorted);
-          }
+          const sorted = docs.sort((a, b) =>
+            (b.timestampSubmitted || '').localeCompare(a.timestampSubmitted || '')
+          );
+          setLiveAssessments(sorted);
+          saveAssessments(sorted);
           setLastSyncedAt(new Date().toLocaleTimeString());
           setQuotaStats(getFirestoreQuotaStats());
         },
@@ -172,9 +176,7 @@ export function RealtimeFirestoreSummaryWidget({
           }
           initialStudentsLoaded = true;
           const docs = snapshot.docs.map((d) => d.data() as TrainingStudent);
-          if (docs.length > 0) {
-            setLiveStudents(docs);
-          }
+          setLiveStudents(docs);
           setLastSyncedAt(new Date().toLocaleTimeString());
           setQuotaStats(getFirestoreQuotaStats());
         },
@@ -199,6 +201,7 @@ export function RealtimeFirestoreSummaryWidget({
 
   // Combine Firestore live snapshots with store state so backup-password admins and instant local writes appear immediately
   const effectiveLeads = useMemo(() => {
+    if (storeLeads.length === 0 && liveLeads !== null && liveLeads.length === 0) return [];
     const map = new Map<string, Lead>();
     storeLeads.forEach((l) => map.set(l.id, l));
     (liveLeads || []).forEach((l) => map.set(l.id, l));
@@ -206,6 +209,7 @@ export function RealtimeFirestoreSummaryWidget({
   }, [storeLeads, liveLeads]);
 
   const effectiveStudents = useMemo(() => {
+    if (storeStudents.length === 0 && liveStudents !== null && liveStudents.length === 0) return [];
     const map = new Map<string, TrainingStudent>();
     storeStudents.forEach((s) => map.set(s.id, s));
     (liveStudents || []).forEach((s) => map.set(s.id, s));

@@ -70,18 +70,12 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
 
   // Recommended main navigation per Part 1.1:
   // Our Work, Services, Packages, Monthly Retainer, How It Works (plus non-competing access to Mini-Series & Training)
-  const links = [
+  const links: Array<{ label: string; href: string; on: boolean; pill?: string }> = [
     { label: 'Our Work', href: '#work', on: sec.showcase },
     { label: 'Services', href: '#services', on: sec.services },
     { label: 'Packages', href: '#pricing', on: true },
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
     { label: 'AI Mini-Series', href: '#/promotional-mini-series', on: true },
-    {
-      label: 'Training',
-      href: '#/training',
-      on: true,
-      pill: isCohortActive ? 'Founding Cohort' : undefined
-    },
     {
       label: 'Client Portal',
       href: '#/client-portal',

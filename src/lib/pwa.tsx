@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Download, Smartphone, Bell, BellRing, WifiOff, X, CheckCircle2 } from 'lucide-react';
+import {
+  Download,
+  Smartphone,
+  Bell,
+  BellRing,
+  WifiOff,
+  X,
+  CheckCircle2,
+  Share2,
+  Copy,
+  Check,
+  ExternalLink,
+} from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -8,6 +20,32 @@ interface BeforeInstallPromptEvent extends Event {
 
 let globalDeferredPrompt: BeforeInstallPromptEvent | null = null;
 const promptListeners = new Set<() => void>();
+
+const PWA_LAUNCH_ROUTE_KEY = 'advibe.pwa.launch_route';
+
+export function setPreferredPWALaunchRoute(route: string, appShortTitle?: string) {
+  try {
+    const clean = route.startsWith('#') ? route.replace(/^#\/?/, '/') : route;
+    const normalized = clean.startsWith('/') ? clean : `/${clean}`;
+    localStorage.setItem(PWA_LAUNCH_ROUTE_KEY, normalized);
+    if (appShortTitle && typeof document !== 'undefined') {
+      const appleTitle = document.querySelector('meta[name="apple-mobile-web-app-title"]');
+      if (appleTitle) {
+        appleTitle.setAttribute('content', appShortTitle);
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function getPreferredPWALaunchRoute(): string | null {
+  try {
+    return localStorage.getItem(PWA_LAUNCH_ROUTE_KEY);
+  } catch {
+    return null;
+  }
+}
 
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeinstallprompt', (e: Event) => {
@@ -25,6 +63,8 @@ export function usePWAInstall() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(globalDeferredPrompt);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [isInAppBrowser, setIsInAppBrowser] = useState(false);
 
   useEffect(() => {
     const isStandalone =
@@ -32,9 +72,17 @@ export function usePWAInstall() {
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;
     setIsInstalled(isStandalone);
 
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
+    const ua = window.navigator.userAgent || '';
+    const uaLower = ua.toLowerCase();
+    const isIOSDevice =
+      /iphone|ipad|ipod/.test(uaLower) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isAndroidDevice = /android/.test(uaLower);
+    const inApp = /whatsapp|instagram|fbav|fban|tiktok|line|wv/i.test(uaLower);
+
     setIsIOS(isIOSDevice);
+    setIsAndroid(isAndroidDevice);
+    setIsInAppBrowser(inApp);
 
     const sync = () => {
       setDeferredPrompt(globalDeferredPrompt);
@@ -49,15 +97,22 @@ export function usePWAInstall() {
     };
   }, []);
 
-  const install = async () => {
+  const install = async (preferredRoute?: string, shortTitle?: string) => {
+    if (preferredRoute) {
+      setPreferredPWALaunchRoute(preferredRoute, shortTitle);
+    }
     if (!globalDeferredPrompt) return false;
-    await globalDeferredPrompt.prompt();
-    const { outcome } = await globalDeferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      globalDeferredPrompt = null;
-      setDeferredPrompt(null);
-      setIsInstalled(true);
-      return true;
+    try {
+      await globalDeferredPrompt.prompt();
+      const { outcome } = await globalDeferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        globalDeferredPrompt = null;
+        setDeferredPrompt(null);
+        setIsInstalled(true);
+        return true;
+      }
+    } catch {
+      // Fallback if prompt was already used
     }
     return false;
   };
@@ -66,40 +121,89 @@ export function usePWAInstall() {
     isInstallable: Boolean(deferredPrompt),
     isInstalled,
     isIOS,
+    isAndroid,
+    isInAppBrowser,
     install,
   };
 }
 
 export function PWAInstallButton({
-  variant = 'admin',
+  variant = 'portal',
   label,
+  targetRoute,
   className = '',
 }: {
-  variant?: 'admin' | 'portal';
+  variant?: 'admin' | 'portal' | 'affiliate' | 'compact';
   label?: string;
+  targetRoute?: string;
   className?: string;
 }) {
-  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const { isInstallable, isInstalled, isIOS, isAndroid, isInAppBrowser, install } = usePWAInstall();
   const [showGuide, setShowGuide] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const resolvedRoute =
+    targetRoute ||
+    (variant === 'admin' || variant === 'compact'
+      ? '#/client-admin'
+      : variant === 'affiliate'
+        ? '#/affiliate-portal'
+        : '#/client-portal');
+
+  const shortTitle =
+    variant === 'admin' || variant === 'compact'
+      ? 'AdVibe Admin'
+      : variant === 'affiliate'
+        ? 'AdVibe Partner'
+        : 'AdVibe Client';
+
+  const appDisplayName =
+    variant === 'admin' || variant === 'compact'
+      ? 'AdVibe Admin PWA'
+      : variant === 'affiliate'
+        ? 'AdVibe Affiliate Partner App'
+        : 'AdVibe Client Portal App';
 
   if (isInstalled) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-mono font-semibold text-emerald-400">
-        <CheckCircle2 className="h-3.5 w-3.5" />
-        <span>{variant === 'admin' ? 'Admin App Installed' : 'Portal App Installed'}</span>
+      <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-mono font-semibold text-emerald-400 shrink-0">
+        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+        <span>App Installed</span>
       </span>
     );
   }
 
   const defaultLabel =
-    label || (variant === 'admin' ? 'Install Admin App' : 'Download Client WebApp');
+    label ||
+    (variant === 'admin' || variant === 'compact'
+      ? 'Install Admin App'
+      : variant === 'affiliate'
+        ? 'Install Partner App'
+        : 'Install Client App');
+
+  const getDirectAppUrl = () => {
+    if (typeof window === 'undefined') return 'https://advibestudio.github.io/portal/#/client-portal';
+    const base = window.location.origin + window.location.pathname;
+    return `${base}${resolvedRoute}`;
+  };
+
+  const handleCopyDirectUrl = () => {
+    try {
+      navigator.clipboard.writeText(getDirectAppUrl());
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch {
+      // ignore
+    }
+  };
 
   const handleClick = async () => {
+    setPreferredPWALaunchRoute(resolvedRoute, shortTitle);
     if (isInstallable) {
-      await install();
-    } else {
-      setShowGuide(true);
+      const ok = await install(resolvedRoute, shortTitle);
+      if (ok) return;
     }
+    setShowGuide(true);
   };
 
   return (
@@ -110,82 +214,147 @@ export function PWAInstallButton({
         className={
           className ||
           (variant === 'admin'
-            ? 'inline-flex items-center gap-2 rounded-xl bg-[#f5a524] px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow-sm transition hover:brightness-110 whitespace-nowrap shrink-0'
-            : 'inline-flex items-center gap-2 rounded-xl bg-[#111412] px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-[#f5a524] border border-[#f5a524]/40 shadow-md transition hover:bg-[#f5a524] hover:text-black whitespace-nowrap shrink-0')
+            ? 'inline-flex items-center gap-1.5 rounded-xl bg-[#f5a524] px-3.5 py-2 font-display text-xs font-bold uppercase tracking-wider text-black shadow-sm transition hover:brightness-110 whitespace-nowrap shrink-0 cursor-pointer'
+            : variant === 'compact'
+              ? 'inline-flex items-center gap-1.5 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3 py-1.5 font-display text-xs font-bold text-[#f5a524] hover:bg-[#f5a524] hover:text-black transition whitespace-nowrap shrink-0 cursor-pointer'
+              : 'inline-flex items-center gap-1.5 rounded-xl bg-[#f5a524] px-3.5 py-2 font-display text-xs font-extrabold uppercase tracking-wider text-black shadow-md transition hover:brightness-110 whitespace-nowrap shrink-0 cursor-pointer')
         }
       >
-        <Download className="h-3.5 w-3.5" />
+        <Download className="h-3.5 w-3.5 shrink-0" />
         <span>{defaultLabel}</span>
       </button>
 
       {showGuide && (
         <div
-          className="fixed inset-0 z-[140] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
           onClick={() => setShowGuide(false)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-white/15 bg-[#12151b] p-6 text-left text-white shadow-2xl space-y-4"
+            className="w-full max-w-md rounded-3xl border border-white/15 bg-[#12161f] p-5 sm:p-6 text-left text-white shadow-2xl space-y-4 max-h-[90dvh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#f5a524]/15 text-[#f5a524]">
+            <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-3.5">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#f5a524] text-black">
                   <Smartphone className="h-5 w-5" />
                 </span>
-                <div>
-                  <h3 className="font-display text-base font-bold text-white">
-                    {variant === 'admin' ? 'Install AdVibe Admin PWA' : 'Install AdVibe Client WebApp'}
+                <div className="min-w-0">
+                  <h3 className="font-display text-base sm:text-lg font-extrabold text-white truncate">
+                    Install {appDisplayName}
                   </h3>
-                  <p className="font-mono text-[11px] text-white/50">
-                    Standalone App · Instant Launch & Notifications
+                  <p className="font-mono text-[11px] text-[#f5a524]">
+                    Works on iPhone (iOS) &amp; Android Phones
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowGuide(false)}
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
+                className="rounded-xl p-1.5 text-white/50 hover:bg-white/10 hover:text-white cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            {isIOS ? (
-              <div className="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                <p className="font-semibold text-[#f5a524]">To install on iPhone or iPad (Safari):</p>
-                <ol className="list-decimal pl-5 space-y-2">
-                  <li>
-                    Tap the <strong>Share</strong> icon at the bottom of Safari.
-                  </li>
-                  <li>
-                    Scroll down and select <strong>Add to Home Screen</strong>.
-                  </li>
-                  <li>
-                    Tap <strong>Add</strong> in the top-right corner to launch the app directly from your home screen.
-                  </li>
-                </ol>
-              </div>
-            ) : (
-              <div className="space-y-3 text-xs sm:text-sm text-white/80 leading-relaxed">
-                <p className="font-semibold text-[#f5a524]">To install on Chrome, Edge, or Android:</p>
-                <ol className="list-decimal pl-5 space-y-2">
-                  <li>
-                    Open this link in its own browser tab (if currently inside a preview frame) or click the <strong>Install App</strong> icon in your browser address bar.
-                  </li>
-                  <li>
-                    On Android Chrome, tap the <strong>⋮ Menu</strong> and choose <strong>Install app / Add to Home screen</strong>.
-                  </li>
-                </ol>
+            {isInAppBrowser && (
+              <div className="rounded-2xl border border-amber-500/40 bg-amber-500/15 p-3.5 space-y-2 text-xs text-amber-200">
+                <p className="font-bold text-amber-300">
+                  You are viewing inside an In-App Browser (WhatsApp / Instagram):
+                </p>
+                <p className="text-white/85 leading-relaxed">
+                  To install the app to your phone’s home screen, tap the <strong>⋮</strong> or <strong>⋯</strong> menu at the top-right and select <strong>Open in Safari / Open in Chrome</strong>, or copy the direct link below:
+                </p>
+                <button
+                  type="button"
+                  onClick={handleCopyDirectUrl}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#f5a524] px-3.5 py-2 font-mono text-xs font-bold text-black cursor-pointer"
+                >
+                  {copiedLink ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                  <span>{copiedLink ? 'Direct App Link Copied!' : 'Copy Direct App Link'}</span>
+                </button>
               </div>
             )}
 
-            <div className="pt-2 flex justify-end">
+            {/* Apple iOS / iPadOS Instructions */}
+            <div
+              className={`rounded-2xl border p-4 space-y-2.5 ${
+                isIOS
+                  ? 'border-[#f5a524]/50 bg-[#f5a524]/10'
+                  : 'border-white/10 bg-black/40'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-display text-xs sm:text-sm font-bold text-[#f5a524]">
+                  iPhone &amp; iPad (Apple Safari)
+                </p>
+                {isIOS && (
+                  <span className="rounded-full bg-[#f5a524] px-2 py-0.5 font-mono text-[10px] font-bold text-black">
+                    Your Device
+                  </span>
+                )}
+              </div>
+              <ol className="list-decimal pl-5 space-y-1.5 text-xs text-white/85 leading-relaxed">
+                <li>
+                  Tap the <strong>Share</strong> button <Share2 className="inline h-3.5 w-3.5 text-[#f5a524]" /> at the bottom of Safari.
+                </li>
+                <li>
+                  Scroll down the share sheet and tap <strong>Add to Home Screen</strong>.
+                </li>
+                <li>
+                  Tap <strong>Add</strong> in the top-right corner — the <strong>{shortTitle}</strong> icon will appear on your iPhone home screen!
+                </li>
+              </ol>
+            </div>
+
+            {/* Android / Chrome / Desktop Instructions */}
+            <div
+              className={`rounded-2xl border p-4 space-y-2.5 ${
+                isAndroid
+                  ? 'border-emerald-500/50 bg-emerald-500/10'
+                  : 'border-white/10 bg-black/40'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-display text-xs sm:text-sm font-bold text-emerald-400">
+                  Android Phones &amp; Chrome / Edge
+                </p>
+                {isAndroid && (
+                  <span className="rounded-full bg-emerald-400 px-2 py-0.5 font-mono text-[10px] font-bold text-black">
+                    Your Device
+                  </span>
+                )}
+              </div>
+              <ol className="list-decimal pl-5 space-y-1.5 text-xs text-white/85 leading-relaxed">
+                <li>
+                  Tap the <strong>⋮ Menu</strong> (top-right of Chrome) and select <strong>Install app</strong> or <strong>Add to Home screen</strong>.
+                </li>
+                <li>
+                  Confirm <strong>Install</strong> to add <strong>{shortTitle}</strong> directly to your phone app drawer.
+                </li>
+              </ol>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2">
               <button
                 type="button"
-                onClick={() => setShowGuide(false)}
-                className="rounded-xl bg-[#f5a524] px-5 py-2 font-display text-xs font-bold uppercase tracking-wider text-black"
+                onClick={handleCopyDirectUrl}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 font-mono text-xs font-bold text-white/85 hover:bg-white/10 transition cursor-pointer"
               >
-                Got It
+                {copiedLink ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                <span>{copiedLink ? 'Link Copied!' : 'Copy Direct App Link'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setPreferredPWALaunchRoute(resolvedRoute, shortTitle);
+                  window.location.hash = resolvedRoute.replace(/^#/, '');
+                  setShowGuide(false);
+                }}
+                className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#f5a524] px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider text-black hover:brightness-110 transition cursor-pointer"
+              >
+                <span>Open App Workspace</span>
+                <ExternalLink className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
@@ -211,9 +380,9 @@ export function OfflineBanner() {
 
   if (online) return null;
   return (
-    <div className="fixed bottom-4 left-4 z-[150] flex items-center gap-2 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-mono font-bold text-black shadow-xl">
-      <WifiOff className="h-4 w-4" />
-      <span>Offline Mode — Using cached data</span>
+    <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[9990] flex items-center gap-2 rounded-full bg-amber-500 px-4 py-2 text-xs font-mono font-bold text-black shadow-xl">
+      <WifiOff className="h-4 w-4 shrink-0" />
+      <span>Offline Mode — Showing saved workspace data</span>
     </div>
   );
 }
@@ -221,7 +390,9 @@ export function OfflineBanner() {
 /** Play a subtle two-tone studio notification chime using Web Audio API */
 export function playAdminAlertSound() {
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
     const now = ctx.currentTime;
@@ -270,18 +441,17 @@ export function triggerAdminBrowserNotification(title: string, body: string) {
     try {
       new Notification(title, {
         body,
-        icon: '/pwa-192x192.png',
-        badge: '/pwa-192x192.png',
+        icon: './pwa-192x192.png',
+        badge: './pwa-192x192.png',
       });
     } catch {
-      // Fallback for mobile service worker notifications
       if (navigator.serviceWorker?.ready) {
         navigator.serviceWorker.ready
           .then((reg) =>
             reg.showNotification(title, {
               body,
-              icon: '/pwa-192x192.png',
-              badge: '/pwa-192x192.png',
+              icon: './pwa-192x192.png',
+              badge: './pwa-192x192.png',
             }),
           )
           .catch(() => {});
@@ -316,7 +486,7 @@ export function AdminNotificationToggle() {
             'Real-time order and script review notifications are active.',
           )
         }
-        className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-mono font-semibold text-emerald-300 hover:bg-emerald-500/20 transition whitespace-nowrap shrink-0"
+        className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-mono font-semibold text-emerald-300 hover:bg-emerald-500/20 transition whitespace-nowrap shrink-0 cursor-pointer"
         title="Click to test order notification alert"
       >
         <BellRing className="h-3.5 w-3.5 text-emerald-400" />
@@ -329,7 +499,7 @@ export function AdminNotificationToggle() {
     <button
       type="button"
       onClick={enableNotifications}
-      className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-mono font-semibold text-white/80 hover:border-[#f5a524] hover:text-[#f5a524] transition whitespace-nowrap shrink-0"
+      className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-mono font-semibold text-white/80 hover:border-[#f5a524] hover:text-[#f5a524] transition whitespace-nowrap shrink-0 cursor-pointer"
     >
       <Bell className="h-3.5 w-3.5" />
       <span>Enable Order Alerts</span>

@@ -19,7 +19,7 @@ import {
   Apple,
   Monitor,
 } from 'lucide-react';
-import { usePWAInstall, OfflineBanner } from '@/lib/pwa';
+import { usePWAInstall, OfflineBanner, setPreferredPWALaunchRoute } from '@/lib/pwa';
 import { useStore } from '@/lib/store';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 
@@ -49,7 +49,7 @@ const APP_SPECS: Record<'customer' | 'affiliate' | 'admin', AppCardSpec> = {
     title: 'AdVibe Client Portal WebApp',
     subtitle: 'Track video production, approve scripts, submit brand assets & download master files.',
     description:
-      'Install the official AdVibe Client Workspace on your phone or laptop. Review scene-by-scene scripts, paste Google Drive brand assets, stream preview cuts, and unlock master video downloads as payment milestones complete.',
+      'Install the official AdVibe Client Workspace on your phone or laptop. Review scene-by-scene scripts, upload brand assets or paste Google Drive links, stream preview cuts, and unlock master video downloads as payment milestones complete.',
     accentColor: '#f5a524',
     launchHref: '#/client-portal',
     launchLabel: 'Launch Client Portal App',
@@ -57,7 +57,7 @@ const APP_SPECS: Record<'customer' | 'affiliate' | 'admin', AppCardSpec> = {
     features: [
       'Real-time project status & milestone payment progress bar',
       'Interactive Script Review room (Approve or Request Rework with notes)',
-      'Google Drive & Cloud brand asset link submission per episode',
+      'Direct device file upload (Logos, Photos, Audio, PDF) + Cloud links per episode',
       'Instant 9:16 & 16:9 Screening Room + Master File Downloads',
       '1-Tap Direct WhatsApp Customer Care support',
     ],
@@ -106,7 +106,7 @@ const APP_SPECS: Record<'customer' | 'affiliate' | 'admin', AppCardSpec> = {
     launchLabel: 'Launch Mobile Client Admin',
     downloadRoute: '#/download/admin-app',
     features: [
-      'Thumb-friendly 5-tab mobile navigation bar with zero horizontal clutter',
+      'Thumb-friendly 4-tab mobile navigation bar with zero horizontal clutter',
       'One-tap payment % milestone pills (0%, 40%, 50%, 60%, 100%) & download unlock',
       'Mobile script publisher + client revision alert badges',
       'Incoming orders & strategy call leads with 1-tap WhatsApp follow-up',
@@ -136,8 +136,15 @@ export default function AppDownloadHubPage({ mode = 'hub' }: { mode?: DownloadPa
 
   const handleInstallAction = async (targetHref: string, appTitle: string) => {
     setInstallNotice('');
+    const shortTitle = targetHref.includes('affiliate')
+      ? 'AdVibe Partner'
+      : targetHref.includes('admin')
+        ? 'AdVibe Admin'
+        : 'AdVibe Client';
+    setPreferredPWALaunchRoute(targetHref, shortTitle);
+
     if (isInstallable) {
-      const accepted = await install();
+      const accepted = await install(targetHref, shortTitle);
       if (accepted) {
         setInstallNotice(`${appTitle} is installing to your device! Launching workspace…`);
         setTimeout(() => {
@@ -154,7 +161,6 @@ export default function AppDownloadHubPage({ mode = 'hub' }: { mode?: DownloadPa
       window.location.hash = targetHref.replace(/^#/, '');
       return;
     }
-    // Fallback for desktop/mobile browsers where beforeinstallprompt hasn't fired yet
     setShowIOSModal(true);
   };
 

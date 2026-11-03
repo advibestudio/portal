@@ -3,11 +3,10 @@ import type { PortfolioItem, Offer } from '@/content/types';
 import { useStore } from '@/lib/store';
 import { CountryProvider } from '@/lib/country';
 import { Nav, Hero, Proof, Showcase, StickyBar } from '@/sections/chrome';
-import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, FinalCta, Footer, ClientSpotlight, CommercialOffersShowcase } from '@/sections/sections';
+import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, FinalCta, Footer, ClientSpotlight } from '@/sections/sections';
 import { CostCompare } from '@/sections/CostCompare';
 import { SalesHome } from '@/sections/SalesHome';
 import { Lightbox } from '@/components/shared';
-import { ChooseYourPathStrip } from '@/components/ChooseYourPathStrip';
 
 // The order form and the "just started" pop-ups are separate small downloads, fetched quietly
 // AFTER the page is up, so they never slow down the first load.
@@ -96,14 +95,12 @@ function Page() {
       <Nav onOrder={() => openStrategy()} onStrategy={() => openStrategy()} />
       <main>
         <Hero onOrder={() => openStrategy()} onStrategy={() => openStrategy()} onPlay={setPlaying} />
-        <ChooseYourPathStrip />
         {sec.proof && <Proof />}
         {sec.showcase && <Showcase onPlay={setPlaying} />}
         {sec.clients && <ClientSpotlight onPlay={setPlaying} />}
         <SalesHome />
         {sec.problem && <Problem />}
         {sec.services && <Services />}
-        <CommercialOffersShowcase />
         {sec.events && <Events onOrder={(ev) => openStrategy(undefined, ev ? `${ev} Campaign` : undefined)} />}
         <Pricing onChoose={(o) => openStrategy(o)} />
         {sec.aiCompare && <CostCompare />}

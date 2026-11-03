@@ -240,12 +240,12 @@ export default function CustomerPortalPage() {
     const found = findMatchingCustomerAccount(identifier);
 
     if (!found) {
-      setAuthError('No client account found with that username, email, or phone. Book a free strategy session first or use one of the 2 Test Logins below.');
+      setAuthError('No client account found with that username, email, or phone. Please check your details or book a strategy session first.');
       return;
     }
 
     if (found.passwordSet && found.password && found.password !== passwordInput) {
-      setAuthError('Incorrect password. You can switch to "One-Time Code (OTP)" or click a Quick Test Login below.');
+      setAuthError('Incorrect password. You can also switch to "One-Time Code (OTP)" to sign in.');
       return;
     }
 
@@ -264,7 +264,7 @@ export default function CustomerPortalPage() {
     }
     const found = findMatchingCustomerAccount(identifier);
     if (!found) {
-      setAuthError('Account not found. Please check your email/phone or use one of the 2 Test Accounts below.');
+      setAuthError('Account not found. Please check your registered email or phone number.');
       return;
     }
     const generatedCode = String(Math.floor(100000 + Math.random() * 900000));
@@ -633,18 +633,36 @@ export default function CustomerPortalPage() {
           </div>
         </header>
 
-        <main className="mx-auto my-auto w-full max-w-md py-6">
-          <div className="rounded-3xl border border-white/15 bg-[#12161d] p-6 sm:p-8 shadow-2xl space-y-6">
-            <div className="space-y-1.5 text-left">
-              <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#f5a524]">
+        <main className="mx-auto my-auto w-full max-w-md py-6 min-w-0">
+          <div className="rounded-3xl border border-white/15 bg-[#12161d] p-5 sm:p-8 shadow-2xl space-y-5 overflow-hidden">
+            <div className="space-y-1.5 text-left min-w-0">
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#f5a524] block">
                 CLIENT WORKSPACE WEBAPP
               </span>
-              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
-                Access Your Projects & Deliverables
+              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white break-words">
+                Access Your Projects &amp; Deliverables
               </h1>
               <p className="text-xs sm:text-sm text-white/65 leading-relaxed">
-                Track your ongoing video production, approve scripts, submit brand assets, and stream or download your Google Drive master files.
+                Track your ongoing video production, approve scripts, upload brand assets, and stream or download your Google Drive master files.
               </p>
+            </div>
+
+            {/* Prominent Install Client App Banner on Sign-In */}
+            <div className="rounded-2xl border border-[#f5a524]/35 bg-[#f5a524]/10 p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="text-left min-w-0">
+                <p className="font-display text-xs font-extrabold text-white">
+                  Install Client App on Your Phone
+                </p>
+                <p className="font-mono text-[10px] text-white/70">
+                  Works on Apple iPhone (iOS) &amp; Android
+                </p>
+              </div>
+              <PWAInstallButton
+                variant="portal"
+                targetRoute="#/client-portal"
+                label="Download App"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#f5a524] px-3.5 py-2 font-display text-xs font-extrabold uppercase tracking-wider text-black shadow-md hover:brightness-110 transition cursor-pointer shrink-0"
+              />
             </div>
 
             {/* Login Mode Switch */}
@@ -685,7 +703,7 @@ export default function CustomerPortalPage() {
                     type="text"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="testclient1, test1@advibestudio.com, or +234..."
+                    placeholder="yourname@company.com or +234..."
                     className="w-full rounded-xl border border-white/15 bg-black/50 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#f5a524] focus:outline-none"
                     required
                   />
@@ -725,7 +743,7 @@ export default function CustomerPortalPage() {
                       type="text"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
-                      placeholder="test1@advibestudio.com or +234..."
+                      placeholder="yourname@company.com or +234..."
                       className="flex-1 rounded-xl border border-white/15 bg-black/50 px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#f5a524] focus:outline-none"
                       required
                     />
@@ -784,67 +802,6 @@ export default function CustomerPortalPage() {
               >
                 <span>Continue with Google Account</span>
               </button>
-
-              {/* 2 TEST CUSTOMER PORTAL LOGINS */}
-              <div className="rounded-2xl border border-[#f5a524]/30 bg-[#f5a524]/5 p-4 space-y-2.5 text-left">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#f5a524] flex items-center gap-1.5">
-                    <Sparkles className="h-3.5 w-3.5" /> 2 Test Portal Accounts (Instant Access)
-                  </span>
-                </div>
-                <p className="text-[11px] text-white/60 leading-relaxed">
-                  Click either test account below to auto-fill credentials or sign in immediately to test payment gates, script reviews, and Drive downloads:
-                </p>
-                <div className="grid grid-cols-1 gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const acc = loadCustomerAccounts().find((a) => a.id === 'cust_test_1') || loadCustomerAccounts()[0];
-                      if (acc) {
-                        setActiveCustomerSession(acc);
-                        setSession(acc);
-                      }
-                    }}
-                    className="w-full rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-2.5 text-left hover:bg-[#f5a524]/25 transition cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-display text-xs font-bold text-white">
-                        Test Account 1 · Retainer (15 Vids) + 5-Pack
-                      </span>
-                      <span className="rounded-md bg-[#f5a524] px-2 py-0.5 font-mono text-[10px] font-bold text-black">
-                        1-Tap Login
-                      </span>
-                    </div>
-                    <p className="mt-1 font-mono text-[10px] text-[#f5a524]">
-                      Email: test1@advibestudio.com · User: testclient1 · Pass: advibe-test-1
-                    </p>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const acc = loadCustomerAccounts().find((a) => a.id === 'cust_test_2') || loadCustomerAccounts()[1];
-                      if (acc) {
-                        setActiveCustomerSession(acc);
-                        setSession(acc);
-                      }
-                    }}
-                    className="w-full rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-3.5 py-2.5 text-left hover:bg-emerald-500/20 transition cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-display text-xs font-bold text-white">
-                        Test Account 2 · Single Video (60% Paid)
-                      </span>
-                      <span className="rounded-md bg-emerald-400 px-2 py-0.5 font-mono text-[10px] font-bold text-black">
-                        1-Tap Login
-                      </span>
-                    </div>
-                    <p className="mt-1 font-mono text-[10px] text-emerald-300">
-                      Email: test2@advibestudio.com · User: testclient2 · Pass: advibe-test-2
-                    </p>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </main>
@@ -874,21 +831,21 @@ export default function CustomerPortalPage() {
       };
 
   return (
-    <div className="min-h-dvh bg-[#0b0e12] text-white pb-28 overflow-x-hidden">
+    <div className="min-h-dvh bg-[#0b0e12] text-white pb-[calc(6.75rem+env(safe-area-inset-bottom,0px))] overflow-x-hidden">
       <OfflineBanner />
 
       {/* =====================================================================
           TOP BAR CONTRACT — CLIENT PORTAL WEBAPP
       ====================================================================== */}
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0b0e12]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 flex-wrap">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2.5 px-3.5 py-3 sm:px-6 flex-wrap">
+          <div className="flex items-center gap-2.5 min-w-0">
             <a href="#/" className="flex items-center gap-2.5 text-white no-underline min-w-0">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#f5a524] text-black">
                 <Film className="h-4 w-4" />
               </span>
               <div className="min-w-0">
-                <span className="font-display text-base font-extrabold tracking-tight block leading-none truncate">
+                <span className="font-display text-sm sm:text-base font-extrabold tracking-tight block leading-none truncate">
                   {content.brand.name}
                 </span>
                 <span className="font-mono text-[10px] text-[#f5a524] uppercase tracking-wider block truncate">
@@ -898,10 +855,10 @@ export default function CustomerPortalPage() {
             </a>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <AppQuickSwitcher label="Navigate" />
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            <AppQuickSwitcher label="Navigate" compact />
             <ThemeToggleButton compact />
-            <PWAInstallButton variant="portal" label="Install App" />
+            <PWAInstallButton variant="portal" targetRoute="#/client-portal" label="Install App" />
 
             <button
               type="button"
@@ -1081,27 +1038,27 @@ export default function CustomerPortalPage() {
             {/* =====================================================================
                 PAYMENT & DELIVERABLE RELEASE GATE PROGRESS CARD
             ====================================================================== */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              <div className="lg:col-span-7 rounded-3xl border border-white/10 bg-[#12161d] p-6 space-y-4 text-left">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+              <div className="lg:col-span-7 rounded-3xl border border-white/10 bg-[#12161d] p-4 sm:p-6 space-y-4 text-left min-w-0 overflow-hidden">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
-                    PAYMENT MILESTONE & DELIVERABLE GATE
+                  <span className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#f5a524]">
+                    PAYMENT MILESTONE &amp; DELIVERABLE GATE
                   </span>
-                  <span className="font-mono text-xs text-white/60">
+                  <span className="font-mono text-[11px] sm:text-xs text-white/60 break-words">
                     Ref: <strong className="text-white">{activeProject.ref}</strong> · Status:{' '}
                     <strong className="text-emerald-400">{activeProject.status}</strong>
                   </span>
                 </div>
 
-                <div className="flex items-baseline justify-between gap-4">
-                  <div>
-                    <div className="font-display text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="font-display text-2xl sm:text-4xl font-extrabold text-white tabular-nums">
                       {activeProject.paidPercent}%{' '}
-                      <span className="text-base font-normal text-white/60">Confirmed by Admin</span>
+                      <span className="text-sm sm:text-base font-normal text-white/60">Confirmed by Admin</span>
                     </div>
-                    <p className="text-xs text-white/60 mt-1">{gate.nextMilestoneNote}</p>
+                    <p className="text-xs text-white/60 mt-1 break-words">{gate.nextMilestoneNote}</p>
                   </div>
-                  <div className="text-right font-mono">
+                  <div className="text-left sm:text-right font-mono shrink-0">
                     <span className="text-xs text-white/50 block">Package Total</span>
                     <span className="text-base font-bold text-[#f5a524] tabular-nums">
                       {activeProject.currency} {activeProject.totalPrice.toLocaleString()}
@@ -1117,41 +1074,41 @@ export default function CustomerPortalPage() {
                   />
                 </div>
 
-                <p className="rounded-2xl border border-white/10 bg-black/40 p-3.5 text-xs text-white/75 leading-relaxed">
+                <p className="rounded-2xl border border-white/10 bg-black/40 p-3.5 text-xs text-white/75 leading-relaxed break-words">
                   {gate.ruleExplanation}
                 </p>
               </div>
 
-              {/* Deliverable Unlock Counters */}
-              <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-                <div className="rounded-3xl border border-emerald-500/25 bg-emerald-500/5 p-5 flex flex-col justify-between text-left">
-                  <div className="flex items-center justify-between">
+              {/* Deliverable Unlock Counters (Mobile Overflow Safe) */}
+              <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-3xl border border-emerald-500/25 bg-emerald-500/5 p-4 sm:p-5 flex flex-col justify-between text-left min-w-0 overflow-hidden">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-[11px] font-bold uppercase text-emerald-400">
                       Download Unlocked
                     </span>
-                    <Unlock className="h-4 w-4 text-emerald-400" />
+                    <Unlock className="h-4 w-4 text-emerald-400 shrink-0" />
                   </div>
                   <div className="my-2 font-display text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
                     {gate.unlockedDownloadCount}{' '}
                     <span className="text-lg font-normal text-white/50">/ {activeProject.totalVideos}</span>
                   </div>
-                  <p className="text-[11px] text-white/65">
+                  <p className="text-[11px] text-white/65 break-words">
                     Master Google Drive files unlocked for full download at your current {activeProject.paidPercent}% payment tier.
                   </p>
                 </div>
 
-                <div className="rounded-3xl border border-[#f5a524]/25 bg-[#f5a524]/5 p-5 flex flex-col justify-between text-left">
-                  <div className="flex items-center justify-between">
+                <div className="rounded-3xl border border-[#f5a524]/25 bg-[#f5a524]/5 p-4 sm:p-5 flex flex-col justify-between text-left min-w-0 overflow-hidden">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="font-mono text-[11px] font-bold uppercase text-[#f5a524]">
                       View-Only Mode
                     </span>
-                    <Eye className="h-4 w-4 text-[#f5a524]" />
+                    <Eye className="h-4 w-4 text-[#f5a524] shrink-0" />
                   </div>
                   <div className="my-2 font-display text-3xl sm:text-4xl font-extrabold text-white tabular-nums">
                     {gate.viewOnlyCount}{' '}
                     <span className="text-lg font-normal text-white/50">Videos</span>
                   </div>
-                  <p className="text-[11px] text-white/65">
+                  <p className="text-[11px] text-white/65 break-words">
                     Streamable on platform as soon as completed; direct download unlocks once remaining balance is confirmed.
                   </p>
                 </div>
@@ -1291,34 +1248,34 @@ export default function CustomerPortalPage() {
                   return (
                     <div
                       key={scr.id}
-                      className="rounded-3xl border border-white/15 bg-[#12161d] p-6 space-y-5 shadow-lg"
+                      className="rounded-3xl border border-white/15 bg-[#12161d] p-4 sm:p-6 space-y-5 shadow-lg min-w-0 overflow-hidden"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
-                        <div>
-                          <div className="flex items-center gap-2 font-mono text-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 min-w-0">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-xs">
                             <span className="text-[#f5a524] font-bold">EPISODE / VIDEO 0{scr.episodeNumber}</span>
                             <span className="text-white/30">·</span>
                             <span className="text-white/60">Updated {new Date(scr.updatedAt).toLocaleDateString()}</span>
                           </div>
-                          <h3 className="font-display text-xl font-bold text-white mt-1">{scr.title}</h3>
+                          <h3 className="font-display text-lg sm:text-xl font-bold text-white mt-1 break-words">{scr.title}</h3>
                         </div>
 
-                        <div>
+                        <div className="shrink-0">
                           {scr.status === 'approved' && (
-                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-3.5 py-1.5 font-mono text-xs font-bold text-emerald-300">
-                              <CheckCircle2 className="h-4 w-4" />
+                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-3 py-1.5 font-mono text-xs font-bold text-emerald-300">
+                              <CheckCircle2 className="h-4 w-4 shrink-0" />
                               <span>Approved for Production</span>
                             </span>
                           )}
                           {scr.status === 'pending_review' && (
-                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-1.5 font-mono text-xs font-bold text-[#f5a524]">
-                              <BellRing className="h-4 w-4" />
+                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3 py-1.5 font-mono text-xs font-bold text-[#f5a524]">
+                              <BellRing className="h-4 w-4 shrink-0" />
                               <span>Awaiting Your Approval</span>
                             </span>
                           )}
                           {scr.status === 'changes_requested' && (
-                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-red-500/40 bg-red-500/15 px-3.5 py-1.5 font-mono text-xs font-bold text-red-300">
-                              <AlertCircle className="h-4 w-4" />
+                            <span className="inline-flex items-center gap-1.5 rounded-xl border border-red-500/40 bg-red-500/15 px-3 py-1.5 font-mono text-xs font-bold text-red-300">
+                              <AlertCircle className="h-4 w-4 shrink-0" />
                               <span>Rework Requested — Studio Revising</span>
                             </span>
                           )}
@@ -1326,15 +1283,15 @@ export default function CustomerPortalPage() {
                       </div>
 
                       {/* Script Hook & Scene Body */}
-                      <div className="space-y-3 rounded-2xl bg-black/50 p-4 sm:p-5 border border-white/10">
-                        <p className="font-display text-sm sm:text-base font-bold text-[#f5a524]">
+                      <div className="space-y-3 rounded-2xl bg-black/50 p-4 sm:p-5 border border-white/10 min-w-0 overflow-hidden">
+                        <p className="font-display text-sm sm:text-base font-bold text-[#f5a524] break-words">
                           {scr.hook}
                         </p>
-                        <p className="whitespace-pre-line text-xs sm:text-sm text-white/85 leading-relaxed">
+                        <p className="whitespace-pre-line text-xs sm:text-sm text-white/85 leading-relaxed break-words">
                           {scr.scriptBody}
                         </p>
                         {scr.visualNotes && (
-                          <p className="pt-2 border-t border-white/10 font-mono text-[11px] text-white/55">
+                          <p className="pt-2 border-t border-white/10 font-mono text-[11px] text-white/55 break-words">
                             Director Notes: {scr.visualNotes}
                           </p>
                         )}
@@ -1516,14 +1473,14 @@ export default function CustomerPortalPage() {
                       )}
 
                       {/* Approve or Reject / Request Rework Actions */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/10">
-                        <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2 border-t border-white/10">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto">
                           <button
                             type="button"
                             onClick={() => void handleApproveScript(scr)}
-                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider text-black shadow-md hover:brightness-110 transition"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-display text-xs font-extrabold uppercase tracking-wider text-black shadow-md hover:brightness-110 transition cursor-pointer"
                           >
-                            <CheckCircle2 className="h-4 w-4" />
+                            <CheckCircle2 className="h-4 w-4 shrink-0" />
                             <span>Approve Script for Production</span>
                           </button>
 
@@ -1533,10 +1490,10 @@ export default function CustomerPortalPage() {
                               setRejectingScriptId(isRejecting ? null : scr.id);
                               setRejectExplanation(scr.revisionExplanation || '');
                             }}
-                            className="inline-flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-red-300 hover:bg-red-500/20 transition"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-2.5 font-display text-xs font-bold uppercase tracking-wider text-red-300 hover:bg-red-500/20 transition cursor-pointer"
                           >
-                            <AlertCircle className="h-4 w-4" />
-                            <span>Reject & Request Script Rework</span>
+                            <AlertCircle className="h-4 w-4 shrink-0" />
+                            <span>Reject &amp; Request Script Rework</span>
                           </button>
                         </div>
                       </div>
@@ -1892,7 +1849,7 @@ export default function CustomerPortalPage() {
       ====================================================================== */}
       <nav
         aria-label="Client Portal Mobile Navigation"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0e12]/95 px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden"
+        className="bottom-navigation-bar fixed inset-x-0 bottom-0 z-[9999] border-t border-white/10 bg-[#0b0e12]/95 backdrop-blur-xl md:hidden"
       >
         <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
           <button

@@ -1,21 +1,43 @@
-# Client Portal Mobile UI Fixes & Direct Brand Asset File Upload Plan
+# Promotional Mini-Series Page Visual & Theme Fixes
 
-## 1. Fix Crushed & Overflowing Navigation Tabs in Client Portal (`/src/pages/CustomerPortalPage.tsx`)
-- **Issue Shown in Screenshot 1 (`image_e0434af7.png`)**:
-  - The workspace tab bar (`Project Overview`, `Scripts, Approvals & Brand Assets`, `Google Drive Video Deliverables`) uses a single horizontal flex row without `shrink-0` or responsive wrapping. On mobile screens, the first tab collapses into a tiny orange pill showing only `"P"`, while the second tab overflows off the right edge.
-- **Fix**:
-  - Convert the navigation tab bar into a responsive grid (`grid grid-cols-1 sm:grid-cols-3 gap-2.5 border-b border-white/10 pb-4`) where every tab button is full-width on mobile (`w-full justify-between sm:justify-center min-w-0`) with clean, unclipped labels and badge counters so all 3 workspace sections are 100% readable and tap-friendly on every screen size.
+## Root Cause Analysis from Uploaded Screenshots
 
-## 2. Fix Mobile Overflow & Add Direct File Upload for Brand Assets (`/src/lib/customerPortalStore.ts` & `/src/pages/CustomerPortalPage.tsx`)
-- **Issue Shown in Screenshot 2 (`image_ce581cdb.png`)**:
-  - Inside each script card's **"Provide Assets for This Video"** box, the URL input and `+ Attach Link` button sit in an unwrapped horizontal row that overflows the right border of the card on mobile.
-  - Additionally, clients need to **upload brand assets directly from their phone or computer** (logos, product photos, short clips, voiceover audio, PDFs) in addition to pasting Google Drive/cloud links.
-- **Data Model Upgrade (`/src/lib/customerPortalStore.ts`)**:
-  - Add `ClientUploadedAsset` interface (`id`, `name`, `mimeType`, `sizeBytes`, `dataUrl`, `uploadedAt`) and optional `clientUploadedAssets?: ClientUploadedAsset[]` onto `ProjectScriptItem`.
-- **Client Portal Upload & Link UI (`/src/pages/CustomerPortalPage.tsx`)**:
-  - **Direct File Upload Control**: Add a prominent **"Upload Files from Device (Logos, Photos, Audio, PDFs)"** button + hidden `<input type="file" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip" />` inside the Brand Assets box on every script card.
-  - **Uploaded Files List**: Display uploaded files with thumbnail previews (for images), file type icons, file size, an **Open / Download** action, and a **Remove** button, automatically synced to Firestore and local storage.
-  - **Mobile-Safe Cloud Link Row**: Stack the Google Drive/cloud link input and `+ Attach Link` button cleanly on mobile (`flex flex-col sm:flex-row gap-2` with `min-w-0 w-full`) so the button never overflows the container border.
+1. **Invisible Text in "THE TRANSFORMATIVE QUESTION" Callout (`image_beae45cb.png`)**
+   - In Chapter 3 of `src/pages/commercial/MiniSeriesPage.tsx`, the callout box has `bg-[#111412] text-white`, and its main headline `<p>` has `text-white`.
+   - In `src/index.css`, the light-mode adaptation rule `html[data-theme="light"] .theme-adaptive .text-white:not(.bg-\[\#111412\]):not(...)` has higher CSS specificity `(0, 6, 1)` than `html[data-theme="light"] .theme-adaptive .bg-\[\#111412\] .text-white` `(0, 3, 1)`.
+   - Because both rules use `!important`, the higher-specificity rule wins and forces child `.text-white` elements inside `.bg-[#111412]` containers to become `#111412` (black text on a `#111412` black background), making the question text completely invisible.
 
-## 3. Admin Portal & Mobile Client Manager Asset Inspection (`/src/components/admin/ClientProjectsAdminView.tsx`)
-- Update the Admin Script & Asset Inspector (used in both Desktop Admin `#/admin` and Co-Founder Mobile Client Manager `#/client-admin`) so any files uploaded directly by a client appear alongside their cloud links with one-tap **Preview / Download File** buttons for the production team.
+2. **Muddy, Low-Contrast Comparison Cards (`image_c1f2f992.png`)**
+   - In Chapter 2 of `src/pages/commercial/MiniSeriesPage.tsx`, **"THE REPETITIVE AD TRAP"** (`bg-red-50/50 text-red-950/80 border-red-200/80`) and **"THE EPISODIC MINI-SERIES"** (`bg-emerald-50/50 text-emerald-950/80 border-emerald-200/80`) sit inside a `<section>` that lacks a surface background class, inheriting the root container's `#0b0e12` dark background.
+   - As a result, `bg-red-50/50` and `bg-emerald-50/50` blend 50% white-tinted pastel over `#0b0e12` black into muddy grey-brown and muddy grey-green boxes while keeping dark `text-red-950/80` and `text-emerald-950/80` text.
+
+3. **Unstyled Section Backgrounds & Dark/Light Mode Consistency Across `MiniSeriesPage.tsx`**
+   - Chapters 2, 5, 6, and the CirclesFundMe proof section in `MiniSeriesPage.tsx` use dark foreground text (`text-[#111412]`, `text-[#2a302b]`) without an explicit `<section className="bg-[#fafaf6] text-[#111412]">` wrapper.
+   - In `AnimatedStoryGraphic.tsx` (used in Chapter 5), the mode toggle button uses `bg-white/10 text-white/60`, which becomes low-contrast on light cards.
+
+---
+
+## Proposed Changes
+
+### 1. Fix CSS Specificity & Dark/Light Surface Rules (`src/index.css`)
+- Update the light-mode `.text-white` rule in `src/index.css` so it never overrides `.text-white` elements that are descendants of dark containers (`.bg-[#111412]`, `.keep-dark`, `.vcard`, `.bg-black`), and raise the specificity of `.bg-[#111412] .text-white` and `.keep-dark .text-white` so white text on intentionally dark callout cards remains crisp `#ffffff` in both Light and Dark modes.
+- Add explicit dark-mode adaptation rules for light red/emerald comparison cards so they render with high-contrast dark surfaces and bright legible text in Dark mode and crisp tinted surfaces with deep legible text in Light mode.
+
+### 2. Fix Section Wrappers, Callout Contrast & Comparison Cards (`src/pages/commercial/MiniSeriesPage.tsx`)
+- **Chapter 2 ("The Repetitive Ad Trap" vs. "The Episodic Mini-Series")**:
+  - Wrap Chapter 2 in a full-width `bg-[#fafaf6] text-[#111412]` section container so its editorial hierarchy alternates cleanly with Chapter 1 (`#0b0e12`).
+  - Redesign the **"The Repetitive Ad Trap"** and **"The Episodic Mini-Series"** cards with high-contrast, opaque surfaces, clear borders, generous padding, and responsive typography so they never blend into a muddy grey or clip text in either theme.
+- **Chapter 3 ("The Transformative Question")**:
+  - Mark the **"THE TRANSFORMATIVE QUESTION"** dark callout box with `keep-dark` and explicit white text styling (`!text-white`) so the question *"What if your brand could become the reason people stop scrolling, instead of always paying someone else to get them to look?"* is 100% legible in both Light and Dark modes.
+- **Chapters 5, 6 & CirclesFundMe Proof Section**:
+  - Add explicit full-width `bg-[#fafaf6] text-[#111412]` wrappers to Chapters 5, 6, and the CirclesFundMe proof section so every chapter has a consistent, intentional background in both Light and Dark modes.
+
+### 3. Polish Interactive Story Graphic & Retention Graph Contrast (`src/components/animations/AnimatedStoryGraphic.tsx` & `src/components/animations/RetentionCurveGraph.tsx`)
+- Ensure the `4K Camera Viewfinder` / `Production Slate` toggle buttons in `AnimatedStoryGraphic.tsx` and the legend/axis labels in `RetentionCurveGraph.tsx` maintain high contrast in both Light and Dark modes.
+
+---
+
+## Verification Plan
+- Run `compile_applet` to verify zero TypeScript or CSS build errors.
+- Verify that **"THE TRANSFORMATIVE QUESTION"** card displays bright white headline text on its dark `#111412` background in both Light and Dark modes.
+- Verify that **"THE REPETITIVE AD TRAP"** and **"THE EPISODIC MINI-SERIES"** cards have crisp, high-contrast backgrounds and legible text across mobile and desktop viewports in both Light and Dark modes.

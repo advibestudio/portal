@@ -19,7 +19,7 @@ const AppDownloadHubPage = lazy(() => import('@/pages/AppDownloadHubPage'));
 const MobileClientAdminApp = lazy(() => import('@/pages/admin/MobileClientAdminApp'));
 import { TapRipple } from '@/components/animations/TapRipple';
 import { usePageHeatmapTracker } from '@/lib/heatmapAnalytics';
-import { OfflineBanner } from '@/lib/pwa';
+import { OfflineBanner, getPreferredPWALaunchRoute, setPreferredPWALaunchRoute } from '@/lib/pwa';
 import { ThemeProvider } from '@/lib/theme';
 
 interface ErrorBoundaryProps {
@@ -88,9 +88,21 @@ function useAppRoute() {
     if (hash && hash !== '#' && hash !== '#/') {
       return hash.replace(/^#\/?/, '/');
     }
+    // If launched as an installed standalone PWA from the phone's home screen with no hash,
+    // open the specific WebApp the user installed (e.g. /client-portal or /affiliate-portal).
+    const isStandalone =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true);
+    if (isStandalone && (!hash || hash === '#' || hash === '#/')) {
+      const preferred = getPreferredPWALaunchRoute();
+      if (preferred && preferred !== '/') {
+        return preferred;
+      }
+    }
     // Strip GitHub Pages repository base path `/portal` or `/portal/` so visiting
     // https://advibestudio.github.io/portal/ or https://advibestudio.github.io/portal/#/
-    // always opens the Main Website (`/`).
+    // in a browser always opens the Main Website (`/`).
     const rawPath = window.location.pathname || '/';
     const stripped = rawPath.replace(/^\/portal\/?/i, '/');
     return stripped.startsWith('/') ? stripped : `/${stripped}`;
@@ -158,12 +170,16 @@ export default function App() {
   useEffect(() => {
     if (isClientAdmin) {
       document.title = 'Mobile Client Manager Admin PWA — AdVibe Studios';
+      setPreferredPWALaunchRoute('/client-admin', 'AdVibe Admin');
     } else if (isAdmin) {
       document.title = 'Admin Portal — AdVibe Studios';
-    } else if (isAffiliatePortal) {
+      setPreferredPWALaunchRoute('/admin', 'AdVibe Admin');
+    } else if (isAffiliatePortal || isDownloadAffiliateApp) {
       document.title = 'Affiliate Partner Portal WebApp — AdVibe Studios';
-    } else if (isCustomerPortal) {
+      setPreferredPWALaunchRoute('/affiliate-portal', 'AdVibe Partner');
+    } else if (isCustomerPortal || isDownloadCustomerApp) {
       document.title = 'Client Project Portal — AdVibe Studios';
+      setPreferredPWALaunchRoute('/client-portal', 'AdVibe Client');
     } else if (isAppsHub) {
       document.title = 'Download AdVibe WebApps — Client & Affiliate Partner Apps';
     } else if (isBookStrategy) {

@@ -771,17 +771,23 @@ export function AnimatedStoryGraphic({
       {interactive && type === 'combo' && (
         <div className="mt-3 flex items-center justify-center gap-2 font-mono text-[11px]">
           <button
+            type="button"
             onClick={() => setActiveMode('viewfinder')}
-            className={`px-3 py-1 rounded transition-colors ${
-              activeMode === 'viewfinder' ? 'bg-[#f5a524] text-black font-bold' : 'bg-white/10 text-white/60 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg border transition-colors ${
+              activeMode === 'viewfinder'
+                ? 'bg-[#f5a524] border-[#f5a524] text-black font-bold shadow-sm'
+                : 'bg-[#111412] border-white/15 text-white/80 hover:text-white keep-dark'
             }`}
           >
             4K Camera Viewfinder
           </button>
           <button
+            type="button"
             onClick={() => setActiveMode('clapperboard')}
-            className={`px-3 py-1 rounded transition-colors ${
-              activeMode === 'clapperboard' ? 'bg-[#f5a524] text-black font-bold' : 'bg-white/10 text-white/60 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg border transition-colors ${
+              activeMode === 'clapperboard'
+                ? 'bg-[#f5a524] border-[#f5a524] text-black font-bold shadow-sm'
+                : 'bg-[#111412] border-white/15 text-white/80 hover:text-white keep-dark'
             }`}
           >
             Production Slate

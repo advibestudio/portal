@@ -332,8 +332,8 @@ export default function MiniSeriesPage() {
             CHAPTER 2 — EVERYONE IS COMPETING FOR ATTENTION
             Editorial layout with visual comparison matrix
         ====================================================================== */}
-        <section className="py-20 px-4 sm:px-6 max-w-4xl mx-auto text-left">
-          <div className="space-y-8">
+        <section className="py-20 px-4 sm:px-6 bg-[#fafaf6] text-[#111412]">
+          <div className="max-w-4xl mx-auto text-left space-y-8">
             <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
               <span>CHAPTER 2</span>
               <span className="text-[#111412]/30">·</span>
@@ -364,44 +364,44 @@ export default function MiniSeriesPage() {
               </p>
 
               {/* Side-by-Side Reality Check Comparison Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
-                <div className="rounded-2xl border border-red-200/80 bg-red-50/50 p-6 space-y-3">
-                  <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-red-700">
-                    <span className="h-2 w-2 rounded-full bg-red-500" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 my-8">
+                <div className="rounded-2xl border border-red-300/90 bg-[#fff5f5] p-6 sm:p-7 space-y-4 shadow-sm">
+                  <div className="flex items-center gap-2.5 font-mono text-xs font-bold uppercase tracking-wider text-red-700">
+                    <span className="h-2.5 w-2.5 rounded-full bg-red-500 shrink-0" />
                     <span>The Repetitive Ad Trap</span>
                   </div>
-                  <ul className="space-y-2 text-sm text-red-950/80">
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 font-bold">✕</span>
+                  <ul className="space-y-3 text-sm sm:text-base text-red-950 font-medium leading-snug">
+                    <li className="flex items-start gap-2.5">
+                      <span className="text-red-500 font-bold shrink-0 mt-0.5">✕</span>
                       <span>Constant "Buy Now" demands that feel intrusive</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 font-bold">✕</span>
+                    <li className="flex items-start gap-2.5">
+                      <span className="text-red-500 font-bold shrink-0 mt-0.5">✕</span>
                       <span>Sub-second dwell time before the viewer swipes away</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-red-500 font-bold">✕</span>
+                    <li className="flex items-start gap-2.5">
+                      <span className="text-red-500 font-bold shrink-0 mt-0.5">✕</span>
                       <span>Zero organic shares or conversation generated</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-6 space-y-3">
-                  <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-emerald-800">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <div className="rounded-2xl border border-emerald-300/90 bg-[#f0fdf4] p-6 sm:p-7 space-y-4 shadow-sm">
+                  <div className="flex items-center gap-2.5 font-mono text-xs font-bold uppercase tracking-wider text-emerald-800">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shrink-0" />
                     <span>The Episodic Mini-Series</span>
                   </div>
-                  <ul className="space-y-2 text-sm text-emerald-950/80">
-                    <li className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <ul className="space-y-3 text-sm sm:text-base text-emerald-950 font-medium leading-snug">
+                    <li className="flex items-start gap-2.5">
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5 stroke-[2.5]" />
                       <span>Entertaining stories that people actually want to watch</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <li className="flex items-start gap-2.5">
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5 stroke-[2.5]" />
                       <span>Builds character familiarity and brand recall over time</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <li className="flex items-start gap-2.5">
+                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5 stroke-[2.5]" />
                       <span>Viewers share with friends because it is genuinely fun</span>
                     </li>
                   </ul>
@@ -469,12 +469,12 @@ export default function MiniSeriesPage() {
               </p>
 
               {/* The Pivotal Breakthrough Question */}
-              <div className="mt-8 rounded-3xl bg-[#111412] text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
+              <div className="keep-dark mt-8 rounded-3xl border border-white/15 bg-[#111412] text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
                 <div className="absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-[#f5a524]/20 blur-2xl pointer-events-none" />
                 <span className="font-mono text-xs uppercase tracking-widest text-[#f5a524] font-bold block mb-3">
                   THE TRANSFORMATIVE QUESTION
                 </span>
-                <p className="font-display text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-snug">
+                <p className="keep-white font-display text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-snug">
                   What if your brand could become the reason people stop scrolling, instead of always paying someone else to get them to look?
                 </p>
               </div>
@@ -556,8 +556,8 @@ export default function MiniSeriesPage() {
             CHAPTER 5 — TYPES OF STORIES YOUR BRAND CAN TELL
             Studio Production Storyboard Format with Film Tags
         ====================================================================== */}
-        <section className="py-20 px-4 sm:px-6 max-w-5xl mx-auto text-left">
-          <div className="space-y-8">
+        <section className="py-20 px-4 sm:px-6 bg-[#fafaf6] text-[#111412]">
+          <div className="max-w-5xl mx-auto text-left space-y-8">
             <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
               <span>CHAPTER 5</span>
               <span className="text-[#111412]/30">·</span>
@@ -705,8 +705,8 @@ export default function MiniSeriesPage() {
         {/* =====================================================================
             CHAPTER 6 — ORGANIC DISCOVERY AND AUDIENCE ENGAGEMENT
         ====================================================================== */}
-        <section className="py-20 px-4 sm:px-6 max-w-4xl mx-auto text-left">
-          <div className="space-y-8">
+        <section className="py-20 px-4 sm:px-6 bg-[#fafaf6] text-[#111412]">
+          <div className="max-w-4xl mx-auto text-left space-y-8">
             <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#a06200]">
               <span>CHAPTER 6</span>
               <span className="text-[#111412]/30">·</span>
@@ -971,10 +971,10 @@ export default function MiniSeriesPage() {
         </section>
 
         {/* CIRCLESFUNDME PROOF FOOTNOTE */}
-        <section className="px-4 py-8 max-w-4xl mx-auto border-t border-[#111412]/10 mb-12">
-          <div className="rounded-2xl border border-[#111412]/10 bg-white p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+        <section className="bg-[#fafaf6] text-[#111412] px-4 py-8 border-t border-[#111412]/10 pb-20 sm:pb-12">
+          <div className="max-w-4xl mx-auto rounded-2xl border border-[#111412]/10 bg-white p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#111412] text-white font-extrabold text-sm font-display">
+              <div className="keep-dark grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#111412] text-white font-extrabold text-sm font-display">
                 CFM
               </div>
               <div>

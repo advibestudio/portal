@@ -90,13 +90,6 @@ const DESTINATIONS: NavDestination[] = [
     group: 'website',
   },
   {
-    label: 'AI Video Training Academy',
-    sublabel: 'Intensive tracks for business owners & creators',
-    href: '#/training',
-    icon: GraduationCap,
-    group: 'website',
-  },
-  {
     label: 'Client Project Portal',
     sublabel: 'Approve scripts, upload assets & download videos',
     href: '#/client-portal',

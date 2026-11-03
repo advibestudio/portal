@@ -142,9 +142,12 @@ export function TeamAndSyncAdmin() {
   const handlePurgeFakeData = async () => {
     setSyncBusy(true);
     setTeamMsg(null);
-    const res = await purgeFakeBackendData();
+    const msg = await purgeFakeBackendData();
+    setDaemonState(getAutoBackupDaemonState());
+    setOutbox(loadSyncOutbox());
+    setSyncLogs(loadBackupSyncLogs());
     setSyncBusy(false);
-    setTeamMsg({ type: 'ok', text: res.message });
+    setTeamMsg({ type: 'ok', text: msg });
   };
 
   const handleRoleToggle = async (email: string, currentName: string, nextRole: 'owner' | 'ops') => {
@@ -678,7 +681,7 @@ export function TeamAndSyncAdmin() {
             </h3>
             <p className="text-sm text-ink/65 mt-1">
               Both Co-Founders (<strong>@enoch</strong> and <strong>@esther</strong>) have separate Super Admin
-              usernames and passwords. You can also add additional admins or clear any legacy seeded records below.
+              usernames and passwords. You can also add additional admins or wipe all operational database records below.
             </p>
           </div>
           {isSuperAdmin && (
@@ -689,7 +692,7 @@ export function TeamAndSyncAdmin() {
               className="h-10 px-4 rounded-full bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              Clear Any Fake / Seeded Backend Data
+              Wipe All Database Records (Clean Slate)
             </button>
           )}
         </div>
@@ -873,30 +876,17 @@ export function TeamAndSyncAdmin() {
           </table>
         </div>
 
-        {/* Test Portal Accounts & WebApp Directory Reference */}
-        <div className="mt-6 rounded-2xl bg-amber/10 border border-amber/30 p-5">
+        {/* Clean Production State Notice */}
+        <div className="mt-6 rounded-2xl bg-emerald-50/70 border border-emerald-200 p-5">
           <div className="flex items-start gap-3">
-            <ArrowRightLeft className="w-5 h-5 text-amber-800 shrink-0 mt-0.5" />
-            <div className="text-xs md:text-sm text-ink/80 space-y-2">
+            <ArrowRightLeft className="w-5 h-5 text-emerald-800 shrink-0 mt-0.5" />
+            <div className="text-xs md:text-sm text-ink/80 space-y-1">
               <div className="font-semibold text-ink">
-                Ready-to-Test Customer Portal Logins &amp; Dedicated WebApp URLs:
+                Clean Production Database Active
               </div>
-              <div className="grid sm:grid-cols-2 gap-3 pt-1">
-                <div className="rounded-xl bg-white/80 border border-ink/10 p-3">
-                  <div className="font-semibold text-ink text-xs">Test Customer Portal Account #1 (Retainer + 5-Pack)</div>
-                  <div className="font-mono text-[11px] text-ink/75 mt-1">
-                    Username: <strong>testclient1</strong> · Email: <strong>test1@advibestudio.com</strong>
-                  </div>
-                  <div className="font-mono text-[11px] text-amber-800">Password: <strong>advibe-test-1</strong></div>
-                </div>
-                <div className="rounded-xl bg-white/80 border border-ink/10 p-3">
-                  <div className="font-semibold text-ink text-xs">Test Customer Portal Account #2 (1-Video Gate)</div>
-                  <div className="font-mono text-[11px] text-ink/75 mt-1">
-                    Username: <strong>testclient2</strong> · Email: <strong>test2@advibestudio.com</strong>
-                  </div>
-                  <div className="font-mono text-[11px] text-amber-800">Password: <strong>advibe-test-2</strong></div>
-                </div>
-              </div>
+              <p className="text-xs text-ink/70">
+                All test client accounts, seeded projects, demo affiliates, and sample analytics have been removed. Only real client bookings, strategy assessments, and verified partner registrations appear in your database.
+              </p>
             </div>
           </div>
         </div>

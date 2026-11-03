@@ -37,6 +37,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import {
+  clearAllAssessmentsAndEvents,
   loadAssessments,
   saveAssessments,
   syncLeadToGoogleSheets,
@@ -44,10 +45,13 @@ import {
   syncAllRecordsToGoogleSheets,
 } from '@/lib/googleSheetsSync';
 import {
+  clearAllBackupQueuesAndLogs,
   triggerImmediateSheetsBackup,
   runFirestoreToSheetsAutoBackupCycle,
   getAutoBackupDaemonState,
 } from '@/lib/firestoreSheetsBackupService';
+import { clearAllCustomerPortalData } from '@/lib/customerPortalStore';
+import { clearAllHeatmapAndPageviews } from '@/lib/heatmapAnalytics';
 
 /* ==========================================================================
    THE STORE — Firebase Firestore + Google Sheets Hand-in-Hand + Local Cache
@@ -641,7 +645,103 @@ const Ctx = createContext<Store | null>(null);
 
 let demoRef = Math.floor(1000 + Math.random() * 9000);
 
+const CLEAN_SLATE_LOCAL_KEY = 'advibe.clean_slate.v3';
+const CLEAN_SLATE_CLOUD_KEY = 'advibe.cloud_clean_slate.v3';
+
+function resetAllLocalOperationalStorage() {
+  try {
+    save(LS.leads, []);
+    save(LS.projects, []);
+    save(LS.audit, []);
+    save(LS.students, []);
+    clearAllAssessmentsAndEvents();
+    clearAllBackupQueuesAndLogs();
+    localStorage.setItem('advibe.customer.accounts.v1', JSON.stringify([]));
+    localStorage.setItem('advibe.customer.projects.v1', JSON.stringify([]));
+    localStorage.removeItem('advibe.customer.session.v1');
+    localStorage.setItem('advibe.section.heatmap.v1', JSON.stringify([]));
+    localStorage.setItem('advibe.pageviews.summary.v1', JSON.stringify([]));
+    localStorage.removeItem('advibe_affiliate_session_v1');
+    localStorage.removeItem('advibe_referral_attribution_v1');
+
+    const existingContent = load<Partial<SiteContent> | null>(LS.content, load(LS.contentCache, null));
+    if (existingContent) {
+      const cleanedContent = { ...existingContent, affiliates: [] };
+      save(LS.content, cleanedContent);
+      save(LS.contentCache, cleanedContent);
+    }
+  } catch {
+    /* ignore storage errors */
+  }
+}
+
+function ensureLocalCleanSlateOnBoot() {
+  if (typeof window === 'undefined') return;
+  try {
+    if (localStorage.getItem(CLEAN_SLATE_LOCAL_KEY) !== 'done') {
+      resetAllLocalOperationalStorage();
+      localStorage.setItem(CLEAN_SLATE_LOCAL_KEY, 'done');
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+async function wipeAllOperationalFirestoreCollections(): Promise<void> {
+  if (!isFirebaseConfigured) return;
+  const collectionsToClear = [
+    'customer_accounts',
+    'customer_projects',
+    'section_heatmap',
+    'leads',
+    'projects',
+    'students',
+    'assessments',
+    'audit_log',
+  ];
+
+  await Promise.all(
+    collectionsToClear.map(async (colName) => {
+      try {
+        const snap = await getDocs(query(collection(db, colName), limit(500)));
+        if (!snap.empty) {
+          await Promise.all(
+            snap.docs.map((d) => deleteDoc(doc(db, colName, d.id)).catch(() => {}))
+          );
+        }
+      } catch {
+        /* ignore if unauthenticated for admin-only collections */
+      }
+    })
+  );
+
+  try {
+    const contentSnap = await getDoc(doc(db, 'site_content', 'main'));
+    if (contentSnap.exists()) {
+      const data = contentSnap.data();
+      if (data?.content && Array.isArray(data.content.affiliates) && data.content.affiliates.length > 0) {
+        await setDoc(
+          doc(db, 'site_content', 'main'),
+          stripUndefined({
+            ...data,
+            content: {
+              ...data.content,
+              affiliates: [],
+            },
+            updatedAt: new Date().toISOString(),
+          }),
+          { merge: true }
+        );
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
 export function StoreProvider({ children }: { children: React.ReactNode }) {
+  ensureLocalCleanSlateOnBoot();
+
   const [content, setContent] = useState<SiteContent>(() =>
     withDefaults(load(LS.content, load(LS.contentCache, null)))
   );
@@ -719,12 +819,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     (async () => {
       try {
+        // Perform one-time cloud clean-slate wipe of public-accessible collections on boot
+        if (localStorage.getItem(CLEAN_SLATE_CLOUD_KEY) !== 'done') {
+          await clearAllCustomerPortalData();
+          await clearAllHeatmapAndPageviews();
+        }
         const snap = await getDoc(doc(db, 'site_content', 'main'));
         trackFirestoreRead(1);
         if (!cancelled && snap.exists()) {
           const data = snap.data();
           if (data?.content) {
-            const merged = withDefaults(data.content as Partial<SiteContent>);
+            const rawContent = data.content as Partial<SiteContent>;
+            const merged = withDefaults(
+              localStorage.getItem(CLEAN_SLATE_CLOUD_KEY) !== 'done'
+                ? { ...rawContent, affiliates: [] }
+                : rawContent
+            );
             setContent(merged);
             save(LS.content, merged);
             save(LS.contentCache, merged);
@@ -751,6 +861,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (!isFirebaseConfigured) return;
 
     try {
+      // If clean-slate cloud wipe hasn't completed while authenticated, wipe all Firestore operational collections first
+      if (auth.currentUser && localStorage.getItem(CLEAN_SLATE_CLOUD_KEY) !== 'done') {
+        await wipeAllOperationalFirestoreCollections();
+        localStorage.setItem(CLEAN_SLATE_CLOUD_KEY, 'done');
+      }
+
       // 1. Always refresh public site_content & cohorts
       const contentSnap = await getDoc(doc(db, 'site_content', 'main'));
       trackFirestoreRead(1);
@@ -789,41 +905,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           Math.max(1, assessmentsSnap.size)
       );
 
-      if (!leadsSnap.empty) {
-        const remoteLeads = leadsSnap.docs
-          .map((d) => d.data() as Lead)
-          .filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref));
-        setLeads((prev) => {
-          const map = new Map<string, Lead>();
-          prev.filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref)).forEach((l) => map.set(l.id, l));
-          remoteLeads.forEach((l) => map.set(l.id, l));
-          return Array.from(map.values()).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-        });
-      }
+      const remoteLeads = leadsSnap.docs
+        .map((d) => d.data() as Lead)
+        .filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref));
+      setLeads(remoteLeads.sort((a, b) => (b.date || '').localeCompare(a.date || '')));
 
-      if (!projectsSnap.empty) {
-        const remoteProjects = projectsSnap.docs
-          .map((d) => d.data() as Project)
-          .filter((p) => !FAKE_PROJECT_IDS.has(p.id));
-        setProjects((prev) => {
-          const map = new Map<string, Project>();
-          prev.filter((p) => !FAKE_PROJECT_IDS.has(p.id)).forEach((p) => map.set(p.id, p));
-          remoteProjects.forEach((p) => map.set(p.id, p));
-          return Array.from(map.values());
-        });
-      }
+      const remoteProjects = projectsSnap.docs
+        .map((d) => d.data() as Project)
+        .filter((p) => !FAKE_PROJECT_IDS.has(p.id));
+      setProjects(remoteProjects);
 
-      if (!studentsSnap.empty) {
-        const remoteStudents = studentsSnap.docs
-          .map((d) => d.data() as TrainingStudent)
-          .filter((s) => !FAKE_STUDENT_IDS.has(s.id));
-        setStudents((prev) => {
-          const map = new Map<string, TrainingStudent>();
-          prev.filter((s) => !FAKE_STUDENT_IDS.has(s.id)).forEach((s) => map.set(s.id, s));
-          remoteStudents.forEach((s) => map.set(s.id, s));
-          return Array.from(map.values());
-        });
-      }
+      const remoteStudents = studentsSnap.docs
+        .map((d) => d.data() as TrainingStudent)
+        .filter((s) => !FAKE_STUDENT_IDS.has(s.id));
+      setStudents(remoteStudents);
 
       if (!adminsSnap.empty) {
         const remoteAdmins = adminsSnap.docs.map((d) => d.data() as AdminAccount);
@@ -835,23 +930,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         });
       }
 
-      if (!auditSnap.empty) {
-        const remoteAudit = auditSnap.docs.map((d) => d.data() as AuditEntry);
-        setAudit(remoteAudit);
-      }
+      const remoteAudit = auditSnap.docs.map((d) => d.data() as AuditEntry);
+      setAudit(remoteAudit);
 
-      if (!assessmentsSnap.empty) {
-        const remoteAssessments = assessmentsSnap.docs.map((d) => d.data() as BusinessAssessment);
-        const localAssessments = loadAssessments();
-        const map = new Map<string, BusinessAssessment>();
-        localAssessments.forEach((a) => map.set(a.assessmentId, a));
-        remoteAssessments.forEach((a) => map.set(a.assessmentId, a));
-        saveAssessments(
-          Array.from(map.values()).sort((a, b) =>
-            (b.timestampSubmitted || '').localeCompare(a.timestampSubmitted || '')
-          )
-        );
-      }
+      const remoteAssessments = assessmentsSnap.docs.map((d) => d.data() as BusinessAssessment);
+      saveAssessments(
+        remoteAssessments.sort((a, b) =>
+          (b.timestampSubmitted || '').localeCompare(a.timestampSubmitted || '')
+        )
+      );
     } catch (err) {
       console.warn('Firestore refresh warning:', err);
     }
@@ -1367,50 +1454,34 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     [log]
   );
 
-  /* ----- Purge All Fake / Seeded Backend Records ----- */
+  /* ----- Purge All Operational Database Records (Clean Slate) ----- */
   const purgeFakeBackendData: Store['purgeFakeBackendData'] = useCallback(async () => {
-    setLeads((prev) => prev.filter((l) => !FAKE_LEAD_IDS.has(l.id) && !FAKE_LEAD_REFS.has(l.ref)));
-    setProjects((prev) => prev.filter((p) => !FAKE_PROJECT_IDS.has(p.id)));
-    setStudents((prev) => prev.filter((s) => !FAKE_STUDENT_IDS.has(s.id)));
+    resetAllLocalOperationalStorage();
+    setLeads([]);
+    setProjects([]);
+    setStudents([]);
+    setAudit([]);
     setContent((prev) => {
       const next = {
         ...prev,
-        affiliates: (prev.affiliates || []).filter(
-          (a) => !FAKE_AFFILIATE_IDS.has(a.id) && !FAKE_AFFILIATE_CODES.has((a.code || '').toUpperCase())
-        ),
+        affiliates: [],
       };
       save(LS.content, next);
       save(LS.contentCache, next);
       return next;
     });
 
-    if (isFirebaseConfigured && auth.currentUser) {
-      for (const id of FAKE_LEAD_IDS) {
-        try {
-          await deleteDoc(doc(db, 'leads', id));
-        } catch {
-          /* ignore */
-        }
-      }
-      for (const id of FAKE_PROJECT_IDS) {
-        try {
-          await deleteDoc(doc(db, 'projects', id));
-        } catch {
-          /* ignore */
-        }
-      }
-      for (const id of FAKE_STUDENT_IDS) {
-        try {
-          await deleteDoc(doc(db, 'students', id));
-        } catch {
-          /* ignore */
-        }
-      }
-    }
+    await Promise.all([
+      clearAllCustomerPortalData(),
+      clearAllHeatmapAndPageviews(),
+      wipeAllOperationalFirestoreCollections(),
+    ]);
 
-    log(sessionRef.current?.name || 'Co-Founder', 'Purged all fake/seeded leads, projects, students, and affiliates');
-    return 'All fake leads, pipeline projects, cohort students, and demo affiliates have been cleared. The 2 test Customer Portal accounts remain active for testing.';
-  }, [log]);
+    localStorage.setItem(CLEAN_SLATE_LOCAL_KEY, 'done');
+    localStorage.setItem(CLEAN_SLATE_CLOUD_KEY, 'done');
+
+    return 'Database wiped completely clean! All leads, bookings, client portal accounts & projects, affiliates, quiz assessments, students, audit logs, and analytics counters have been reset to zero while keeping your website content and Co-Founder logins intact.';
+  }, []);
 
   /* ----- Firebase Free-Tier Quota Saver: Prune already-synced rows from Firestore ----- */
   const pruneSyncedRecordsFromFirestore: Store['pruneSyncedRecordsFromFirestore'] = useCallback(async () => {

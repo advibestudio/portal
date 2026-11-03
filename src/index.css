@@ -195,36 +195,37 @@ html[data-theme="light"] .theme-adaptive .border-white\/25 {
   border-color: rgba(17, 20, 18, 0.14) !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white:not(.bg-\[\#111412\]):not(.bg-red-500):not(.bg-emerald-600):not(.keep-white) {
+html[data-theme="light"] .theme-adaptive .text-white:where(:not(.bg-\[\#111412\]):not(.bg-red-500):not(.bg-emerald-600):not(.keep-white):not(.keep-dark):not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #111412 !important;
 }
 html[data-theme="light"] .theme-adaptive .bg-\[\#111412\] .text-white,
 html[data-theme="light"] .theme-adaptive .bg-\[\#111412\].text-white,
 html[data-theme="light"] .theme-adaptive .bg-red-500.text-white,
 html[data-theme="light"] .theme-adaptive .vcard .text-white,
-html[data-theme="light"] .theme-adaptive .keep-dark .text-white {
+html[data-theme="light"] .theme-adaptive .keep-dark .text-white,
+html[data-theme="light"] .theme-adaptive .keep-white {
   color: #ffffff !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/90,
-html[data-theme="light"] .theme-adaptive .text-white\/85,
-html[data-theme="light"] .theme-adaptive .text-white\/80,
-html[data-theme="light"] .theme-adaptive .text-white\/75,
-html[data-theme="light"] .theme-adaptive .text-white\/70 {
+html[data-theme="light"] .theme-adaptive .text-white\/90:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/85:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/80:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/75:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/70:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #2a302b !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/65,
-html[data-theme="light"] .theme-adaptive .text-white\/60,
-html[data-theme="light"] .theme-adaptive .text-white\/55,
-html[data-theme="light"] .theme-adaptive .text-white\/50 {
+html[data-theme="light"] .theme-adaptive .text-white\/65:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/60:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/55:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/50:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #525b53 !important;
 }
 
-html[data-theme="light"] .theme-adaptive .text-white\/45,
-html[data-theme="light"] .theme-adaptive .text-white\/40,
-html[data-theme="light"] .theme-adaptive .text-white\/35,
-html[data-theme="light"] .theme-adaptive .text-white\/30 {
+html[data-theme="light"] .theme-adaptive .text-white\/45:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/40:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/35:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)),
+html[data-theme="light"] .theme-adaptive .text-white\/30:where(:not(.bg-\[\#111412\] *):not(.keep-dark *):not(.vcard *)) {
   color: #6e776f !important;
 }
 
@@ -289,6 +290,50 @@ html[data-theme="dark"] .theme-adaptive .bg-\[\#fff8e6\] {
   color: #f4f2ec !important;
 }
 
+html[data-theme="dark"] .theme-adaptive .bg-red-50,
+html[data-theme="dark"] .theme-adaptive .bg-red-50\/50,
+html[data-theme="dark"] .theme-adaptive .bg-red-50\/80,
+html[data-theme="dark"] .theme-adaptive .bg-\[\#fff5f5\] {
+  background-color: rgba(127, 29, 29, 0.22) !important;
+  border-color: rgba(248, 113, 113, 0.35) !important;
+  color: #fef2f2 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .bg-emerald-50,
+html[data-theme="dark"] .theme-adaptive .bg-emerald-50\/50,
+html[data-theme="dark"] .theme-adaptive .bg-emerald-50\/80,
+html[data-theme="dark"] .theme-adaptive .bg-\[\#f0fdf4\] {
+  background-color: rgba(6, 78, 59, 0.25) !important;
+  border-color: rgba(52, 211, 153, 0.35) !important;
+  color: #ecfdf5 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-red-950,
+html[data-theme="dark"] .theme-adaptive .text-red-950\/80,
+html[data-theme="dark"] .theme-adaptive .text-red-900 {
+  color: #fee2e2 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-red-700,
+html[data-theme="dark"] .theme-adaptive .text-red-800 {
+  color: #f87171 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-emerald-950,
+html[data-theme="dark"] .theme-adaptive .text-emerald-950\/80,
+html[data-theme="dark"] .theme-adaptive .text-emerald-900 {
+  color: #d1fae5 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-emerald-700,
+html[data-theme="dark"] .theme-adaptive .text-emerald-800 {
+  color: #34d399 !important;
+}
+
+html[data-theme="dark"] .theme-adaptive .text-\[\#a06200\] {
+  color: #f5a524 !important;
+}
+
 html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]:not(button):not(.bg-\[\#f5a524\]):not(.bg-emerald-500):not(.bg-white),
 html[data-theme="dark"] .theme-adaptive .text-\[\#2a302b\] {
   color: #f4f2ec !important;
@@ -308,7 +353,9 @@ html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/65,
 html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/60,
 html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/55,
 html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/50,
-html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/40 {
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/40,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/30,
+html[data-theme="dark"] .theme-adaptive .text-\[\#111412\]\/20 {
   color: rgba(244, 242, 236, 0.58) !important;
 }
 

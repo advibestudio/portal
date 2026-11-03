@@ -407,7 +407,6 @@ export function Footer() {
               ['Monthly Retainer', '#/monthly-content'],
               ['How It Works', '#process'],
               ['AI Mini-Series', '#/promotional-mini-series'],
-              ['Training', '#/training'],
             ].map(([l, h]) => (
               <a key={h} href={h}>
                 {l}
