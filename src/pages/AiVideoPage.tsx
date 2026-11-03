@@ -49,7 +49,7 @@ function Page() {
   const ours = ourRange(content.offers, country);
   const hasTrad = country.tradLow > 0 && country.tradHigh > 0;
   const videos = content.portfolio.filter((p) => p.visible).sort((a, b) => (a.orientation === 'vertical' ? 0 : 1) - (b.orientation === 'vertical' ? 0 : 1) || a.order - b.order).slice(0, 4);
-  const stats = [...content.hero.stats, { value: String(countries.length), label: countries.length === 1 ? 'country served' : 'countries served' }];
+  const stats = [...content.hero.stats.filter((s) => s.visible !== false), { value: String(countries.length), label: countries.length === 1 ? 'country served' : 'countries served' }];
   const backHref = `#/${country.slug}`;
   const jump = (where: string) => { try { sessionStorage.setItem('advibe.jump', where); } catch { /* ignore */ } };
 

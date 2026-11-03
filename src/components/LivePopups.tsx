@@ -4,8 +4,6 @@ import { useStore } from '@/lib/store';
 import { playNotificationChime } from '@/lib/sound';
 
 const OFF_KEY = 'advibe.popups.off';
-// Paused per studio owner request — set to false to re-enable live activity popups
-const POPUPS_GLOBALLY_PAUSED = true;
 
 export interface LiveActivityItem {
   id: string;
@@ -20,8 +18,9 @@ export interface LiveActivityItem {
 }
 
 export default function LivePopups({ paused }: { paused: boolean }) {
-  const isPaused = paused || POPUPS_GLOBALLY_PAUSED;
   const { content, leads, students } = useStore();
+  // Paused unless content.sections.liveToasts is explicitly enabled in Admin → Website → Sections
+  const isPaused = paused || !content.sections?.liveToasts;
 
   const [current, setCurrent] = useState<LiveActivityItem | null>(null);
   const [isExiting, setIsExiting] = useState(false);

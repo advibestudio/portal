@@ -42,6 +42,7 @@ export const defaultContent: SiteContent = {
   sections: {
     wall: true, proof: true, showcase: true, clients: true, problem: true, services: true,
     events: true, whyUs: true, process: true, testimonials: true, faq: true, finalCta: true, liveToasts: false, aiCompare: true,
+    trainingCourse: false, chooseYourPath: false, partnerShowcaseBottom: false,
   },
   client: {
     name: 'CirclesFundMe',
@@ -96,9 +97,9 @@ export const defaultContent: SiteContent = {
     primaryCta: 'Book a Free Strategy Session',
     secondaryCta: 'Watch Our Work',
     stats: [
-      { value: '120+', label: 'videos delivered' },
-      { value: '48', label: 'businesses served' },
-      { value: '5 days', label: 'average delivery' },
+      { value: '50+', label: 'videos delivered', visible: true },
+      { value: '48', label: 'businesses served', visible: false },
+      { value: '5 days', label: 'average delivery', visible: true },
     ],
   },
   problem: {
@@ -237,7 +238,7 @@ export const defaultContent: SiteContent = {
         { value: '24 Hours', label: 'Time to Earn Back Cost' },
       ],
       featured: true,
-      visible: true,
+      visible: false,
     },
     {
       id: 't2',
@@ -263,7 +264,7 @@ export const defaultContent: SiteContent = {
         { value: '4 Days', label: 'From Idea to Final Video' },
       ],
       featured: true,
-      visible: true,
+      visible: false,
     },
     {
       id: 't3',
@@ -289,7 +290,7 @@ export const defaultContent: SiteContent = {
         { value: '3.7x More', label: 'People Clicking to Order' },
       ],
       featured: true,
-      visible: true,
+      visible: false,
     },
     {
       id: 't4',
@@ -341,7 +342,7 @@ export const defaultContent: SiteContent = {
         { value: '10 Videos', label: 'Delivered in One Batch' },
       ],
       featured: true,
-      visible: true,
+      visible: false,
     },
   ],
   faqs: [

@@ -63,7 +63,8 @@ export interface Country {
 
 export type SectionKey =
   | 'wall' | 'proof' | 'showcase' | 'clients' | 'problem' | 'services'
-  | 'events' | 'whyUs' | 'process' | 'testimonials' | 'faq' | 'finalCta' | 'liveToasts' | 'aiCompare';
+  | 'events' | 'whyUs' | 'process' | 'testimonials' | 'faq' | 'finalCta' | 'liveToasts' | 'aiCompare'
+  | 'trainingCourse' | 'chooseYourPath' | 'partnerShowcaseBottom';
 
 export interface ClientCaseStudy {
   title: string;
@@ -269,7 +270,7 @@ export interface SiteContent {
     subheadline: string;
     primaryCta: string;
     secondaryCta: string;
-    stats: { value: string; label: string }[];
+    stats: { value: string; label: string; visible?: boolean }[];
   };
   problem: { heading: string; lines: string[]; transition: string };
   services: { id: string; title: string; description: string }[];

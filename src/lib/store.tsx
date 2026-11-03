@@ -499,13 +499,56 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
     };
   });
 
+  // Normalize hero stats: update legacy '120+' to '50+' and keep '48 businesses served' paused (visible: false) unless explicitly toggled on in Admin
+  if (Array.isArray(merged.hero?.stats) && merged.hero.stats.length > 0) {
+    merged.hero.stats = merged.hero.stats.map((s) => {
+      const val = s.value?.trim() === '120+' ? '50+' : s.value;
+      const isBusinessesServed = s.label?.toLowerCase().includes('businesses served');
+      const visible =
+        typeof s.visible === 'boolean'
+          ? s.visible
+          : isBusinessesServed
+          ? false
+          : true;
+      return {
+        ...s,
+        value: val,
+        visible,
+      };
+    });
+  } else {
+    merged.hero.stats = [...defaultContent.hero.stats];
+  }
+
+  // Apply one-time pause migration so cached/cloud content immediately reflects:
+  // 1) Only CirclesFundMe testimonial visible (others paused, ready to re-activate in Admin)
+  // 2) '48 businesses served' stat paused (visible: false) and '120+' updated to '50+'
+  // 3) Live popups, course links, 3-ways strip, and duplicate bottom showcase paused
+  const PAUSE_MIGRATION_KEY = 'advibe.pause_migration.v2';
+  let pauseMigrationApplied = false;
+  try {
+    pauseMigrationApplied = localStorage.getItem(PAUSE_MIGRATION_KEY) === 'true';
+  } catch {
+    /* ignore */
+  }
+
   if (Array.isArray(merged.testimonials) && merged.testimonials.length > 0) {
     const defMap = new Map(defaultContent.testimonials.map((t) => [t.id, t]));
     const existingIds = new Set(merged.testimonials.map((t) => t.id));
     merged.testimonials = [
       ...merged.testimonials.map((t) => {
         const def = defMap.get(t.id);
-        if (!def) return t;
+        const isCirclesFundMe =
+          t.id === 't4' || t.business?.toLowerCase().includes('circlesfundme');
+        const resolvedVisible = !pauseMigrationApplied
+          ? isCirclesFundMe
+          : typeof t.visible === 'boolean'
+          ? t.visible
+          : def?.visible ?? isCirclesFundMe;
+
+        if (!def) {
+          return { ...t, visible: resolvedVisible };
+        }
         const isLegacyShortName = t.name === 'Chiamaka E.' || t.name === 'Ibrahim M.' || t.name === 'Funke A.';
         const isLegacyShortQuote = t.quote && t.quote.length < 110;
         const isLegacy60sLabel = t.packageUsed === 'Single 60s Explainer Video';
@@ -529,7 +572,7 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
         if (isLegacyJargon || isLegacyShortName || isLegacyShortQuote || isLegacy60sLabel) {
           return {
             ...def,
-            visible: typeof t.visible === 'boolean' ? t.visible : def.visible,
+            visible: resolvedVisible,
             featured: typeof t.featured === 'boolean' ? t.featured : def.featured,
           };
         }
@@ -537,6 +580,7 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
         return {
           ...def,
           ...t,
+          visible: resolvedVisible,
           role: t.role || def.role,
           packageUsed: t.packageUsed || def.packageUsed,
           roiHeadline: t.roiHeadline || def.roiHeadline,
@@ -552,6 +596,24 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
     ];
   } else {
     merged.testimonials = defaultContent.testimonials;
+  }
+
+  if (!pauseMigrationApplied) {
+    merged.sections = {
+      ...merged.sections,
+      liveToasts: false,
+      trainingCourse: false,
+      chooseYourPath: false,
+      partnerShowcaseBottom: false,
+    };
+    merged.hero.stats = merged.hero.stats.map((s) =>
+      s.label?.toLowerCase().includes('businesses served') ? { ...s, visible: false } : s
+    );
+    try {
+      localStorage.setItem(PAUSE_MIGRATION_KEY, 'true');
+    } catch {
+      /* ignore */
+    }
   }
 
   merged.defaultCountry = c.defaultCountry || 'NG';

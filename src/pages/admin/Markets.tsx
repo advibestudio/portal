@@ -176,7 +176,7 @@ export function CountriesTab({ draft, set }: { draft: SiteContent; set: SetFn })
 /* ====================================================================== */
 const SECTION_INFO: { key: SectionKey; title: string; desc: string }[] = [
   { key: 'wall', title: 'Spinning video wall (top of page)', desc: 'The 3D wall of your videos under the headline.' },
-  { key: 'proof', title: 'Trust strip', desc: 'The scrolling list of what you make, plus your three headline numbers.' },
+  { key: 'proof', title: 'Trust strip', desc: 'The scrolling list of what you make, plus your headline numbers (50+ videos delivered, 5 days average delivery, etc.).' },
   { key: 'showcase', title: 'Work gallery', desc: '"Ads we\'ve made" — the filterable row of videos. (Also hides the Work link and "See our work" button.)' },
   { key: 'clients', title: 'Client spotlight', desc: 'The "trusted by" badge under the hero buttons and the featured-client section.' },
   { key: 'problem', title: 'The problem section', desc: '"People don\'t read everything. They scroll."' },
@@ -185,10 +185,13 @@ const SECTION_INFO: { key: SectionKey; title: string; desc: string }[] = [
   { key: 'events', title: 'Upcoming events / sales seasons', desc: 'The calendar-powered "Got something coming up?" block.' },
   { key: 'whyUs', title: 'Why businesses choose us', desc: 'The "no camera crew" statement and chips.' },
   { key: 'process', title: 'How it works', desc: 'The step-by-step process. (Also hides its menu link.)' },
-  { key: 'testimonials', title: 'Testimonials', desc: 'Customer quotes.' },
+  { key: 'testimonials', title: 'Testimonials section', desc: 'Client stories section (currently showing CirclesFundMe only; individual stories can be toggled below or in the Testimonials tab).' },
   { key: 'faq', title: 'FAQs', desc: 'The questions and answers. (Also hides its menu link.)' },
   { key: 'finalCta', title: 'Final call-to-action', desc: 'The big closing block near the bottom.' },
-  { key: 'liveToasts', title: '"Just started" pop-ups', desc: 'Small notices showing real people who just began an order, with their country.' },
+  { key: 'liveToasts', title: 'Live viewer & activity pop-ups (Paused)', desc: 'Floating bottom-left notices showing live viewers, strategy calls, and recent activity. Currently paused — switch On anytime to re-activate.' },
+  { key: 'trainingCourse', title: 'AI Video Training / Course links in Navbar & Footer (Paused)', desc: 'Shows or hides the AI Video Training program links in the main navigation bar and footer.' },
+  { key: 'chooseYourPath', title: '"Three Ways to Grow With AdVibe" strip (Paused)', desc: 'The 3-card path selector strip (Done-For-You Ads, Monthly Partner, and AI Video Training). Currently paused.' },
+  { key: 'partnerShowcaseBottom', title: 'Second "Two Ways to Partner With Our Studio" bottom section (Paused)', desc: 'The duplicate flagship cards section below Pricing. Keep Off so "Two Ways to Partner" only appears once.' },
 ];
 
 export function SectionsTab({ draft, set }: { draft: SiteContent; set: SetFn }) {
@@ -209,13 +212,62 @@ export function SectionsTab({ draft, set }: { draft: SiteContent; set: SetFn }) 
           {SECTION_INFO.map((s) => (
             <div key={s.key} className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 p-3">
               <div className="min-w-0"><p className="text-sm font-semibold text-white">{s.title}</p><p className="text-xs text-white/45">{s.desc}</p></div>
-              <Pill on={draft.sections[s.key]} onClick={() => set((d) => { d.sections[s.key] = !d.sections[s.key]; })}>{draft.sections[s.key] ? 'On' : 'Off'}</Pill>
+              <Pill on={Boolean(draft.sections[s.key])} onClick={() => set((d) => { d.sections[s.key] = !d.sections[s.key]; })}>{draft.sections[s.key] ? 'On' : 'Paused'}</Pill>
             </div>
           ))}
           <div className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 p-3 opacity-70">
             <div><p className="text-sm font-semibold text-white">Packages & prices</p><p className="text-xs text-white/40">Always on — this is how people order. To stop selling in one country, switch that country off under Countries &amp; Prices.</p></div>
             <span className="flex items-center gap-1.5 text-xs text-white/50"><Lock className="h-3.5 w-3.5" /> Always on</span>
           </div>
+        </div>
+      </div>
+
+      {/* Quick Re-Activation Panel for Paused Hero Trust Stats & Testimonials */}
+      <div className={box}>
+        <div>
+          <p className="font-display text-lg uppercase text-white">Paused Trust Numbers & Client Testimonials</p>
+          <p className="mt-1 text-sm text-white/50">
+            Everything you asked to pause or hide is preserved right here. Toggle any stat (like <strong className="text-white/80">48 businesses served</strong>) or client testimonial back on whenever you are ready.
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <p className="font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">Hero Trust Strip Numbers</p>
+          {draft.hero.stats.map((st, i) => {
+            const isOn = st.visible !== false;
+            return (
+              <div key={i} className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 p-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-white">
+                    {st.value} — <span className="text-white/70">{st.label}</span>
+                  </p>
+                  <p className="text-xs text-white/45">
+                    {isOn ? 'Currently visible in the Hero Trust Strip' : 'Paused and hidden from public visitors'}
+                  </p>
+                </div>
+                <Pill on={isOn} onClick={() => set((d) => { d.hero.stats[i].visible = !isOn; })}>
+                  {isOn ? 'On' : 'Paused'}
+                </Pill>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="space-y-2 pt-2">
+          <p className="font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">Client Testimonials (Beneath Process Section)</p>
+          {draft.testimonials.map((t, i) => (
+            <div key={t.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 p-3">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-white">
+                  {t.business} <span className="text-xs font-normal text-white/50">({t.name} · {t.industry})</span>
+                </p>
+                <p className="text-xs text-white/45 truncate">{t.roiHeadline || t.quote}</p>
+              </div>
+              <Pill on={t.visible} onClick={() => set((d) => { d.testimonials[i].visible = !d.testimonials[i].visible; })}>
+                {t.visible ? 'On' : 'Paused'}
+              </Pill>
+            </div>
+          ))}
         </div>
       </div>
 

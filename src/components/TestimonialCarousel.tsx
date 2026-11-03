@@ -101,73 +101,75 @@ export function TestimonialCarousel({ onStrategy }: TestimonialCarouselProps) {
           </SecHead>
         </div>
 
-        {/* Simple Business Name Tabs + Back & Next Controls */}
-        <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div
-            className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
-            role="tablist"
-            aria-label="Choose a business story"
-          >
-            {items.map((item, idx) => {
-              const isSelected = idx === safeIndex;
-              return (
+        {/* Simple Business Name Tabs + Back & Next Controls (shown when 2+ stories are active) */}
+        {count > 1 && (
+          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div
+              className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
+              role="tablist"
+              aria-label="Choose a business story"
+            >
+              {items.map((item, idx) => {
+                const isSelected = idx === safeIndex;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    onClick={() => setActiveIndex(idx)}
+                    className={`shrink-0 rounded-xl border px-4 py-2.5 font-display text-sm font-bold tracking-tight transition duration-200 ${
+                      isSelected
+                        ? 'border-[#111412] bg-[#111412] text-white shadow-sm'
+                        : 'border-[#111412]/15 bg-white text-[#2a302b] hover:border-[#111412]/40 hover:bg-[#f3f4ef]'
+                    }`}
+                  >
+                    {item.business}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Simple Back / Next & Pause Controls */}
+            <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
+              <span className="font-mono text-xs font-semibold text-[#586159] tabular-nums">
+                Story {safeIndex + 1} of {count}
+              </span>
+
+              <div className="flex items-center gap-2">
                 <button
-                  key={item.id}
                   type="button"
-                  role="tab"
-                  aria-selected={isSelected}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`shrink-0 rounded-xl border px-4 py-2.5 font-display text-sm font-bold tracking-tight transition duration-200 ${
-                    isSelected
-                      ? 'border-[#111412] bg-[#111412] text-white shadow-sm'
-                      : 'border-[#111412]/15 bg-white text-[#2a302b] hover:border-[#111412]/40 hover:bg-[#f3f4ef]'
-                  }`}
+                  onClick={() => setIsAutoPlaying((prev) => !prev)}
+                  aria-label={isAutoPlaying ? 'Pause automatic slide changes' : 'Play automatic slide changes'}
+                  className=" inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#111412]/15 bg-white text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
+                  title={isAutoPlaying ? 'Pause auto-play' : 'Resume auto-play'}
                 >
-                  {item.business}
+                  {isAutoPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 </button>
-              );
-            })}
-          </div>
 
-          {/* Simple Back / Next & Pause Controls */}
-          <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
-            <span className="font-mono text-xs font-semibold text-[#586159] tabular-nums">
-              Story {safeIndex + 1} of {count}
-            </span>
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  aria-label="Previous client story"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412]/15 bg-white px-3.5 text-xs font-bold text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Back</span>
+                </button>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAutoPlaying((prev) => !prev)}
-                aria-label={isAutoPlaying ? 'Pause automatic slide changes' : 'Play automatic slide changes'}
-                className=" inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#111412]/15 bg-white text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
-                title={isAutoPlaying ? 'Pause auto-play' : 'Resume auto-play'}
-              >
-                {isAutoPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Previous client story"
-                className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412]/15 bg-white px-3.5 text-xs font-bold text-[#111412] transition hover:border-[#111412] hover:bg-[#f3f4ef]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>Back</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Next client story"
-                className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412] bg-[#111412] px-3.5 text-xs font-bold text-white transition hover:bg-[#2a302b]"
-              >
-                <span>Next</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  aria-label="Next client story"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-[#111412] bg-[#111412] px-3.5 text-xs font-bold text-white transition hover:bg-[#2a302b]"
+                >
+                  <span>Next</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Spacious Story Card */}
         <div

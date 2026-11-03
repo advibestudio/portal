@@ -77,6 +77,12 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
     { label: 'AI Mini-Series', href: '#/promotional-mini-series', on: true },
     {
+      label: 'Training',
+      href: '#/training',
+      on: Boolean(sec.trainingCourse),
+      pill: isCohortActive ? 'Live' : undefined,
+    },
+    {
       label: 'Client Portal',
       href: '#/client-portal',
       on: true,
@@ -278,6 +284,7 @@ export function Proof() {
   const words = ['Product ads', 'UGC-style ads', 'Event promos', 'Explainer videos', 'Black Friday', 'Detty December', "Valentine's", 'Launch campaigns', 'Brand videos', 'Service ads'];
   const row = [...words, ...words];
   const tones = ['tone-peach', 'tone-mint', 'tone-butter', 'tone-lilac'];
+  const visibleStats = content.hero.stats.filter((s) => s.visible !== false);
   return (
     <section className="proof" aria-label="What we make and results">
       <div className="wrap">
@@ -285,18 +292,20 @@ export function Proof() {
         <div className="marquee" aria-hidden="true">
           <div className="marquee-track">{row.map((w, i) => <span key={i}>{w}</span>)}</div>
         </div>
-        <ul className="stats">
-          {content.hero.stats.map((s, i) => (
-            <li key={s.label}>
-              <Reveal delay={i * 0.07}>
-                <div className={`stat ${tones[i % tones.length]}`}>
-                  <span className="stat-value">{s.value}</span>
-                  <span className="stat-label">{s.label}</span>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ul>
+        {visibleStats.length > 0 && (
+          <ul className="stats">
+            {visibleStats.map((s, i) => (
+              <li key={s.label}>
+                <Reveal delay={i * 0.07}>
+                  <div className={`stat ${tones[i % tones.length]}`}>
+                    <span className="stat-value">{s.value}</span>
+                    <span className="stat-label">{s.label}</span>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

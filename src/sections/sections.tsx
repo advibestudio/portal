@@ -401,17 +401,20 @@ export function Footer() {
           <div className="foot-col">
             <h4>Explore</h4>
             {[
-              ['Our Work', '#work'],
-              ['Services', '#services'],
-              ['Packages', '#pricing'],
-              ['Monthly Retainer', '#/monthly-content'],
-              ['How It Works', '#process'],
-              ['AI Mini-Series', '#/promotional-mini-series'],
-            ].map(([l, h]) => (
-              <a key={h} href={h}>
-                {l}
-              </a>
-            ))}
+              ['Our Work', '#work', true],
+              ['Services', '#services', true],
+              ['Packages', '#pricing', true],
+              ['Monthly Retainer', '#/monthly-content', true],
+              ['How It Works', '#process', true],
+              ['AI Mini-Series', '#/promotional-mini-series', true],
+              ['AI Video Training', '#/training', Boolean(content.sections?.trainingCourse)],
+            ]
+              .filter(([, , on]) => on)
+              .map(([l, h]) => (
+                <a key={String(h)} href={String(h)}>
+                  {l}
+                </a>
+              ))}
           </div>
           <div className="foot-col">
             <h4>WebApps & Portals</h4>
@@ -517,3 +520,58 @@ export function CommercialOffersShowcase() {
     </section>
   );
 }
+
+/* ---------- 3 WAYS TO GROW WITH ADVIBE (PAUSED BY DEFAULT, RE-ACTIVATABLE IN ADMIN) ---------- */
+export function ChooseYourPathStrip() {
+  return (
+    <section className="sec" style={{ paddingTop: 0 }}>
+      <div className="wrap">
+        <SecHead label="Choose Your Growth Path" lead="Whether you need a single campaign ad, ongoing monthly production, or hands-on training for your team.">
+          Three Ways to Grow With <em>AdVibe.</em>
+        </SecHead>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 18 }}>
+          <div className="card-soft" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <span className="pill-label">01 · Done-For-You Ads</span>
+              <h3 style={{ font: '800 22px/1.2 var(--font-display)', marginTop: 8 }}>One-Off & Creative Test Packs</h3>
+              <p style={{ marginTop: 8, fontSize: 14, color: 'rgb(var(--ink-2))' }}>
+                Order a single high-converting video ad or a 5/10 creative testing pack delivered in 5–10 days.
+              </p>
+            </div>
+            <a href="#pricing" className="btn-studio is-sm" style={{ justifyContent: 'space-between' }}>
+              <span>View Ad Packages</span>
+              <ArrowBtn />
+            </a>
+          </div>
+          <div className="card-soft" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <span className="pill-label">02 · Monthly Studio Partner</span>
+              <h3 style={{ font: '800 22px/1.2 var(--font-display)', marginTop: 8 }}>Retainer & AI Mini-Series</h3>
+              <p style={{ marginTop: 8, fontSize: 14, color: 'rgb(var(--ink-2))' }}>
+                Get 15 custom AI video ads or an original episodic branded mini-series produced for your brand every month.
+              </p>
+            </div>
+            <a href="#/monthly-content" className="btn-studio is-sm" style={{ justifyContent: 'space-between' }}>
+              <span>Explore Monthly Plans</span>
+              <ArrowBtn />
+            </a>
+          </div>
+          <div className="card-soft" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 16 }}>
+            <div>
+              <span className="pill-label">03 · Learn the Skill</span>
+              <h3 style={{ font: '800 22px/1.2 var(--font-display)', marginTop: 8 }}>AI Video Intensive Training</h3>
+              <p style={{ marginTop: 8, fontSize: 14, color: 'rgb(var(--ink-2))' }}>
+                Master our complete script-to-screen AI commercial workflow in a live 2-week intensive cohort.
+              </p>
+            </div>
+            <a href="#/training" className="btn-studio is-sm" style={{ justifyContent: 'space-between' }}>
+              <span>View Training Cohort</span>
+              <ArrowBtn />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+

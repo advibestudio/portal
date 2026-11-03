@@ -74,10 +74,90 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
             <Field label="Primary button"><input className={inputCls} value={draft.hero.primaryCta} onChange={(e) => set((d) => { d.hero.primaryCta = e.target.value; })} /></Field>
             <Field label="Secondary button"><input className={inputCls} value={draft.hero.secondaryCta} onChange={(e) => set((d) => { d.hero.secondaryCta = e.target.value; })} /></Field>
           </div>
-          <Field label="Trust strip (value — label, one per line)">
-            <textarea className={`${inputCls} min-h-[90px] font-mono text-xs`} value={draft.hero.stats.map((s) => `${s.value} — ${s.label}`).join('\n')}
-              onChange={(e) => set((d) => { d.hero.stats = e.target.value.split('\n').filter(Boolean).map((l) => { const [v, ...rest] = l.split('—'); return { value: (v ?? '').trim(), label: rest.join('—').trim() }; }); })} />
-          </Field>
+          <div className="space-y-3 pt-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className={labelCls}>Hero Trust Strip Numbers (Toggle individual stats On or Paused)</span>
+              <button
+                type="button"
+                onClick={() =>
+                  set((d) => {
+                    d.hero.stats.push({ value: '100+', label: 'new milestone', visible: true });
+                  })
+                }
+                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 text-xs font-semibold text-white/80 hover:border-[#f5a524] hover:text-[#f5a524]"
+              >
+                <Plus className="h-3.5 w-3.5" /> Add stat
+              </button>
+            </div>
+            <div className="space-y-2.5">
+              {draft.hero.stats.map((s, idx) => {
+                const isVisible = s.visible !== false;
+                return (
+                  <div
+                    key={idx}
+                    className={`flex flex-col gap-3 rounded-xl border p-3.5 sm:flex-row sm:items-center ${
+                      isVisible ? 'border-white/15 bg-white/[0.04]' : 'border-amber-500/25 bg-amber-500/[0.04] opacity-80'
+                    }`}
+                  >
+                    <div className="grid flex-1 gap-3 sm:grid-cols-2">
+                      <Field label="Number / Value (e.g. 50+)">
+                        <input
+                          className={inputCls}
+                          value={s.value}
+                          onChange={(e) =>
+                            set((d) => {
+                              d.hero.stats[idx].value = e.target.value;
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="Label (e.g. videos delivered)">
+                        <input
+                          className={inputCls}
+                          value={s.label}
+                          onChange={(e) =>
+                            set((d) => {
+                              d.hero.stats[idx].label = e.target.value;
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <div className="flex items-center justify-end gap-2 sm:pt-5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          set((d) => {
+                            d.hero.stats[idx].visible = !isVisible;
+                          })
+                        }
+                        className={`flex min-h-[42px] items-center gap-2 rounded-xl border px-3.5 text-xs font-bold uppercase tracking-wider transition ${
+                          isVisible
+                            ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                            : 'border-amber-500/40 bg-amber-500/15 text-amber-300'
+                        }`}
+                      >
+                        {isVisible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                        {isVisible ? 'Showing on Site' : 'Paused (Hidden)'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          set((d) => {
+                            d.hero.stats.splice(idx, 1);
+                          })
+                        }
+                        className="grid h-10 w-10 place-items-center rounded-lg text-white/35 hover:text-red-300"
+                        aria-label="Delete stat"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
@@ -86,8 +166,68 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
       {tab === 'Pricing & Offers' && <OffersEditor draft={draft} set={set} />}
       {tab === 'Testimonials' && (
         <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#f5a524]/30 bg-[#f5a524]/[0.06] p-4">
+            <div>
+              <p className="text-sm font-bold text-white">Testimonials Visibility Control</p>
+              <p className="text-xs text-white/60">
+                Paused testimonials stay saved here so you can re-activate them anytime with one click. Currently{' '}
+                <strong className="text-[#f5a524]">
+                  {draft.testimonials.filter((t) => t.visible).length} of {draft.testimonials.length}
+                </strong>{' '}
+                showing on the public site.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  set((d) => {
+                    d.testimonials.forEach((t) => {
+                      t.visible = t.id === 't4' || t.business.toLowerCase().includes('circlesfundme');
+                    });
+                  })
+                }
+                className="min-h-[38px] rounded-xl border border-[#f5a524]/50 bg-[#f5a524]/15 px-3.5 text-xs font-bold text-[#f5a524] transition hover:bg-[#f5a524]/25"
+              >
+                Show CirclesFundMe Only
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  set((d) => {
+                    d.testimonials.forEach((t) => {
+                      t.visible = true;
+                    });
+                  })
+                }
+                className="min-h-[38px] rounded-xl border border-white/15 bg-white/5 px-3.5 text-xs font-bold text-white/80 transition hover:bg-white/10"
+              >
+                Activate All Testimonials
+              </button>
+            </div>
+          </div>
           {draft.testimonials.map((t, i) => (
-            <div key={t.id} className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+            <div key={t.id} className={`space-y-3 rounded-xl border p-5 ${t.visible ? 'border-white/10 bg-white/[0.03]' : 'border-amber-500/20 bg-amber-500/[0.02] opacity-80'}`}>
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-bold text-white">{t.business || 'Client Testimonial'}</span>
+                  <span className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider ${t.visible ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}`}>
+                    {t.visible ? 'Active on Site' : 'Paused (Hidden)'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => set((d) => { d.testimonials[i].visible = !d.testimonials[i].visible; })}
+                  className={`flex min-h-[38px] items-center gap-2 rounded-lg border px-3 text-xs font-bold uppercase tracking-wider ${
+                    t.visible
+                      ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                      : 'border-amber-500/40 bg-amber-500/15 text-amber-300'
+                  }`}
+                >
+                  {t.visible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+                  {t.visible ? 'Showing — Click to Pause' : 'Paused — Click to Activate'}
+                </button>
+              </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <Field label="Client Name"><input className={inputCls} value={t.name} onChange={(e) => set((d) => { d.testimonials[i].name = e.target.value; })} /></Field>
                 <Field label="Role / Title"><input className={inputCls} placeholder="e.g. Founder & CEO" value={t.role ?? ''} onChange={(e) => set((d) => { d.testimonials[i].role = e.target.value; })} /></Field>
@@ -104,10 +244,7 @@ export function ContentView({ role, actor, initialTab }: { role: 'owner' | 'ops'
                 <Field label="Before AdVibe (Baseline Challenge)"><textarea className={`${inputCls} min-h-[65px] resize-none`} value={t.beforeSummary ?? ''} onChange={(e) => set((d) => { d.testimonials[i].beforeSummary = e.target.value; })} /></Field>
                 <Field label="After AdVibe (Verified Outcome)"><textarea className={`${inputCls} min-h-[65px] resize-none`} value={t.afterSummary ?? ''} onChange={(e) => set((d) => { d.testimonials[i].afterSummary = e.target.value; })} /></Field>
               </div>
-              <div className="flex items-center justify-between pt-1">
-                <button onClick={() => set((d) => { d.testimonials[i].visible = !d.testimonials[i].visible; })} className="flex min-h-[40px] items-center gap-2 rounded-lg border border-white/15 px-3 text-xs font-semibold text-white/70">
-                  {t.visible ? <Eye className="h-3.5 w-3.5 text-[#f5a524]" /> : <EyeOff className="h-3.5 w-3.5" />} {t.visible ? 'Visible' : 'Hidden'}
-                </button>
+              <div className="flex items-center justify-end pt-1">
                 <button onClick={() => set((d) => { d.testimonials.splice(i, 1); })} className="grid h-10 w-10 place-items-center rounded-lg text-white/35 hover:text-red-300" aria-label="Delete testimonial"><Trash2 className="h-4 w-4" /></button>
               </div>
             </div>

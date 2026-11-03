@@ -3,7 +3,7 @@ import type { PortfolioItem, Offer } from '@/content/types';
 import { useStore } from '@/lib/store';
 import { CountryProvider } from '@/lib/country';
 import { Nav, Hero, Proof, Showcase, StickyBar } from '@/sections/chrome';
-import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, FinalCta, Footer, ClientSpotlight } from '@/sections/sections';
+import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, FinalCta, Footer, ClientSpotlight, ChooseYourPathStrip, CommercialOffersShowcase } from '@/sections/sections';
 import { CostCompare } from '@/sections/CostCompare';
 import { SalesHome } from '@/sections/SalesHome';
 import { Lightbox } from '@/components/shared';
@@ -96,6 +96,7 @@ function Page() {
       <main>
         <Hero onOrder={() => openStrategy()} onStrategy={() => openStrategy()} onPlay={setPlaying} />
         {sec.proof && <Proof />}
+        {sec.chooseYourPath && <ChooseYourPathStrip />}
         {sec.showcase && <Showcase onPlay={setPlaying} />}
         {sec.clients && <ClientSpotlight onPlay={setPlaying} />}
         <SalesHome />
@@ -103,6 +104,7 @@ function Page() {
         {sec.services && <Services />}
         {sec.events && <Events onOrder={(ev) => openStrategy(undefined, ev ? `${ev} Campaign` : undefined)} />}
         <Pricing onChoose={(o) => openStrategy(o)} />
+        {sec.partnerShowcaseBottom && <CommercialOffersShowcase />}
         {sec.aiCompare && <CostCompare />}
         {sec.whyUs && <WhyUs />}
         {sec.process && <Process />}
