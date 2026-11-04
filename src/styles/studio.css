@@ -73,16 +73,25 @@
 }
 
 [data-theme="dark"] .site-nav-bar {
-  background: rgba(18, 22, 29, 0.9);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.14), 0 12px 30px -18px rgba(0, 0, 0, 0.8);
+  background: rgba(16, 20, 28, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), 0 16px 38px -16px rgba(0, 0, 0, 0.85);
 }
 [data-theme="dark"] .site-nav.is-scrolled .site-nav-bar {
-  background: rgba(18, 22, 29, 0.97);
+  background: rgba(16, 20, 28, 0.96);
+}
+[data-theme="dark"] .site-links {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+[data-theme="dark"] .site-links a.is-featured-link {
+  background: rgba(245, 165, 36, 0.16);
+  color: #f5a524;
+  font-weight: 700;
 }
 [data-theme="dark"] .site-links a:hover,
 [data-theme="dark"] .menu-btn,
 [data-theme="dark"] .country-btn {
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.1);
   color: rgb(var(--ink));
 }
 [data-theme="dark"] .menu-btn:hover,
@@ -269,14 +278,16 @@ p, li { text-wrap: pretty; }
 
 /* ---------- Nav (floating pill) ---------- */
 .site-nav { position: fixed; inset: 12px 0 auto; z-index: 60; pointer-events: none; }
-.site-nav-bar { pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; width: min(1200px, calc(100vw - 20px)); max-width: calc(100vw - 20px); margin-inline: auto; padding: 6px 6px 6px 12px; border-radius: 999px; background: #ffffff94; backdrop-filter: blur(14px) saturate(1.3); box-shadow: inset 0 1px #ffffffb3, 0 12px 30px -18px #11141259; transition: background-color .3s; box-sizing: border-box; }
-.site-nav.is-scrolled .site-nav-bar { background: #ffffffe8; }
-.site-brand { display: flex; align-items: center; gap: 8px; min-height: 44px; min-width: 0; flex-shrink: 1; font: 800 16px / 1 var(--font-display); letter-spacing: -.02em; white-space: nowrap; }
+.site-nav-bar { pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; width: min(1240px, calc(100vw - 20px)); max-width: calc(100vw - 20px); margin-inline: auto; padding: 6px 8px 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(18px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(17, 20, 18, 0.09), 0 16px 36px -18px rgba(17, 20, 18, 0.22); transition: background-color .3s, box-shadow .3s; box-sizing: border-box; }
+.site-nav.is-scrolled .site-nav-bar { background: rgba(255, 255, 255, 0.96); box-shadow: inset 0 0 0 1px rgba(17, 20, 18, 0.12), 0 18px 40px -18px rgba(17, 20, 18, 0.28); }
+.site-brand { display: flex; align-items: center; gap: 9px; min-height: 42px; min-width: 0; flex-shrink: 0; font: 800 15.5px / 1 var(--font-display); letter-spacing: -.02em; white-space: nowrap; }
 .site-brand > span:last-child { overflow: hidden; text-overflow: ellipsis; }
 .brand-mark { display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; background: #111412; color: rgb(var(--brand)); }
-.site-links { display: none; gap: 4px; align-items: center; }
-.site-links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 10px; border-radius: 999px; color: rgb(var(--ink-2)); font-size: 14px; font-weight: 500; white-space: nowrap; transition: background-color .2s; }
-.site-links a:hover { background: #1114120f; }
+.site-links { display: none; gap: 3px; align-items: center; padding: 4px; border-radius: 999px; background: rgba(17, 20, 18, 0.04); box-shadow: inset 0 0 0 1px rgba(17, 20, 18, 0.06); }
+.site-links a { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; border-radius: 999px; color: rgb(var(--ink-2)); font-size: 13.5px; font-weight: 600; white-space: nowrap; transition: background-color .2s, color .2s; }
+.site-links a.is-featured-link { background: rgb(var(--brand)); color: #111412; font-weight: 700; }
+.site-links a:hover { background: rgba(17, 20, 18, 0.08); color: rgb(var(--ink)); }
+.site-links a.is-featured-link:hover { filter: brightness(1.04); background: rgb(var(--brand)); color: #111412; }
 .site-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .nav-cta-label-long { display: none; }
 .menu-btn { display: grid; place-items: center; flex-shrink: 0; width: 42px; height: 42px; border-radius: 999px; background: #11141212; border: none; cursor: pointer; color: rgb(var(--ink)); transition: background-color .2s; }

@@ -68,10 +68,9 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
     activeCohort.status === 'final_seats'
   );
 
-  // Recommended main navigation per Part 1.1:
-  // Our Work, Services, Packages, Monthly Retainer, How It Works (plus non-competing access to Mini-Series & Training)
-  const links: Array<{ label: string; href: string; on: boolean; pill?: string }> = [
-    { label: 'Our Work', href: '#/our-work', on: true },
+  // Desktop center pill links: curated for zero crowding inside the floating pill
+  const desktopLinks: Array<{ label: string; href: string; on: boolean; pill?: string; featured?: boolean }> = [
+    { label: 'Our Work', href: '#/our-work', on: true, featured: true },
     { label: 'Services', href: '#services', on: sec.services },
     { label: 'Packages', href: '#pricing', on: true },
     { label: 'Monthly Retainer', href: '#/monthly-content', on: true },
@@ -82,16 +81,13 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
       on: Boolean(sec.trainingCourse),
       pill: isCohortActive ? 'Live' : undefined,
     },
-    {
-      label: 'Client Portal',
-      href: '#/client-portal',
-      on: true,
-    },
-    {
-      label: 'Download Apps',
-      href: '#/apps',
-      on: true,
-    },
+  ].filter((l) => l.on);
+
+  // Full link list for mobile drawer
+  const mobileLinks: Array<{ label: string; href: string; on: boolean; pill?: string }> = [
+    ...desktopLinks,
+    { label: 'Client Portal', href: '#/client-portal', on: true },
+    { label: 'Download Apps', href: '#/apps', on: true },
   ].filter((l) => l.on);
 
   const handlePrimaryCta = () => {
@@ -110,8 +106,13 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
           <span>{content.brand.name}</span>
         </a>
         <nav className="site-links" aria-label="Main">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          {desktopLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className={l.featured ? 'is-featured-link' : undefined}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+            >
               <span>{l.label}</span>
               {l.pill && (
                 <span style={{ fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '2px 7px', borderRadius: 999, background: 'rgb(var(--brand))', color: '#111412' }}>
@@ -123,12 +124,12 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
         </nav>
         <div className="site-actions">
           <div className="hidden lg:block">
-            <AppQuickSwitcher label="Apps" compact />
+            <AppQuickSwitcher label="Portals" compact />
           </div>
           <ThemeToggleButton compact />
           <CountrySwitch />
           <button onClick={handlePrimaryCta} className="btn-studio is-sm">
-            <span>Book a Free Strategy Session</span><span className="btn-arrow" aria-hidden="true"><ArrowRight size={16} strokeWidth={2.4} /></span>
+            <span>Book Strategy Call</span><span className="btn-arrow" aria-hidden="true"><ArrowRight size={15} strokeWidth={2.4} /></span>
           </button>
           <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
             {open ? <X size={20} /> : <Menu size={20} />}
@@ -137,7 +138,7 @@ export function Nav({ onOrder, onStrategy }: { onOrder: () => void; onStrategy?:
       </div>
       {open && (
         <nav className="mobile-menu" aria-label="Mobile">
-          {links.map((l) => (
+          {mobileLinks.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setOpen(false)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>{l.label}</span>
               {l.pill && (
