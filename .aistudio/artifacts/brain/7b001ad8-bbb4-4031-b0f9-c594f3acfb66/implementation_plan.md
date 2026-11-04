@@ -1,86 +1,91 @@
+# Instant Mobile Hero Video Boot Optimization
+
+Eliminates mobile startup delay on the **AI Promotional Mini-Series** and **Monthly AI Video Content Retainer** hero sections so the mosaic video backdrop appears and begins playing virtually instantaneously on mobile connections.
+
 ### User Review & Critical Decisions
 
-- **Showcase Segmentation & Structure**: The Our Work Screening Room (`#/our-work`) will be organized into three distinct, visually cohesive zones below the Cinema Screening Stage:
-  1. **Featured CirclesFundMe Brand Collection (`#circlesfundme`)**: A dedicated editorial showcase spotlighting CirclesFundMe's campaign reels, verified impact highlights, and a 1-click shareable CirclesFundMe portfolio link.
-  2. **Company-Specific Search & Brand Directory (`#company-search`)**: A dedicated company search bar paired with interactive client selector pills (showing reel counts per brand) and 1-click shareable company URLs (`#/our-work?company=<ClientName>`).
-  3. **General Work Depository (`#general-depository`)**: The complete master repository of all studio productions with category tabs, aspect-ratio filtering (`9:16 Vertical` vs. `16:9 Widescreen`), and keyword search.
-- **Navigation Bar Upgrade**: Both the Our Work Showcase page and the main studio navigation will feature a sleek floating studio pill navbar (`rounded-full`, glassmorphic backdrop blur, crisp 1px border, and balanced 3-zone layout) that adapts seamlessly between White Mode and Dark Mode with quick-jump section links (`Screening Stage`, `CirclesFundMe`, `Company Search`, `All Works`).
-- **View-Only Screening Protection**: All video embeds across the Featured CirclesFundMe section, Company Directory, and General Work Depository maintain strict view-only streaming protections (`youtube-nocookie.com`, disabled context menus, no download links).
+> [!IMPORTANT]
+> **Root Cause Diagnosed**: The raw uploaded hero video is **8.4 MB** (`hero-video_3a894603.mp4`) and its fallback image is an uncompressed **1.6 MB PNG** (`image_583be17e.png` which also contains baked-in reference screenshot text). On mobile networks, downloading 10 MB of unoptimized media before playback starts causes a noticeable delay.
+>
+> **Optimization Strategy**:
+> - **88% Mobile Video Payload Reduction + Fast-Start Atom**: Encode a dedicated mobile-optimized stream (~850 KB, H.264 with `-movflags +faststart` and muted audio track stripped) alongside a fast-start desktop stream (~2.0 MB) so playback starts on the very first network packet without waiting for the full file.
+> - **Instant Clean First-Frame WebP Poster (~35 KB)**: Extract the exact first frame of the clean mosaic video as an ultra-lightweight WebP poster (~98% smaller than the 1.6 MB PNG) and preload it in the document `<head>`, ensuring zero blank screen and zero flash of reference screenshot text while the video stream initializes.
 
 ---
 
 ### 1. Overview & Core Concept
 
-The **Our Work Showcase & Screening Room** serves as AdVibe Studio's executive screening portal where prospective clients, partners, and brand teams can watch verified commercial productions without downloading source files.
-
-To elevate both client-specific presentation and broad portfolio exploration, the page will be structured around a curated hierarchy:
-- **Cinema Screening Stage & Master Playlist**: An interactive theater at the top of the page where any reel selected from the CirclesFundMe showcase, Company Search, or General Depository immediately loads and plays, accompanied by a synchronized playlist sidebar.
-- **Featured CirclesFundMe Brand Collection**: Segments all CirclesFundMe productions into a flagship brand monograph card featuring the client's logo, sector metadata, verified performance outcomes, a "Share CirclesFundMe Portfolio" link (`#/our-work?company=CirclesFundMe`), and dedicated reel cards.
-- **Company-Specific Search & Brand Selector**: Enables visitors to search by company name or click any brand pill (e.g., `CirclesFundMe`, `AdVibe Studio`, or any client added in the Admin CMS) to isolate that company's productions and copy a direct company-specific showcase link.
-- **General Work Depository**: Houses the full catalog of studio works with multi-dimensional filtering by production category, aspect ratio (`9:16 Vertical` and `16:9 Widescreen`), and title/keyword search.
+- **What It Does**: Delivers a zero-lag, instant-booting mosaic video backdrop on both commercial offer pages (`#/promotional-mini-series` and `#/monthly-content`) tailored specifically for mobile bandwidth and mobile browser autoplay engines (iOS Safari and Android Chrome).
+- **Target Audience / Persona**: Mobile visitors, founders, and marketing decision-makers clicking through from WhatsApp, Instagram, or mobile search who expect immediate visual polish within the first 300ms.
+- **Key Value**: Removes the multi-second black box / loading stall on mobile devices while preserving the exact full-bleed mosaic video aesthetic and AdVibe Studio's signature gold (`#f5a524`), crisp white (`#ffffff`), and obsidian (`#07090d`) brand palette.
 
 ---
 
 ### 2. User Experience & Visual Design
 
-- **Sleek Floating Studio Pill Navbar**:
-  - **3-Zone Architecture**:
-    - *Left Zone*: Studio emblem, brand wordmark, and subtle `"Screening Room"` editorial subtitle.
-    - *Center Zone*: Single-line quick-jump navigation links (`Stage`, `CirclesFundMe`, `By Company`, `All Works`) with active section highlighting and smooth scroll behavior.
-    - *Right Zone*: Theme toggle (`White Mode` / `Dark Mode`), 1-click `"Share Link"` button (copies the active company or video link), `Back to Home` link, and the primary emerald `"Book Strategy Call"` action button.
-  - **Responsive Discipline**: All navigation items enforce `whitespace-nowrap` with adaptive compact spacing on smaller viewports so the floating pill never wraps awkwardly or crowds adjacent controls.
-- **Dual-Theme High-Contrast Palette (`White Mode` & `Dark Mode`)**:
-  - **Alabaster Daylight (`White Mode`)**: Warm editorial stone canvas (`#F7F6F2`) paired with pure white elevated cards (`#FFFFFF`), deep obsidian typography (`#0F1412`), muted slate secondary metadata (`#475467`), and forest emerald accents (`#047857`).
-  - **Cinema Obsidian (`Dark Mode`)**: Deep carbon theater canvas (`#080B0E`) paired with charcoal cards (`#10151C`), crisp alabaster typography (`#F8FAFC`), cool silver secondary copy (`#94A3B8`), and luminous emerald highlights (`#34D399`).
-- **Editorial Card & Metadata Formatting**:
-  - Client, category, and aspect ratio metadata on video cards use clean typographic hierarchy with middle-dot (`·`) separators (`CirclesFundMe · Crowdfunding · 9:16 Vertical`) and `tabular-nums` index badges (`#01`, `#02`) rather than cluttered badge clusters.
+- **Key User Flows**:
+  1. **0ms – Instant Visual Frame**: As soon as a visitor opens either commercial page on mobile, the preloaded ~35 KB clean first-frame WebP mosaic image paints immediately behind the headline and gold cinema vignette—no dark flash or layout shift.
+  2. **<300ms – Fast-Start Mobile Stream**: Mobile browsers (`max-width: 768px`) automatically select the lightweight fast-start mobile video stream (`~850 KB`), where the MP4 `moov` header sits at byte 0 and unused audio data is stripped, allowing hardware decoding to begin on the first chunk.
+  3. **Seamless Crossfade**: Once the first video frame decodes, the video layer transitions in smoothly over the matching first-frame poster with zero visual jump, and programmatic low-power/autoplay recovery ensures playback starts reliably on iOS Safari and Android Chrome.
+- **Visual Identity & Theme**:
+  - *Aesthetic Direction*: Dark Cinema Editorial Studio (`#07090d` obsidian canvas, `#f5a524` AdVibe gold highlights, `#ffffff` high-contrast display typography).
+  - *Color Palette & Mood*: Retains the multi-layered radial and linear obsidian scrims plus warm gold ambient glow (`rgba(245, 165, 36, 0.16)`) with `.keep-dark` protection across Light and Dark modes.
+  - *Typography & Hierarchy*: Bold geometric sans-serif upper headline paired with expressive gold italic serif second line and inline gold highlight pill.
+- **Interactive Feedback & Motion**: Compositor-only opacity transition (`transition-opacity duration-300`) from the static first-frame WebP layer to the live video loop, respecting `prefers-reduced-motion`.
 
 ---
 
 ### 3. Key Product Decisions & Trade-Offs
 
-- **Dynamic Client Matching with Admin CMS Compatibility**:
-  - *Decision*: Rather than hardcoding CirclesFundMe videos, the Featured CirclesFundMe section dynamically matches items whose `client` field matches `content.client.matchName` (defaulting to `"CirclesFundMe"`), while the Company Search & Brand Directory automatically indexes all unique `client` names present in `content.portfolio`.
-  - *Rationale*: Any new video or client added via the Admin Portal automatically populates both the Company Selector pills and the General Depository without requiring code changes.
-- **Shareable Deep Links for Both Companies and Individual Videos**:
-  - *Decision*: Support URL query parameters for both company filtering (`#/our-work?company=CirclesFundMe`) and direct video playback (`#/our-work?v=<id>`), combinable so sharing a filtered company view opens the page scrolled or filtered directly to that brand's work.
-  - *Rationale*: Allows the sales and production team to send tailored links to prospects showcasing either a specific brand case study or a specific reel.
+- **Decision 1: Responsive Dual-Stream Encoding (`+faststart`) vs. Single 8.4 MB Raw Video**
+  - *Chosen Approach*: Generate a dedicated mobile 720p fast-start MP4 (~850 KB) and a desktop 1080p fast-start MP4 (~2.0 MB) with the silent audio stream removed (`-an`), served via responsive `<source media="(max-width: 768px)">` tags.
+  - *Why*: Because the hero backdrop sits behind a dark cinema vignette (`55%–88%` opacity scrim), a ~850 KB 720p stream is visually indistinguishable from the 8.4 MB original on mobile Retina screens while booting up to **10x faster** on 4G/5G connections.
+  - *Alternatives Considered*: Keeping the single 8.4 MB video and relying only on `preload="auto"`, which still bottlenecks mobile bandwidth and delays time-to-first-frame.
+- **Decision 2: Extracted Frame-0 WebP Poster (~35 KB) vs. Raw 1.6 MB Reference PNG**
+  - *Chosen Approach*: Extract frame `00:00:00` directly from the mosaic video as a compressed WebP poster (`~35 KB`) and preload it with `fetchpriority="high"`.
+  - *Why*: Reduces initial image weight by 98% and guarantees the poster frame aligns pixel-for-pixel with frame 1 of the video (without flashing the reference screenshot's third-party text overlay).
 
 ---
 
-### 4. Technical Architecture & Data Strategy
+### 4. Technical Architecture & Data Strategy *(Technical Reference)*
+
+- **Architecture & Component Diagram**:
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                   Floating Studio Pill Navbar (3-Zone)                   │
-│  [Brand Identity]   [Stage · CirclesFundMe · By Company · All]   [CTAs]  │
-└────────────────────────────────────┬─────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    Document Head & Asset Preloader                      │
+│  • <link rel="preload" as="image" type="image/webp" fetchpriority="high"│
+│  • Proactive idle video warm-up for instant route transitions           │
+└───────────────────────────────────┬─────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                 Reusable Hero Mosaic Video Backdrop                     │
+│  ┌───────────────────────────────┐   ┌───────────────────────────────┐  │
+│  │  Instant Frame-0 WebP Layer   │   │  Fast-Start <video> Element   │  │
+│  │  • ~35 KB clean mosaic frame  │   │  • preload="auto" + playsInline│  │
+│  │  • Paints at 0ms before video │   │  • Mobile source (<768px)     │  │
+│  │    stream finishes buffering  │   │    ~850 KB (+faststart, -an)  │  │
+│  └───────────────┬───────────────┘   │  • Desktop source (>768px)    │  │
+│                  │                   │    ~2.0 MB (+faststart, -an)  │  │
+│                  └─────────┬─────────┴───────────────┬───────────────┘  │
+│                            ▼                         ▼                  │
+│          ┌───────────────────────────────────────────────────┐          │
+│          │   Brand-Tuned Obsidian & Gold Cinema Vignettes    │          │
+│          │   • Radial center focus + #f5a524 ambient glow    │          │
+│          └─────────────────────────┬─────────────────────────┘          │
+└────────────────────────────────────┼────────────────────────────────────┘
                                      │
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│                 URL Hash & Query Parameter Synchronizer                  │
-│          Parses & updates ?v=<videoId> and ?company=<clientName>         │
-└───────────┬────────────────────────┬─────────────────────────┬───────────┘
-            │                        │                         │
-            ▼                        ▼                         ▼
-┌───────────────────────┐ ┌──────────────────────┐ ┌───────────────────────┐
-│   Cinema Screening    │ │   CirclesFundMe      │ │   Company Search &    │
-│   Stage & Playlist    │ │   Brand Collection   │ │   General Depository  │
-│                       │ │                      │ │                       │
-│ • Active YouTube      │ │ • Matches client ==  │ │ • Company search bar  │
-│   NoCookie Player     │ │   CirclesFundMe      │ │   & Brand Pills       │
-│ • Up Next Queue       │ │ • Verified metrics & │ │ • Category + Aspect   │
-│ • Lightbox Trigger    │ │   Case Study summary │ │   Ratio + Keyword     │
-│ • View-Only Shield    │ │ • Direct Share Link  │ │   Master Grid         │
-└───────────────────────┘ └──────────────────────┘ └───────────────────────┘
+                 ┌───────────────────┴───────────────────┐
+                 ▼                                       ▼
+┌─────────────────────────────────┐     ┌─────────────────────────────────┐
+│   AI Promotional Mini-Series    │     │  Monthly Video Content Retainer │
+│   (#/promotional-mini-series)   │     │        (#/monthly-content)      │
+└─────────────────────────────────┘     └─────────────────────────────────┘
 ```
 
-1. **URL State Synchronization**:
-   - Parse `company` and `v` query parameters from `window.location.hash` on mount and `hashchange`.
-   - Selecting a company pill or typing in the Company Search updates the active company filter and provides a 1-click `"Copy Company Link"` button that generates the exact `#/our-work?company=...` URL.
-2. **Segmented Data Pipelines**:
-   - `allVideos`: All visible portfolio items sorted by `order`.
-   - `circlesFundMeVideos`: Filtered subset of `allVideos` matching `CirclesFundMe` (`content.client.matchName`).
-   - `companyDirectory`: Aggregated list of unique client brands with their respective reel counts, orientations, and categories.
-   - `companyFilteredVideos`: Videos matching the active company search query and selected brand pill.
-   - `depositoryVideos`: Master repository filtered by category tab, orientation (`all` / `vertical` / `horizontal`), and keyword search.
+- **Data Model & State**:
+  - `isVideoReady` (`boolean`): Tracks whether the `<video>` element has decoded its first playable frame (`onLoadedData` / `onCanPlay` / `onPlaying`), smoothly layering the playing video over the identical Frame-0 WebP backdrop.
+- **Interactive Component & State Mapping**:
+  - **Mount & Autoplay Assurance**: On mount, a `useEffect` hook sets `video.muted = true`, `video.defaultMuted = true`, and invokes `video.play().catch(() => {})` to satisfy strict iOS Safari and Android Chrome mobile autoplay policies immediately.
+  - **Visibility Recovery**: Listens for `visibilitychange` so if a mobile user switches tabs or apps and returns, the background video resumes playing without stalling.

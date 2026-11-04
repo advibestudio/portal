@@ -26,6 +26,7 @@ import { RetentionCurveGraph } from '@/components/animations/RetentionCurveGraph
 import { StoryConceptBadge } from '@/components/animations/StoryConceptIcons';
 import { RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
+import { HeroMosaicVideoBackdrop } from '@/components/HeroMosaicVideoBackdrop';
 
 export default function MiniSeriesPage() {
   const { content } = useStore();
@@ -199,23 +200,7 @@ export default function MiniSeriesPage() {
         ====================================================================== */}
         <section className="keep-dark relative flex min-h-[84dvh] flex-col justify-between overflow-hidden bg-[#07090d] px-4 pt-16 pb-12 text-white sm:px-6 sm:pt-24 sm:pb-16">
           {/* Full-Bleed Mosaic Video Backdrop + Brand-Tuned Cinema Vignette */}
-          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-            <video
-              src="/assets/aistudio/hero-video_3a894603.mp4"
-              poster="/assets/aistudio/image_583be17e.png"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="h-full w-full scale-[1.01] object-cover"
-            />
-            {/* Multi-layered vignette: keeps peripheral video mosaic vibrant while ensuring 100% text contrast */}
-            <div className="absolute inset-0 bg-[#07090d]/55" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_50%_46%,rgba(7,9,13,0.88)_0%,rgba(7,9,13,0.62)_56%,rgba(7,9,13,0.84)_100%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_38%_at_50%_42%,rgba(245,165,36,0.16)_0%,transparent_72%)]" />
-            <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07090d]/90 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07090d] via-[#07090d]/85 to-transparent" />
-          </div>
+          <HeroMosaicVideoBackdrop />
 
           <div className="relative z-10 mx-auto my-auto max-w-4xl space-y-6 text-center">
             {/* Uppercase Tracked Kicker */}

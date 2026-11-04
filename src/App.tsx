@@ -232,6 +232,30 @@ export default function App() {
     isTrainingThankYou,
   ]);
 
+  // Proactively warm up commercial offer chunks and hero video stream so navigating or booting on mobile is instantaneous
+  useEffect(() => {
+    const warmUp = () => {
+      import('@/pages/commercial/MiniSeriesPage').catch(() => {});
+      import('@/pages/commercial/MonthlyRetainerPage').catch(() => {});
+
+      const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+      const videoUrl = isMobile
+        ? '/assets/aistudio/hero-video-mobile.mp4'
+        : '/assets/aistudio/hero-video-fast.mp4';
+
+      // Prime browser HTTP cache with the initial fast-start bytes of the video stream
+      fetch(videoUrl, { headers: { Range: 'bytes=0-262143' } }).catch(() => {});
+    };
+
+    if (isMiniSeries || isMonthlyContent) {
+      warmUp();
+      return;
+    }
+
+    const timer = window.setTimeout(warmUp, 600);
+    return () => window.clearTimeout(timer);
+  }, [isMiniSeries, isMonthlyContent]);
+
   const downloadMode = isDownloadCustomerApp
     ? 'customer'
     : isDownloadAffiliateApp
@@ -302,8 +326,14 @@ export default function App() {
                 ) : isMonthlyContent ? (
                   <Suspense
                     fallback={
-                      <div className="grid min-h-dvh place-items-center bg-[#07090c] text-white/60 font-mono text-xs">
-                        Loading Monthly Retainer…
+                      <div className="keep-dark relative min-h-dvh overflow-hidden bg-[#07090d]">
+                        <img
+                          src="/assets/aistudio/hero-poster.webp"
+                          alt=""
+                          aria-hidden="true"
+                          fetchPriority="high"
+                          className="absolute inset-0 h-full w-full object-cover opacity-45"
+                        />
                       </div>
                     }
                   >
@@ -312,8 +342,14 @@ export default function App() {
                 ) : isMiniSeries ? (
                   <Suspense
                     fallback={
-                      <div className="grid min-h-dvh place-items-center bg-[#0b0e12] text-white/60 font-mono text-xs">
-                        Loading Mini Series…
+                      <div className="keep-dark relative min-h-dvh overflow-hidden bg-[#07090d]">
+                        <img
+                          src="/assets/aistudio/hero-poster.webp"
+                          alt=""
+                          aria-hidden="true"
+                          fetchPriority="high"
+                          className="absolute inset-0 h-full w-full object-cover opacity-45"
+                        />
                       </div>
                     }
                   >
