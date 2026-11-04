@@ -195,135 +195,153 @@ export default function MiniSeriesPage() {
 
       <main>
         {/* =====================================================================
-            CHAPTER 1 — HERO: THE ATTENTION PARADOX & CINEMA TRAILER
-            Refined with clean split hierarchy, two-tone typography, and 2.39:1 player
+            CHAPTER 1 — HERO: FULL-BLEED MOSAIC VIDEO BACKDROP & EDITORIAL CENTERPIECE
         ====================================================================== */}
-        <section className="relative bg-[#0b0e12] text-white pt-12 pb-20 sm:pt-20 sm:pb-28 px-4 sm:px-6 overflow-hidden">
-          {/* Subtle warm golden cinema glow behind player */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[450px] bg-[radial-gradient(ellipse_at_center,rgba(245,165,36,0.16)_0%,transparent_70%)] pointer-events-none blur-3xl" />
+        <section className="keep-dark relative flex min-h-[84dvh] flex-col justify-between overflow-hidden bg-[#07090d] px-4 pt-16 pb-12 text-white sm:px-6 sm:pt-24 sm:pb-16">
+          {/* Full-Bleed Mosaic Video Backdrop + Brand-Tuned Cinema Vignette */}
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <video
+              src="/assets/aistudio/hero-video_3a894603.mp4"
+              poster="/assets/aistudio/image_583be17e.png"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full scale-[1.01] object-cover"
+            />
+            {/* Multi-layered vignette: keeps peripheral video mosaic vibrant while ensuring 100% text contrast */}
+            <div className="absolute inset-0 bg-[#07090d]/55" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_50%_46%,rgba(7,9,13,0.88)_0%,rgba(7,9,13,0.62)_56%,rgba(7,9,13,0.84)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_38%_at_50%_42%,rgba(245,165,36,0.16)_0%,transparent_72%)]" />
+            <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07090d]/90 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07090d] via-[#07090d]/85 to-transparent" />
+          </div>
 
-          <div className="mx-auto max-w-5xl text-center space-y-7 relative z-10">
-            {/* Clean Typographic Film Kicker (Anti-Pill) */}
-            <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#f5a524]">
-              <Clapperboard className="h-3.5 w-3.5 text-[#f5a524]" />
-              <span>CHAPTER 1</span>
-              <span className="text-white/40">·</span>
-              <span>THE ATTENTION PARADOX</span>
-              <span className="text-white/40">·</span>
-              <span>15 EPISODES / MONTH</span>
+          <div className="relative z-10 mx-auto my-auto max-w-4xl space-y-6 text-center">
+            {/* Uppercase Tracked Kicker */}
+            <div className="flex flex-wrap items-center justify-center gap-2 font-mono text-[11px] font-extrabold tracking-[0.22em] text-[#f5a524] uppercase sm:text-xs">
+              <span>CHAPTER 1 · THE ATTENTION PARADOX · {videoQty} EPISODES / MONTH</span>
             </div>
 
-            {/* Dominant Editorial H1 */}
-            <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white leading-[1.05] max-w-4xl mx-auto text-balance">
-              YOUR CUSTOMERS ARE TIRED OF YOUR BORING{' '}
-              <span className="font-serif italic font-normal text-[#f5a524] lowercase tracking-normal">
-                “buy now”
-              </span>{' '}
-              MESSAGES.
+            {/* Two-Tier Headline: Bold White Sans + Expressive Brand-Gold Italic Serif */}
+            <h1 className="mx-auto max-w-4xl text-balance">
+              <span className="block font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.05] drop-shadow-[0_6px_28px_rgba(0,0,0,0.85)]">
+                Your Customers Are Tired of
+              </span>
+              <span className="mt-1.5 block font-serif text-4xl font-normal italic tracking-normal text-[#f5a524] sm:text-6xl md:text-7xl lg:text-[4.65rem] leading-[1.04] drop-shadow-[0_6px_28px_rgba(0,0,0,0.85)]">
+                boring “buy now” messages.
+              </span>
             </h1>
 
-            {/* Second-Hook Funnel Subheadline (Always visible above CTAs; shows Watch First kicker only when VSL is set) */}
-            <div className="pt-2 max-w-3xl mx-auto">
-              <div className="rounded-2xl border border-white/15 bg-white/[0.06] p-5 sm:p-6 backdrop-blur-md shadow-lg text-center space-y-2.5">
-                {vslYoutubeId && (
-                  <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#f5a524]">
-                    <Play className="h-3 w-3 fill-[#f5a524] text-[#f5a524]" />
-                    <span>WATCH THIS FIRST · 2-MINUTE CINEMA TRAILER</span>
-                  </div>
-                )}
-                <h2 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-[#f5a524] leading-snug text-balance">
-                  Here is how to get their attention:
-                  <span className="block font-sans text-sm sm:text-base md:text-lg text-white/90 font-normal mt-2 leading-relaxed">
-                    {offerData.hero.subheadline ||
-                      'Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with stories that keep them engaged, build a connection, and drive conversions.'}
-                  </span>
-                </h2>
-              </div>
+            {/* Centered Editorial Lead Copy with Inline Brand Highlight Chip */}
+            <div className="mx-auto max-w-2xl space-y-3 pt-1">
+              <p className="text-base leading-relaxed font-medium text-white/90 sm:text-lg md:text-xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)]">
+                <strong className="font-bold text-[#f5a524]">Here is how to get their attention: </strong>
+                Turn them into brand ambassadors who share your videos, and make them choose you over your competitors with original AI-assisted stories —{' '}
+                <span className="inline-block rounded-lg border border-[#f5a524]/50 bg-[#f5a524]/20 px-2.5 py-0.5 font-display font-extrabold text-[#f5a524] shadow-sm backdrop-blur-sm">
+                  {videoQty} episodes monthly (up to 2 mins)
+                </span>{' '}
+                with full commercial ownership.
+              </p>
             </div>
 
-            {/* Top VSL Player (Hidden until dedicated VSL link is provided) */}
+            {/* Optional Top VSL Player (Shown when dedicated VSL link is configured in Admin) */}
             {vslYoutubeId && (
-              <>
-                {/* VSL CINEMA LETTERBOX PLAYER CONTAINER */}
-                <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-2xl sm:rounded-3xl border border-white/20 bg-black shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9),0_0_35px_rgba(245,165,36,0.25)] group">
-                  <div className="relative aspect-video sm:aspect-[2.39/1] w-full overflow-hidden flex items-center justify-center">
-                    <img
-                      src={`https://img.youtube.com/vi/${featuredTrailer.youtubeId}/maxresdefault.jpg`}
-                      alt="AI Promotional Mini Series Cinema Trailer"
-                      className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredTrailer.youtubeId}/hqdefault.jpg`;
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.85)_100%)]" />
-
-                    {/* 4K Camera Viewfinder HUD Recording Overlay */}
-                    <CameraViewfinder
-                      active
-                      resolution="4K UHD"
-                      fps={60}
-                      label="ORIGINAL SERIES DIRECTING REEL"
-                    />
-
-                    {/* Center Glowing Play Button */}
-                    <button
-                      onClick={() => setPlayingVideo(featuredTrailer)}
-                      className="relative z-10 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-[#f5a524] text-black shadow-2xl shadow-[#f5a524]/60 transition-transform duration-300 hover:scale-110 active:scale-95 group/btn"
-                      aria-label="Play Mini Series Trailer"
-                    >
-                      <Play className="h-7 w-7 sm:h-9 sm:w-9 translate-x-0.5 fill-black text-black" />
-                    </button>
-
-                    {/* Bottom Trailer Metadata */}
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-left">
-                      <div>
-                        <p className="font-display text-sm sm:text-base font-bold text-white leading-tight">
-                          {featuredTrailer.title}
-                        </p>
-                        <p className="text-xs text-[#f5a524] font-mono mt-0.5">
-                          Tap to experience our episodic film directing reel
-                        </p>
-                      </div>
-                      <span className="rounded-lg bg-black/75 px-3 py-1.5 font-mono text-xs text-white/90 border border-white/15 hover:border-[#f5a524] transition">
-                        WATCH TRAILER
-                      </span>
-                    </div>
-                  </div>
+              <div className="relative mx-auto mt-6 max-w-3xl overflow-hidden rounded-2xl border border-white/20 bg-black shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9),0_0_35px_rgba(245,165,36,0.25)] group">
+                <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden sm:aspect-[2.39/1]">
+                  <img
+                    src={`https://img.youtube.com/vi/${featuredTrailer.youtubeId}/maxresdefault.jpg`}
+                    alt="AI Promotional Mini Series Cinema Trailer"
+                    className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${featuredTrailer.youtubeId}/hqdefault.jpg`;
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/60" />
+                  <CameraViewfinder
+                    active
+                    resolution="4K UHD"
+                    fps={60}
+                    label="ORIGINAL SERIES DIRECTING REEL"
+                  />
+                  <button
+                    onClick={() => setPlayingVideo(featuredTrailer)}
+                    className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-[#f5a524] text-black shadow-2xl shadow-[#f5a524]/60 transition-transform duration-300 hover:scale-110 active:scale-95 sm:h-20 sm:w-20"
+                    aria-label="Play Mini Series Trailer"
+                  >
+                    <Play className="h-7 w-7 translate-x-0.5 fill-black text-black sm:h-9 sm:w-9" />
+                  </button>
                 </div>
-              </>
+              </div>
             )}
 
-            {/* Hero CTAs */}
-            <div className="pt-6 flex flex-col items-center gap-3">
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
-                <RippleButton
-                  onClick={() => setStrategyOpen(true)}
-                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-full bg-[#f5a524] px-7 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/25 transition hover:brightness-110"
-                >
-                  <span>Book Your Free Strategy Call</span>
-                  <ArrowRight className="h-4 w-4" />
-                </RippleButton>
+            {/* Side-by-Side Pill CTA Buttons Matching Reference Composition */}
+            <div className="flex flex-col items-center justify-center gap-3.5 pt-3 sm:flex-row">
+              <RippleButton
+                onClick={() => setStrategyOpen(true)}
+                className="inline-flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-full bg-[#f5a524] px-8 font-display text-sm font-extrabold text-[#111412] shadow-[0_14px_38px_-8px_rgba(245,165,36,0.5)] transition hover:brightness-105 sm:w-auto"
+              >
+                <span>Book Your Free Strategy Call — {formattedPrice}/mo</span>
+                <ArrowRight className="h-4 w-4" />
+              </RippleButton>
 
-                <RippleAnchor
-                  href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I read the AI Promotional Mini-Series page and want to chat on WhatsApp.`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track('Contact')}
-                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10"
-                >
-                  <MessageCircle className="h-4 w-4 text-emerald-400" />
-                  <span>Chat on WhatsApp</span>
-                </RippleAnchor>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPlayingVideo(featuredTrailer)}
+                className="inline-flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-full border border-white/25 bg-[#12161f]/75 px-7 font-display text-sm font-bold text-white backdrop-blur-md transition hover:border-[#f5a524]/60 hover:bg-[#12161f] sm:w-auto"
+              >
+                <Play className="h-4 w-4 fill-current text-[#f5a524]" />
+                <span>Watch Sample Episode</span>
+              </button>
+            </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-mono text-white/50 pt-2">
-                <span>{formattedPrice} / month</span>
-                <span>·</span>
-                <span>15 Custom AI Videos (Up to 2 Mins Each)</span>
-                <span>·</span>
-                <span>Full Asset Ownership</span>
+            {/* Verified Trust Row (Stars + Proof Metrics + WhatsApp Direct Link) */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-xs text-white/80">
+              <div className="inline-flex items-center gap-1" aria-label="5 out of 5 stars">
+                {[0, 1, 2, 3, 4].map((star) => (
+                  <span
+                    key={star}
+                    className="grid h-5 w-5 place-items-center rounded-[3px] bg-emerald-500 text-[11px] font-black text-[#07090d]"
+                  >
+                    ★
+                  </span>
+                ))}
               </div>
+              <span className="font-semibold text-white">50+ Videos Delivered</span>
+              <span className="text-white/40">·</span>
+              <span className="text-[#f5a524] font-semibold">~{formattedUnitPrice} per episode</span>
+              <span className="text-white/40">·</span>
+              <a
+                href={waLink(
+                  waNumberFor(content.settings.whatsappNumber, country),
+                  `Hi ${content.settings.whatsappDisplay}, I read the AI Promotional Mini-Series page and want to chat on WhatsApp.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('Contact')}
+                className="inline-flex items-center gap-1 font-semibold text-emerald-400 underline decoration-emerald-400/50 underline-offset-4 hover:text-emerald-300"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Bottom Trusted By Strip Anchoring the Hero Backdrop */}
+          <div className="relative z-10 mx-auto mt-12 w-full max-w-5xl border-t border-white/10 pt-6 text-center">
+            <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-white/50 uppercase">
+              TRUSTED BY GROWING BRANDS &amp; DIGITAL COOPERATIVES
+            </p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-6 text-xs font-mono text-white/70 sm:gap-10">
+              <span className="font-display text-sm font-extrabold tracking-tight text-white/90">
+                {content.client?.name || 'CirclesFundMe'}
+              </span>
+              <span className="text-white/25">·</span>
+              <span>15 Custom Episodes / Month</span>
+              <span className="text-white/25">·</span>
+              <span>Up to 2 Minutes Each</span>
+              <span className="text-white/25">·</span>
+              <span>100% Commercial Asset Ownership</span>
             </div>
           </div>
         </section>

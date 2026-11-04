@@ -135,7 +135,7 @@
    ========================================================================== */
 
 /* 1. WHITE (LIGHT) MODE ADAPTATION FOR DARK-AUTHORED SURFACES */
-html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):not(.keep-dark):not(.keep-dark *):is(
   .bg-\[\#0b0e12\],
   .bg-\[\#090c10\],
   .bg-\[\#0a0c0f\],
@@ -150,7 +150,7 @@ html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed
   color: #111412 !important;
 }
 
-html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):not(.keep-dark):not(.keep-dark *):is(
   .bg-\[\#0b0e12\]\/95,
   .bg-\[\#0a0c0f\]\/90,
   .bg-\[\#0a0c0f\]\/95,
@@ -166,7 +166,7 @@ html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed
   color: #111412 !important;
 }
 
-html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):is(
+html[data-theme="light"] .theme-adaptive :not(.theme-managed):not(.theme-managed *):not(.keep-dark):not(.keep-dark *):is(
   .bg-\[\#11151c\],
   .bg-\[\#12161d\],
   .bg-\[\#12161f\],

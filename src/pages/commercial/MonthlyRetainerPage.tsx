@@ -180,33 +180,60 @@ export default function MonthlyRetainerPage() {
 
       <main className="relative z-10 pb-28">
         {/* =====================================================================
-            3. HERO: CINEMATIC DARK-MODE EDITORIAL HEADER
+            3. HERO: FULL-BLEED MOSAIC VIDEO BACKDROP & EDITORIAL CENTERPIECE
         ====================================================================== */}
-        <section className="relative px-4 pt-12 pb-16 sm:px-6 sm:pt-20 sm:pb-24 overflow-hidden">
-          <div className="mx-auto max-w-5xl space-y-8 text-center">
-            {/* Film Production Kicker (Zero-Pill) */}
-            <div className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-[#f5a524] border-b border-[#f5a524]/30 pb-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-[#f5a524]" />
-              <span>{offerData.hero.eyebrow}</span>
-              <span className="text-white/30">·</span>
-              <span>15 Commercial Deliverables Every 30 Days</span>
+        <section className="keep-dark relative flex min-h-[84dvh] flex-col justify-between overflow-hidden bg-[#07090d] px-4 pt-16 pb-12 text-white sm:px-6 sm:pt-24 sm:pb-16">
+          {/* Full-Bleed Mosaic Video Backdrop + Brand-Tuned Cinema Vignette */}
+          <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+            <video
+              src="/assets/aistudio/hero-video_3a894603.mp4"
+              poster="/assets/aistudio/image_583be17e.png"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full scale-[1.01] object-cover"
+            />
+            {/* Multi-layered vignette: keeps peripheral video mosaic vibrant while ensuring 100% text contrast */}
+            <div className="absolute inset-0 bg-[#07090d]/55" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_58%_at_50%_46%,rgba(7,9,13,0.88)_0%,rgba(7,9,13,0.62)_56%,rgba(7,9,13,0.84)_100%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_48%_38%_at_50%_42%,rgba(245,165,36,0.16)_0%,transparent_72%)]" />
+            <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07090d]/90 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07090d] via-[#07090d]/85 to-transparent" />
+          </div>
+
+          <div className="relative z-10 mx-auto my-auto max-w-4xl space-y-6 text-center">
+            {/* Uppercase Tracked Kicker */}
+            <div className="flex flex-wrap items-center justify-center gap-2 font-mono text-[11px] font-extrabold tracking-[0.22em] text-[#f5a524] uppercase sm:text-xs">
+              <span>{offerData.hero.eyebrow} · {videoQty} COMMERCIAL VIDEOS / MONTH</span>
             </div>
 
-            {/* Primary Bricolage Grotesque Headline */}
-            <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold uppercase tracking-tight text-white leading-[1.04] max-w-4xl mx-auto text-balance">
-              {offerData.hero.headline}
+            {/* Two-Tier Headline: Bold White Sans + Expressive Brand-Gold Italic Serif */}
+            <h1 className="mx-auto max-w-4xl text-balance">
+              <span className="block font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-[4.15rem] leading-[1.05] drop-shadow-[0_6px_28px_rgba(0,0,0,0.85)]">
+                An Entire Creative Team Behind Your Brand
+              </span>
+              <span className="mt-1.5 block font-serif text-4xl font-normal italic tracking-normal text-[#f5a524] sm:text-6xl md:text-7xl lg:text-[4.55rem] leading-[1.04] drop-shadow-[0_6px_28px_rgba(0,0,0,0.85)]">
+                for the cost of one hire.
+              </span>
             </h1>
 
-            {/* Two-Tone Refined Subheadline */}
-            <p className="mx-auto max-w-2xl text-base text-white/70 sm:text-xl leading-relaxed">
-              <span className="font-semibold text-white">Never let your ad pipeline run dry. </span>
-              {offerData.hero.subheadline}
-            </p>
+            {/* Centered Editorial Lead Copy with Inline Brand Highlight Chip */}
+            <div className="mx-auto max-w-2xl space-y-3 pt-1">
+              <p className="text-base leading-relaxed font-medium text-white/90 sm:text-lg md:text-xl drop-shadow-[0_2px_14px_rgba(0,0,0,0.9)]">
+                <strong className="font-bold text-[#f5a524]">Never let your ad pipeline run dry. </strong>
+                Get a managed creative partner that develops concepts, writes scripts, and produces{' '}
+                <span className="inline-block rounded-lg border border-[#f5a524]/50 bg-[#f5a524]/20 px-2.5 py-0.5 font-display font-extrabold text-[#f5a524] shadow-sm backdrop-blur-sm">
+                  {videoQty} custom videos monthly
+                </span>{' '}
+                (up to 1m 30s each) so your brand shows up consistently without managing an in-house production team.
+              </p>
+            </div>
 
-            {/* Optional Top VSL Player Box (Hidden until dedicated VSL link is provided) */}
+            {/* Optional Top VSL Player Box (Shown when dedicated VSL link is configured in Admin) */}
             {vslVideoItem && (
               <div className="relative mx-auto mt-6 max-w-3xl overflow-hidden rounded-2xl border border-white/20 bg-black shadow-2xl group">
-                <div className="relative aspect-video w-full overflow-hidden flex items-center justify-center">
+                <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden">
                   <img
                     src={`https://img.youtube.com/vi/${vslVideoItem.youtubeId}/maxresdefault.jpg`}
                     alt="Monthly Retainer VSL"
@@ -227,10 +254,61 @@ export default function MonthlyRetainerPage() {
               </div>
             )}
 
-            {/* =====================================================================
-                INTERACTIVE UNIT ECONOMICS: HOVER REVEAL PRICE-PER-VIDEO COMPONENT
-            ====================================================================== */}
-            <div className="mx-auto max-w-xl">
+            {/* Side-by-Side Pill CTA Buttons Matching Reference Composition */}
+            <div className="flex flex-col items-center justify-center gap-3.5 pt-2 sm:flex-row">
+              <RippleButton
+                onClick={() => setStrategyOpen(true)}
+                className="inline-flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-full bg-[#f5a524] px-8 font-display text-sm font-extrabold text-[#111412] shadow-[0_14px_38px_-8px_rgba(245,165,36,0.5)] transition hover:brightness-105 sm:w-auto"
+              >
+                <span>{offerData.hero.primaryCta} — {formattedPrice}/mo</span>
+                <ArrowRight className="h-4 w-4" />
+              </RippleButton>
+
+              {featuredVideo && (
+                <button
+                  type="button"
+                  onClick={() => setPlayingVideo(featuredVideo)}
+                  className="inline-flex min-h-[54px] w-full items-center justify-center gap-2.5 rounded-full border border-white/25 bg-[#12161f]/75 px-7 font-display text-sm font-bold text-white backdrop-blur-md transition hover:border-[#f5a524]/60 hover:bg-[#12161f] sm:w-auto"
+                >
+                  <Play className="h-4 w-4 fill-current text-[#f5a524]" />
+                  <span>Watch Sample Commercial</span>
+                </button>
+              )}
+            </div>
+
+            {/* Verified Trust Row (Stars + Unit Cost + WhatsApp Direct Link) */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1 text-xs text-white/80">
+              <div className="inline-flex items-center gap-1" aria-label="5 out of 5 stars">
+                {[0, 1, 2, 3, 4].map((star) => (
+                  <span
+                    key={star}
+                    className="grid h-5 w-5 place-items-center rounded-[3px] bg-emerald-500 text-[11px] font-black text-[#07090d]"
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="font-semibold text-white">50+ Videos Delivered</span>
+              <span className="text-white/40">·</span>
+              <span className="font-semibold text-[#f5a524]">~{formattedUnitPrice} per video</span>
+              <span className="text-white/40">·</span>
+              <a
+                href={waLink(
+                  waNumberFor(content.settings.whatsappNumber, country),
+                  `Hi ${content.settings.whatsappDisplay}, I am interested in the Monthly Video Content Retainer for my business.`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('Contact')}
+                className="inline-flex items-center gap-1 font-semibold text-emerald-400 underline decoration-emerald-400/50 underline-offset-4 hover:text-emerald-300"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
+
+            {/* Interactive Unit Economics Reveal Card */}
+            <div className="mx-auto max-w-xl pt-2">
               <div
                 onMouseEnter={() => setPriceHovered(true)}
                 onMouseLeave={() => setPriceHovered(false)}
@@ -238,108 +316,93 @@ export default function MonthlyRetainerPage() {
                 tabIndex={0}
                 role="region"
                 aria-label="Price per video interactive breakdown"
-                className={`relative rounded-2xl border transition-all duration-300 p-5 sm:p-6 text-left cursor-pointer group select-none ${
+                className={`relative cursor-pointer rounded-2xl border p-4 sm:p-5 text-left backdrop-blur-xl transition-all duration-300 select-none ${
                   priceHovered
-                    ? 'border-[#f5a524] bg-white/[0.08] shadow-[0_0_35px_rgba(245,165,36,0.25)]'
-                    : 'border-white/15 bg-white/[0.03] hover:border-[#f5a524]/60 hover:bg-white/[0.05]'
+                    ? 'border-[#f5a524] bg-[#0e131b]/90 shadow-[0_0_35px_rgba(245,165,36,0.25)]'
+                    : 'border-white/15 bg-[#0e131b]/75 hover:border-[#f5a524]/60 hover:bg-[#0e131b]/85'
                 }`}
               >
-                {/* Header Row */}
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-[#f5a524] animate-ping" />
-                    <span className="font-mono text-xs uppercase tracking-wider text-white/60">
-                      Managed Studio Retainer
+                    <span className="h-2 w-2 animate-ping rounded-full bg-[#f5a524]" />
+                    <span className="font-mono text-xs tracking-wider text-white/75 uppercase">
+                      Managed Studio Retainer Breakdown
                     </span>
                   </div>
-
-                  <span className="font-mono text-[11px] text-[#f5a524] flex items-center gap-1 group-hover:underline">
+                  <span className="flex items-center gap-1 font-mono text-[11px] text-[#f5a524] group-hover:underline">
                     <Calculator className="h-3 w-3" />
                     {priceHovered ? 'Tap or click to lock' : 'Hover to reveal unit cost'}
                   </span>
                 </div>
 
-                {/* Pricing Core Display */}
-                <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
+                <div className="mt-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-baseline">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-display text-3xl sm:text-4xl font-extrabold text-white">
+                      <span className="font-display text-2xl font-extrabold text-white sm:text-3xl">
                         {formattedPrice}
                       </span>
-                      <span className="font-mono text-sm text-white/50">/ month</span>
+                      <span className="font-mono text-sm text-white/60">/ month</span>
                     </div>
-                    <p className="mt-1 font-mono text-xs text-white/50">
+                    <p className="mt-0.5 font-mono text-xs text-white/65">
                       Includes {videoQty} master direct-response videos (up to 1 min 30 secs each)
                     </p>
                   </div>
 
-                  {/* The Interactive Reveal Pill/Box */}
-                  <div className={`transition-all duration-300 ${priceHovered ? 'scale-105' : 'opacity-85'}`}>
-                    <div className="rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/10 px-4 py-2 text-right">
-                      <span className="font-mono text-[10px] uppercase text-[#f5a524] block font-bold">
+                  <div className={`transition-all duration-300 ${priceHovered ? 'scale-105' : 'opacity-90'}`}>
+                    <div className="rounded-xl border border-[#f5a524]/40 bg-[#f5a524]/15 px-3.5 py-1.5 text-right">
+                      <span className="block font-mono text-[10px] font-bold text-[#f5a524] uppercase">
                         UNIT COST CALCULATION
                       </span>
-                      <span className="font-display text-xl sm:text-2xl font-black text-[#f5a524]">
+                      <span className="font-display text-lg font-black text-[#f5a524] sm:text-xl">
                         ~{formattedUnitPrice}
                       </span>
-                      <span className="text-[11px] font-mono text-white/60 block">per finished commercial</span>
+                      <span className="block font-mono text-[10px] text-white/70">per finished commercial</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Expanding Reveal Drawer (Shown on hover or tap) */}
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
-                    priceHovered ? 'max-h-36 opacity-100 pt-4 mt-4 border-t border-white/10' : 'max-h-0 opacity-0'
+                    priceHovered ? 'mt-3 max-h-36 border-t border-white/10 pt-3 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
+                  <div className="grid grid-cols-2 gap-3 font-mono text-xs sm:grid-cols-3">
                     <div>
-                      <span className="text-white/40 block text-[10px] uppercase">Retainer Package</span>
-                      <span className="text-white font-semibold">{videoQty} Custom Videos</span>
+                      <span className="block text-[10px] text-white/50 uppercase">Retainer Package</span>
+                      <span className="font-semibold text-white">{videoQty} Custom Videos</span>
                     </div>
                     <div>
-                      <span className="text-white/40 block text-[10px] uppercase">Calculated Unit Cost</span>
-                      <span className="text-[#f5a524] font-bold">{formattedUnitPrice} / video</span>
+                      <span className="block text-[10px] text-white/50 uppercase">Calculated Unit Cost</span>
+                      <span className="font-bold text-[#f5a524]">{formattedUnitPrice} / video</span>
                     </div>
                     <div className="col-span-2 sm:col-span-1">
-                      <span className="text-white/40 block text-[10px] uppercase">Traditional Crew</span>
+                      <span className="block text-[10px] text-white/50 uppercase">Traditional Crew</span>
                       <span className="text-red-400 line-through">~{formattedTraditionalUnitPrice}+</span>
                     </div>
                   </div>
-                  <p className="mt-2 text-[11px] text-emerald-400 font-mono">
-                    ✓ Full scriptwriting, AI directing, sound mix & commercial rights included.
+                  <p className="mt-2 font-mono text-[11px] text-emerald-400">
+                    ✓ Full scriptwriting, AI directing, sound mix &amp; commercial rights included.
                   </p>
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* Hero CTAs */}
-            <div className="pt-2 flex flex-col items-center gap-3">
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
-                <RippleButton
-                  onClick={() => setStrategyOpen(true)}
-                  className="flex min-h-[54px] w-full flex-1 items-center justify-center gap-2 rounded-xl bg-[#f5a524] px-7 font-display text-sm font-bold uppercase tracking-wider text-black shadow-xl shadow-[#f5a524]/20 transition hover:brightness-110"
-                >
-                  <span>Book Strategy Call</span>
-                  <ArrowRight className="h-4 w-4" />
-                </RippleButton>
-
-                <RippleAnchor
-                  href={waLink(waNumberFor(content.settings.whatsappNumber, country), `Hi ${content.settings.whatsappDisplay}, I am interested in the Monthly Video Content Retainer for my business.`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track('Contact')}
-                  className="flex min-h-[54px] w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 font-display text-sm font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-white/10"
-                >
-                  <MessageCircle className="h-4 w-4 text-emerald-400" />
-                  <span>WhatsApp</span>
-                </RippleAnchor>
-              </div>
-
-              <p className="text-xs text-white/50 font-mono max-w-md mt-1">
-                {offerData.hero.contextNote}
-              </p>
+          {/* Bottom Trusted By Strip Anchoring the Hero Backdrop */}
+          <div className="relative z-10 mx-auto mt-10 w-full max-w-5xl border-t border-white/10 pt-5 text-center">
+            <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-white/50 uppercase">
+              TRUSTED BY GROWING BRANDS &amp; DIGITAL COOPERATIVES
+            </p>
+            <div className="mt-2.5 flex flex-wrap items-center justify-center gap-6 font-mono text-xs text-white/70 sm:gap-10">
+              <span className="font-display text-sm font-extrabold tracking-tight text-white/90">
+                {content.client?.name || 'CirclesFundMe'}
+              </span>
+              <span className="text-white/25">·</span>
+              <span>{videoQty} Custom Commercials / Month</span>
+              <span className="text-white/25">·</span>
+              <span>Up to 1 Min 30 Secs Each</span>
+              <span className="text-white/25">·</span>
+              <span>Full Commercial Usage Rights</span>
             </div>
           </div>
         </section>
