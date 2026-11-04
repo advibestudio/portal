@@ -1,49 +1,49 @@
-# Instant Mobile Hero Video Boot Optimization
+# Hero Video GitHub Bundling, Dark Cinema Grade Restoration & Slow-Internet Mobile Fix
 
-Eliminates mobile startup delay on the **AI Promotional Mini-Series** and **Monthly AI Video Content Retainer** hero sections so the mosaic video backdrop appears and begins playing virtually instantaneously on mobile connections.
+Resolves all three issues identified from your mobile screenshot (`image_5aadc50e.png`): bundles the uploaded video directly inside the website's tracked source assets so it always deploys to GitHub Pages, restores the rich dark cinema overlay you liked, and fixes the mobile zoom-crop blur and slow-internet startup time.
 
 ### User Review & Critical Decisions
 
 > [!IMPORTANT]
-> **Root Cause Diagnosed**: The raw uploaded hero video is **8.4 MB** (`hero-video_3a894603.mp4`) and its fallback image is an uncompressed **1.6 MB PNG** (`image_583be17e.png` which also contains baked-in reference screenshot text). On mobile networks, downloading 10 MB of unoptimized media before playback starts causes a noticeable delay.
->
-> **Optimization Strategy**:
-> - **88% Mobile Video Payload Reduction + Fast-Start Atom**: Encode a dedicated mobile-optimized stream (~850 KB, H.264 with `-movflags +faststart` and muted audio track stripped) alongside a fast-start desktop stream (~2.0 MB) so playback starts on the very first network packet without waiting for the full file.
-> - **Instant Clean First-Frame WebP Poster (~35 KB)**: Extract the exact first frame of the clean mosaic video as an ultra-lightweight WebP poster (~98% smaller than the 1.6 MB PNG) and preload it in the document `<head>`, ensuring zero blank screen and zero flash of reference screenshot text while the video stream initializes.
+> **3 Root Causes Diagnosed from Your Mobile Screenshot (`image_5aadc50e.png`)**:
+> 1. **Why the Video Missing / Slow Issue Happened on GitHub Pages**: The video paths used root-absolute URLs (`/assets/aistudio/...`) instead of Vite-bundled / relative (`./assets/...`) paths. When hosted on GitHub Pages (e.g. `/portal/`), root-absolute `/assets/...` requests fail with a 404 or bypass the bundle. We will place the video and poster directly inside `src/assets/hero/` (imported via Vite so they are committed to Git and automatically bundled into `dist/assets/`) as well as relative `./assets/aistudio/` paths.
+> 2. **Why It Looked Too Bright & Zoomed-In/Blurry on Mobile**:
+>    - Removing the dark overlay and adding `brightness-110` washed out the moody cinema atmosphere and made the video clash with the text.
+>    - On a tall vertical phone screen, applying `object-cover` to a `16:9` widescreen video zoomed **320% into the dead center**, cutting off 4 of the 6 mosaic columns and stretching just 2 tiles (the horse and coffee cup) across the entire screen.
+> 3. **How We Fix Both Visuals & Slow-Internet Mobile Speed**:
+>    - **Restore Moody Dark Cinema Overlay**: Bring back the dark obsidian wash (`bg-[#07090d]/42` + center radial vignette `78%` center → `48%` edges + warm `#f5a524` gold glow) and remove `brightness-110` so it looks just like the rich dark version you liked while keeping the mosaic subtly visible.
+>    - **Proper Mobile Mosaic Framing + Ultra-Light Slow-Network Stream**: Format the mobile video stream and framing so mobile visitors see a multi-tile mosaic grid (not 2 giant zoomed-in blurry tiles), encoded with H.264 `+faststart` and an embedded tiny blurred/sharp first-frame data preview that paints in **0ms** even on 3G / slow mobile internet.
 
 ---
 
 ### 1. Overview & Core Concept
 
-- **What It Does**: Delivers a zero-lag, instant-booting mosaic video backdrop on both commercial offer pages (`#/promotional-mini-series` and `#/monthly-content`) tailored specifically for mobile bandwidth and mobile browser autoplay engines (iOS Safari and Android Chrome).
-- **Target Audience / Persona**: Mobile visitors, founders, and marketing decision-makers clicking through from WhatsApp, Instagram, or mobile search who expect immediate visual polish within the first 300ms.
-- **Key Value**: Removes the multi-second black box / loading stall on mobile devices while preserving the exact full-bleed mosaic video aesthetic and AdVibe Studio's signature gold (`#f5a524`), crisp white (`#ffffff`), and obsidian (`#07090d`) brand palette.
+- **What It Does**: Embeds your uploaded mosaic video directly into the website's bundled codebase, restores the rich dark cinema aesthetic, and ensures the mosaic grid looks sharp and boots immediately on mobile devices—even on slow internet connections.
+- **Target Audience / Persona**: Mobile and desktop visitors opening the **AI Promotional Mini-Series** (`#/promotional-mini-series`) and **Monthly AI Video Content Retainer** (`#/monthly-content`) pages on AI Studio or GitHub Pages.
+- **Key Value**: Guaranteed video inclusion in Git/GitHub deployments, authentic dark cinema aesthetics matching your reference, and instant startup on slow mobile connections without blurry 2-tile zoom cropping.
 
 ---
 
 ### 2. User Experience & Visual Design
 
 - **Key User Flows**:
-  1. **0ms – Instant Visual Frame**: As soon as a visitor opens either commercial page on mobile, the preloaded ~35 KB clean first-frame WebP mosaic image paints immediately behind the headline and gold cinema vignette—no dark flash or layout shift.
-  2. **<300ms – Fast-Start Mobile Stream**: Mobile browsers (`max-width: 768px`) automatically select the lightweight fast-start mobile video stream (`~850 KB`), where the MP4 `moov` header sits at byte 0 and unused audio data is stripped, allowing hardware decoding to begin on the first chunk.
-  3. **Seamless Crossfade**: Once the first video frame decodes, the video layer transitions in smoothly over the matching first-frame poster with zero visual jump, and programmatic low-power/autoplay recovery ensures playback starts reliably on iOS Safari and Android Chrome.
+  1. **0ms Instant Paint (Even on Slow 3G)**: An ultra-lightweight inline/bundled first-frame WebP backdrop paints immediately with the dark cinema vignette already applied—zero blank screen and zero wait for network handshakes.
+  2. **Rich Dark Cinema Look**: The mosaic video plays smoothly behind a balanced dark obsidian scrim (`42%` base wash + `78%` center text radial scrim tapering to `48%` on the outer grid), so the videos are tastefully visible in the background while the white and `#f5a524` gold typography pops with crystal clarity.
+  3. **Multi-Tile Mobile Mosaic Composition**: On mobile viewports, the video framing preserves the multi-tile mosaic aesthetic rather than zooming 320% into just two center tiles.
 - **Visual Identity & Theme**:
-  - *Aesthetic Direction*: Dark Cinema Editorial Studio (`#07090d` obsidian canvas, `#f5a524` AdVibe gold highlights, `#ffffff` high-contrast display typography).
-  - *Color Palette & Mood*: Retains the multi-layered radial and linear obsidian scrims plus warm gold ambient glow (`rgba(245, 165, 36, 0.16)`) with `.keep-dark` protection across Light and Dark modes.
-  - *Typography & Hierarchy*: Bold geometric sans-serif upper headline paired with expressive gold italic serif second line and inline gold highlight pill.
-- **Interactive Feedback & Motion**: Compositor-only opacity transition (`transition-opacity duration-300`) from the static first-frame WebP layer to the live video loop, respecting `prefers-reduced-motion`.
+  - *Aesthetic Direction*: Dark Cinema Studio Mosaic (`#07090d` obsidian, `#f5a524` AdVibe gold, `#ffffff` crisp white).
+  - *Color Palette & Mood*: Restores the deep cinema contrast from the initial version you liked, removing the artificial `brightness-110` filter.
 
 ---
 
 ### 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Responsive Dual-Stream Encoding (`+faststart`) vs. Single 8.4 MB Raw Video**
-  - *Chosen Approach*: Generate a dedicated mobile 720p fast-start MP4 (~850 KB) and a desktop 1080p fast-start MP4 (~2.0 MB) with the silent audio stream removed (`-an`), served via responsive `<source media="(max-width: 768px)">` tags.
-  - *Why*: Because the hero backdrop sits behind a dark cinema vignette (`55%–88%` opacity scrim), a ~850 KB 720p stream is visually indistinguishable from the 8.4 MB original on mobile Retina screens while booting up to **10x faster** on 4G/5G connections.
-  - *Alternatives Considered*: Keeping the single 8.4 MB video and relying only on `preload="auto"`, which still bottlenecks mobile bandwidth and delays time-to-first-frame.
-- **Decision 2: Extracted Frame-0 WebP Poster (~35 KB) vs. Raw 1.6 MB Reference PNG**
-  - *Chosen Approach*: Extract frame `00:00:00` directly from the mosaic video as a compressed WebP poster (`~35 KB`) and preload it with `fetchpriority="high"`.
-  - *Why*: Reduces initial image weight by 98% and guarantees the poster frame aligns pixel-for-pixel with frame 1 of the video (without flashing the reference screenshot's third-party text overlay).
+- **Decision 1: Vite-Bundled `src/assets/hero/` Imports + Relative Public Assets**
+  - *Chosen Approach*: Store the optimized video streams and WebP poster inside `src/assets/hero/` and import them as ES module asset URLs in `HeroMosaicVideoBackdrop.tsx`, while also keeping relative `./assets/aistudio/...` copies in `public/`.
+  - *Why*: Ensures the video files are tracked in GitHub and resolved correctly by Vite (`base: './'`) regardless of whether the site is hosted at the root domain or a GitHub Pages subfolder (`/portal/`).
+- **Decision 2: Mobile-Optimized Multi-Tile Framing & Fast-Start Encoding (~550 KB)**
+  - *Chosen Approach*: Encode a dedicated mobile stream (`hero-video-mobile.mp4`, ~550 KB, `-movflags +faststart`, keyframe at frame 0) and adjust mobile video sizing so more of the mosaic grid is visible instead of over-magnifying two center tiles.
+  - *Why*: Eliminates pixelation on portrait mobile screens while cutting the mobile video download size by **93%** compared to the 8.4 MB raw upload so it boots rapidly on slow internet.
 
 ---
 
@@ -53,39 +53,29 @@ Eliminates mobile startup delay on the **AI Promotional Mini-Series** and **Mont
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                    Document Head & Asset Preloader                      │
-│  • <link rel="preload" as="image" type="image/webp" fetchpriority="high"│
-│  • Proactive idle video warm-up for instant route transitions           │
+│               Git-Tracked & Vite-Bundled Hero Media Assets              │
+│  • Bundled in src/assets/hero/ + relative ./assets/aistudio/            │
+│  • Works identically on AI Studio, Custom Domains & GitHub Pages        │
 └───────────────────────────────────┬─────────────────────────────────────┘
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                 Reusable Hero Mosaic Video Backdrop                     │
-│  ┌───────────────────────────────┐   ┌───────────────────────────────┐  │
-│  │  Instant Frame-0 WebP Layer   │   │  Fast-Start <video> Element   │  │
-│  │  • ~35 KB clean mosaic frame  │   │  • preload="auto" + playsInline│  │
-│  │  • Paints at 0ms before video │   │  • Mobile source (<768px)     │  │
-│  │    stream finishes buffering  │   │    ~850 KB (+faststart, -an)  │  │
-│  └───────────────┬───────────────┘   │  • Desktop source (>768px)    │  │
-│                  │                   │    ~2.0 MB (+faststart, -an)  │  │
-│                  └─────────┬─────────┴───────────────┬───────────────┘  │
-│                            ▼                         ▼                  │
-│          ┌───────────────────────────────────────────────────┐          │
-│          │   Brand-Tuned Obsidian & Gold Cinema Vignettes    │          │
-│          │   • Radial center focus + #f5a524 ambient glow    │          │
-│          └─────────────────────────┬─────────────────────────┘          │
-└────────────────────────────────────┼────────────────────────────────────┘
-                                     │
-                 ┌───────────────────┴───────────────────┐
-                 ▼                                       ▼
-┌─────────────────────────────────┐     ┌─────────────────────────────────┐
-│   AI Promotional Mini-Series    │     │  Monthly Video Content Retainer │
-│   (#/promotional-mini-series)   │     │        (#/monthly-content)      │
-└─────────────────────────────────┘     └─────────────────────────────────┘
+│                    HeroMosaicVideoBackdrop Component                    │
+│  ┌───────────────────────────────────────────────────────────────────┐  │
+│  │  1. Instant 0ms First-Frame Poster Layer (WebP)                   │  │
+│  │     • Paints immediately on slow mobile internet                  │  │
+│  ├───────────────────────────────────────────────────────────────────┤  │
+│  │  2. Fast-Start Responsive Video Stream                            │  │
+│  │     • Mobile: ~550 KB faststart stream + multi-tile framing       │  │
+│  │     • Desktop: ~1.8 MB faststart HD stream                        │  │
+│  ├───────────────────────────────────────────────────────────────────┤  │
+│  │  3. Restored Dark Cinema Vignette Stack                           │  │
+│  │     • Base obsidian wash (bg-[#07090d]/42)                        │  │
+│  │     • Center text radial scrim (78% center -> 48% outer mosaic)   │  │
+│  │     • Subtle #f5a524 brand gold ambient glow + top/bottom fades   │  │
+│  └───────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Data Model & State**:
-  - `isVideoReady` (`boolean`): Tracks whether the `<video>` element has decoded its first playable frame (`onLoadedData` / `onCanPlay` / `onPlaying`), smoothly layering the playing video over the identical Frame-0 WebP backdrop.
 - **Interactive Component & State Mapping**:
-  - **Mount & Autoplay Assurance**: On mount, a `useEffect` hook sets `video.muted = true`, `video.defaultMuted = true`, and invokes `video.play().catch(() => {})` to satisfy strict iOS Safari and Android Chrome mobile autoplay policies immediately.
-  - **Visibility Recovery**: Listens for `visibilitychange` so if a mobile user switches tabs or apps and returns, the background video resumes playing without stalling.
+  - **Slow-Internet Resilience**: The poster frame and dark cinema vignette render at 0ms from bundled assets; the `<video>` element streams progressively from byte 0 (`+faststart`) and seamlessly plays underneath the dark vignette as soon as the first GOP (group of pictures) arrives.

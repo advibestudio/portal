@@ -50,7 +50,7 @@ export default defineConfig(() => {
           skipWaiting: true,
           navigateFallback: null,
           maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
           runtimeCaching: [
             {
               urlPattern: ({ request }) => request.mode === 'navigate',
@@ -60,6 +60,20 @@ export default defineConfig(() => {
                 networkTimeoutSeconds: 4,
                 cacheableResponse: {
                   statuses: [0, 200],
+                },
+              },
+            },
+            {
+              urlPattern: /\.(?:mp4|webp)$/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'advibe-hero-media-cache-v2',
+                expiration: {
+                  maxEntries: 12,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+                cacheableResponse: {
+                  statuses: [0, 200, 206],
                 },
               },
             },

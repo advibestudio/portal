@@ -3,6 +3,10 @@ import { StoreProvider } from '@/lib/store';
 import { ReferralProvider } from '@/lib/referralStore';
 import { CountryProvider } from '@/lib/country';
 import PublicSite from '@/pages/PublicSite';
+import heroPosterDesktopUrl from '@/assets/hero/hero-poster.webp';
+import heroPosterMobileUrl from '@/assets/hero/hero-poster-mobile.webp';
+import heroVideoDesktopUrl from '@/assets/hero/hero-video-fast.mp4';
+import heroVideoMobileUrl from '@/assets/hero/hero-video-mobile.mp4';
 
 // Code-splitting: Pages are loaded on demand to keep initial load instantaneous.
 const Admin = lazy(() => import('@/pages/admin/Admin'));
@@ -239,12 +243,18 @@ export default function App() {
       import('@/pages/commercial/MonthlyRetainerPage').catch(() => {});
 
       const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
-      const videoUrl = isMobile
-        ? '/assets/aistudio/hero-video-mobile.mp4'
-        : '/assets/aistudio/hero-video-fast.mp4';
+      const videoUrl = isMobile ? heroVideoMobileUrl : heroVideoDesktopUrl;
+      const posterUrl = isMobile ? heroPosterMobileUrl : heroPosterDesktopUrl;
 
-      // Prime browser HTTP cache with the initial fast-start bytes of the video stream
-      fetch(videoUrl, { headers: { Range: 'bytes=0-262143' } }).catch(() => {});
+      // Preload first-frame poster into image decode cache
+      const img = new Image();
+      img.src = posterUrl;
+
+      // Prime browser HTTP cache with the initial fast-start bytes (~128KB) of the video stream
+      const conn = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
+      if (!conn?.saveData) {
+        fetch(videoUrl, { headers: { Range: 'bytes=0-131071' } }).catch(() => {});
+      }
     };
 
     if (isMiniSeries || isMonthlyContent) {
@@ -327,13 +337,18 @@ export default function App() {
                   <Suspense
                     fallback={
                       <div className="keep-dark relative min-h-dvh overflow-hidden bg-[#07090d]">
-                        <img
-                          src="/assets/aistudio/hero-poster.webp"
-                          alt=""
-                          aria-hidden="true"
-                          fetchPriority="high"
-                          className="absolute inset-0 h-full w-full object-cover opacity-45"
-                        />
+                        <picture>
+                          <source srcSet={heroPosterMobileUrl} media="(max-width: 768px)" type="image/webp" />
+                          <img
+                            src={heroPosterDesktopUrl}
+                            alt=""
+                            aria-hidden="true"
+                            fetchPriority="high"
+                            className="absolute inset-0 h-full w-full object-cover object-center"
+                          />
+                        </picture>
+                        <div className="absolute inset-0 bg-[#07090d]/42" />
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_56%_at_50%_46%,rgba(7,9,13,0.78)_0%,rgba(7,9,13,0.48)_58%,rgba(7,9,13,0.68)_100%)]" />
                       </div>
                     }
                   >
@@ -343,13 +358,18 @@ export default function App() {
                   <Suspense
                     fallback={
                       <div className="keep-dark relative min-h-dvh overflow-hidden bg-[#07090d]">
-                        <img
-                          src="/assets/aistudio/hero-poster.webp"
-                          alt=""
-                          aria-hidden="true"
-                          fetchPriority="high"
-                          className="absolute inset-0 h-full w-full object-cover opacity-45"
-                        />
+                        <picture>
+                          <source srcSet={heroPosterMobileUrl} media="(max-width: 768px)" type="image/webp" />
+                          <img
+                            src={heroPosterDesktopUrl}
+                            alt=""
+                            aria-hidden="true"
+                            fetchPriority="high"
+                            className="absolute inset-0 h-full w-full object-cover object-center"
+                          />
+                        </picture>
+                        <div className="absolute inset-0 bg-[#07090d]/42" />
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_62%_56%_at_50%_46%,rgba(7,9,13,0.78)_0%,rgba(7,9,13,0.48)_58%,rgba(7,9,13,0.68)_100%)]" />
                       </div>
                     }
                   >
