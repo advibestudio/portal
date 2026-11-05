@@ -1,81 +1,108 @@
-# Hero Video GitHub Bundling, Dark Cinema Grade Restoration & Slow-Internet Mobile Fix
+# Full-Spectrum SEO Discovery & Google Ads Keyword Optimization Plan
 
-Resolves all three issues identified from your mobile screenshot (`image_5aadc50e.png`): bundles the uploaded video directly inside the website's tracked source assets so it always deploys to GitHub Pages, restores the rich dark cinema overlay you liked, and fixes the mobile zoom-crop blur and slow-internet startup time.
+Optimize AdVibe Studio for high-ranking organic Google Search discovery and high-Quality-Score Google Ads bidding across the complete keyword spectrum: **AI video generation tools**, **AI video production agencies**, and **digital/performance marketing agencies** across Nigeria, West Africa, Kenya, the USA, the UK, and worldwide English-speaking markets.
 
-### User Review & Critical Decisions
+---
+
+## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> **3 Root Causes Diagnosed from Your Mobile Screenshot (`image_5aadc50e.png`)**:
-> 1. **Why the Video Missing / Slow Issue Happened on GitHub Pages**: The video paths used root-absolute URLs (`/assets/aistudio/...`) instead of Vite-bundled / relative (`./assets/...`) paths. When hosted on GitHub Pages (e.g. `/portal/`), root-absolute `/assets/...` requests fail with a 404 or bypass the bundle. We will place the video and poster directly inside `src/assets/hero/` (imported via Vite so they are committed to Git and automatically bundled into `dist/assets/`) as well as relative `./assets/aistudio/` paths.
-> 2. **Why It Looked Too Bright & Zoomed-In/Blurry on Mobile**:
->    - Removing the dark overlay and adding `brightness-110` washed out the moody cinema atmosphere and made the video clash with the text.
->    - On a tall vertical phone screen, applying `object-cover` to a `16:9` widescreen video zoomed **320% into the dead center**, cutting off 4 of the 6 mosaic columns and stretching just 2 tiles (the horse and coffee cup) across the entire screen.
-> 3. **How We Fix Both Visuals & Slow-Internet Mobile Speed**:
->    - **Restore Moody Dark Cinema Overlay**: Bring back the dark obsidian wash (`bg-[#07090d]/42` + center radial vignette `78%` center → `48%` edges + warm `#f5a524` gold glow) and remove `brightness-110` so it looks just like the rich dark version you liked while keeping the mosaic subtly visible.
->    - **Proper Mobile Mosaic Framing + Ultra-Light Slow-Network Stream**: Format the mobile video stream and framing so mobile visitors see a multi-tile mosaic grid (not 2 giant zoomed-in blurry tiles), encoded with H.264 `+faststart` and an embedded tiny blurred/sharp first-frame data preview that paints in **0ms** even on 3G / slow mobile internet.
+> The plan incorporates all three of your confirmed strategy choices from Phase 1:
+
+- **Confirmed Decision 1 — Multi-Region & Global Geographic Targeting**: Configured for **Nigeria & West Africa primarily**, **Ghana, Kenya, USA, and UK**, and **Worldwide English-speaking markets** via multi-region `areaServed` Schema.org nodes, currency-aware `OfferCatalog` structured data (`NGN`, `GHS`, `KES`, `USD`, `GBP`), and regional keyword clusters.
+- **Confirmed Decision 2 — Full-Spectrum Keyword Architecture**: Covers the entire funnel from **AI video generation tools & software alternatives** (capturing users searching for AI video generators, text-to-video tools, UGC AI makers, and AI commercial creators) to **AI video production agencies** and **full-service digital & social media marketing agencies**.
+- **Confirmed Decision 3 — On-Page Collapsible SEO Keyword & FAQ Discovery Hub + Dynamic Route Meta Tags**: Adds a clean, crawlable, interactive SEO Discovery & FAQ Hub above the footer along with dynamic route-specific `<title>`, `<meta name="description">`, `<meta name="keywords">`, OpenGraph, and canonical URL updates across every public page (`Home`, `Monthly Content Retainer`, `AI Promotional Mini-Series`, `Our Work Screening Room`, and `AI Video Training Academy`).
 
 ---
 
-### 1. Overview & Core Concept
+## 1. Overview & Core Concept
 
-- **What It Does**: Embeds your uploaded mosaic video directly into the website's bundled codebase, restores the rich dark cinema aesthetic, and ensures the mosaic grid looks sharp and boots immediately on mobile devices—even on slow internet connections.
-- **Target Audience / Persona**: Mobile and desktop visitors opening the **AI Promotional Mini-Series** (`#/promotional-mini-series`) and **Monthly AI Video Content Retainer** (`#/monthly-content`) pages on AI Studio or GitHub Pages.
-- **Key Value**: Guaranteed video inclusion in Git/GitHub deployments, authentic dark cinema aesthetics matching your reference, and instant startup on slow mobile connections without blurry 2-tile zoom cropping.
+- **What It Does**:
+  1. **Search Engine & Crawler Foundation**: Equips the site with rich HTML `<head>` metadata, a comprehensive multi-entity **Schema.org JSON-LD Graph** (`Organization`, `ProfessionalService`, `VideoProductionService`, `MarketingAgency`, `Course`, `OfferCatalog`, and `FAQPage`), plus static `robots.txt` and `sitemap.xml` discovery files.
+  2. **Dynamic Route-Level SEO Engine**: Automatically updates the browser title, meta description, keyword tags, OpenGraph/Twitter social share cards, and canonical URL whenever a visitor or crawler navigates between the Main Agency Landing Page, Monthly Retainer, AI Promotional Mini-Series, Screening Room, or Training Academy.
+  3. **Crawlable SEO Keyword & FAQ Discovery Hub**: A refined, collapsible on-page discovery section engineered to maximize **Google Ads Landing Page Experience (Quality Score 10/10)** and organic keyword relevance across four core search pillars:
+     - *01. AI Video Generation Tools & Commercial Creators* (Done-for-you alternative to DIY AI video generators, text-to-video tools, AI avatar/UGC tools, and product video makers)
+     - *02. AI Video Production & Commercial Studio Services* (Product ads, service explainers, cinematic brand commercials, and episodic AI mini-series)
+     - *03. Performance & Social Media Video Marketing Agency* (Facebook, Instagram, TikTok, YouTube, and WhatsApp Status ad creatives engineered for ROAS and conversion)
+     - *04. Regional & Global Market Coverage* (Lagos/Nigeria, Accra/Ghana, Nairobi/Kenya, London/UK, New York/USA, and remote global delivery)
+- **Target Audience / Persona**:
+  - Google Search crawlers (`Googlebot`, `AdsBot-Google`) evaluating organic rankings and Google Ads landing page relevance.
+  - Business owners, marketing directors, e-commerce founders, and agency buyers searching for AI video tools, video production companies, or marketing agencies.
+- **Key Value**: Lowers Google Ads Cost-Per-Click (CPC) by aligning landing page copy and metadata directly with the keywords you bid on, while generating rich search snippets (FAQ dropdowns and service pricing) in organic Google Search results.
 
 ---
 
-### 2. User Experience & Visual Design
+## 2. User Experience & Visual Design
 
 - **Key User Flows**:
-  1. **0ms Instant Paint (Even on Slow 3G)**: An ultra-lightweight inline/bundled first-frame WebP backdrop paints immediately with the dark cinema vignette already applied—zero blank screen and zero wait for network handshakes.
-  2. **Rich Dark Cinema Look**: The mosaic video plays smoothly behind a balanced dark obsidian scrim (`42%` base wash + `78%` center text radial scrim tapering to `48%` on the outer grid), so the videos are tastefully visible in the background while the white and `#f5a524` gold typography pops with crystal clarity.
-  3. **Multi-Tile Mobile Mosaic Composition**: On mobile viewports, the video framing preserves the multi-tile mosaic aesthetic rather than zooming 320% into just two center tiles.
+  1. **Search Snippet & Social Preview**: When found on Google Search or shared on WhatsApp/LinkedIn/X, the page displays an authoritative title, compelling conversion-focused description, rich FAQ/Service schema snippets, and high-contrast OpenGraph preview imagery.
+  2. **Interactive SEO Keyword & FAQ Discovery Hub**: Positioned cleanly above the footer on the main site and commercial pages. Visitors can filter between the 4 keyword pillars (*AI Video Tools vs. Studio*, *Video Production Agency*, *Performance Marketing*, *Global & Regional Markets*), expand high-intent search FAQs, or click any capability topic to launch the Strategy Session modal with that topic pre-selected.
 - **Visual Identity & Theme**:
-  - *Aesthetic Direction*: Dark Cinema Studio Mosaic (`#07090d` obsidian, `#f5a524` AdVibe gold, `#ffffff` crisp white).
-  - *Color Palette & Mood*: Restores the deep cinema contrast from the initial version you liked, removing the artificial `brightness-110` filter.
+  - *Aesthetic Direction*: Studio-grade editorial marketing layout following the **Landing & Marketing Design Constitution** (`Proposition -> Mechanism -> Proof -> Action`).
+  - *Color Palette & Mood*: 60-30-10 discipline adaptive to both Light (`#faf9f5` warm alabaster canvas) and Dark (`#0b0e12` deep obsidian canvas) themes, using subtle hairline borders and `#f5a524` warm amber-gold strictly for primary interactive accents.
+  - *Typography & Hierarchy*: `Bricolage Grotesque` display headings (`clamp(1.75rem, 3vw, 2.5rem)`, `text-wrap: balance`) paired with `Figtree` body prose (`15px–16px`, `1.6` line-height) and `JetBrains Mono` / tabular numerals (`tabular-nums`) for pricing and turnaround metrics.
+  - *Anti-Slop & Zero-Pill Discipline*: Category metadata and regional coverage markers use clean unboxed typography with subtle middle-dot (`·`) separators rather than decorative pill badges. Section numbering uses clean human editorial format (`01.`, `02.`, `03.`, `04.`).
+- **Interactive Feedback & Motion**:
+  - Smooth category tab switching (`<= 150ms` transition) between keyword clusters.
+  - Accessible accordion toggles (`aria-expanded`) for search-intent FAQs with direct *"Book Strategy Call for This"* action links.
 
 ---
 
-### 3. Key Product Decisions & Trade-Offs
+## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1: Vite-Bundled `src/assets/hero/` Imports + Relative Public Assets**
-  - *Chosen Approach*: Store the optimized video streams and WebP poster inside `src/assets/hero/` and import them as ES module asset URLs in `HeroMosaicVideoBackdrop.tsx`, while also keeping relative `./assets/aistudio/...` copies in `public/`.
-  - *Why*: Ensures the video files are tracked in GitHub and resolved correctly by Vite (`base: './'`) regardless of whether the site is hosted at the root domain or a GitHub Pages subfolder (`/portal/`).
-- **Decision 2: Mobile-Optimized Multi-Tile Framing & Fast-Start Encoding (~550 KB)**
-  - *Chosen Approach*: Encode a dedicated mobile stream (`hero-video-mobile.mp4`, ~550 KB, `-movflags +faststart`, keyframe at frame 0) and adjust mobile video sizing so more of the mosaic grid is visible instead of over-magnifying two center tiles.
-  - *Why*: Eliminates pixelation on portrait mobile screens while cutting the mobile video download size by **93%** compared to the 8.4 MB raw upload so it boots rapidly on slow internet.
+- **Decision 1 — Bridging "AI Video Generation Tools" Searches to Done-For-You Agency Conversions**:
+  - *Chosen Approach*: Include dedicated comparison copy and schema targeting tool-intent keywords (*"best AI video generator for business"*, *"AI video generation tools vs. done-for-you AI video agency"*, *"AI UGC video generator"*, *"text to video commercial maker"*), positioning AdVibe Studio as the turnkey studio that uses enterprise AI video tools on the client's behalf—or teaches them via the AdVibe Training Academy.
+  - *Why*: Bidding on high-volume "AI video generator / tool" keywords in Google Ads requires the landing page to explicitly address those terms so `AdsBot-Google` assigns a high Landing Page Relevance score and visitors searching for tools immediately understand why hiring AdVibe (or joining the Academy) beats struggling with DIY tools.
+- **Decision 2 — Pre-Rendered Static HTML Head + Client-Side Route Meta Synchronizer**:
+  - *Chosen Approach*: Embed the complete primary meta tags, OpenGraph tags, noscript crawlable semantic summary, and full Schema.org JSON-LD graph directly in the initial HTML payload, complemented by a lightweight React SEO manager that updates document title, description, keywords, and canonical tags on route transitions.
+  - *Why*: Ensures both non-JS crawlers and modern headless crawlers index the full keyword graph immediately at `0ms` while sub-pages (`#/monthly-content`, `#/promotional-mini-series`, `#/training`, `#/our-work`) get tailored titles and descriptions.
 
 ---
 
-### 4. Technical Architecture & Data Strategy *(Technical Reference)*
+## 4. Technical Architecture & Data Strategy *(Technical Reference)*
 
-- **Architecture & Component Diagram**:
+### Architecture & Component Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│               Git-Tracked & Vite-Bundled Hero Media Assets              │
-│  • Bundled in src/assets/hero/ + relative ./assets/aistudio/            │
-│  • Works identically on AI Studio, Custom Domains & GitHub Pages        │
-└───────────────────────────────────┬─────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    HeroMosaicVideoBackdrop Component                    │
-│  ┌───────────────────────────────────────────────────────────────────┐  │
-│  │  1. Instant 0ms First-Frame Poster Layer (WebP)                   │  │
-│  │     • Paints immediately on slow mobile internet                  │  │
-│  ├───────────────────────────────────────────────────────────────────┤  │
-│  │  2. Fast-Start Responsive Video Stream                            │  │
-│  │     • Mobile: ~550 KB faststart stream + multi-tile framing       │  │
-│  │     • Desktop: ~1.8 MB faststart HD stream                        │  │
-│  ├───────────────────────────────────────────────────────────────────┤  │
-│  │  3. Restored Dark Cinema Vignette Stack                           │  │
-│  │     • Base obsidian wash (bg-[#07090d]/42)                        │  │
-│  │     • Center text radial scrim (78% center -> 48% outer mosaic)   │  │
-│  │     • Subtle #f5a524 brand gold ambient glow + top/bottom fades   │  │
-│  └───────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   Static Crawler & Initial HTML Layer                       │
+│  ┌────────────────────────┐  ┌──────────────────────┐  ┌─────────────────┐  │
+│  │ HTML <head> Meta, OG,  │  │ Schema.org JSON-LD   │  │ robots.txt &    │  │
+│  │ Twitter & Keyword Tags │  │ Multi-Entity Graph   │  │ sitemap.xml     │  │
+│  └───────────┬────────────┘  └──────────┬───────────┘  └────────┬────────┘  │
+└──────────────┼──────────────────────────┼───────────────────────┼───────────┘
+               │                          │                       │
+               ▼                          ▼                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    Runtime Route SEO Synchronizer Hook                      │
+│  • Listens to active route & selected country currency                      │
+│  • Dynamically updates <title>, meta[name="description"],                   │
+│    meta[name="keywords"], og:title, og:description & canonical link         │
+└──────────────┬──────────────────────────────────────────────────┬───────────┘
+               │                                                  │
+               ▼                                                  ▼
+┌───────────────────────────────────────┐  ┌──────────────────────────────────┐
+│   Public & Commercial Landing Pages   │  │  Interactive SEO Discovery Hub   │
+│  • Main Agency Site (/)               │  │  • 4 Keyword Pillar Tabs         │
+│  • Monthly Content (#/monthly-content)│  │  • Search-Intent FAQ Accordions  │
+│  • Mini-Series (#/promotional-...)    │  │  • Regional Market Directory     │
+│  • Screening Room (#/our-work)        │  │  • Pre-filled Strategy CTA Hook  │
+│  • Training Academy (#/training)      │  └──────────────────────────────────┘
+└───────────────────────────────────────┘
 ```
 
-- **Interactive Component & State Mapping**:
-  - **Slow-Internet Resilience**: The poster frame and dark cinema vignette render at 0ms from bundled assets; the `<video>` element streams progressively from byte 0 (`+faststart`) and seamlessly plays underneath the dark vignette as soon as the first GOP (group of pictures) arrives.
+### Data Model & Keyword Taxonomy
+
+The SEO engine organizes keywords and structured data into four comprehensive clusters:
+1. **AI Video Generation Tools & Software Cluster**: *AI video generator, AI video generation tools, text to video AI, image to video AI, AI commercial generator, AI UGC video maker, AI product video generator, AI voiceover and avatar video creator, AI marketing video software alternative*.
+2. **AI Video Production Agency & Studio Cluster**: *AI video production agency, AI video ads studio, commercial video production company, explainer video production agency, UGC video ad agency, branded mini-series production studio, AI animation and filmmaking studio*.
+3. **Marketing & Advertising Agency Cluster**: *video marketing agency, social media advertising agency, Facebook and Instagram video ads agency, TikTok ad creative agency, WhatsApp marketing video agency, direct-response creative agency, performance marketing studio*.
+4. **Geographic & Multi-Currency Market Cluster**: *AI video agency in Nigeria (Lagos, Abuja), Ghana (Accra), Kenya (Nairobi), West Africa, Africa, UK (London), USA, and global English-speaking markets*.
+
+### Interactive Component & State Mapping
+
+- **Route SEO Manager**: Observes the active route and country context, mutating the document's `<title>`, `<meta name="description">`, `<meta name="keywords">`, `og:title`, `og:description`, and `link[rel="canonical"]` without page flicker.
+- **SEO Keyword & Discovery Hub Component**:
+  - *Pillar Filter State (`activePillar`)*: Toggles between the 4 keyword clusters (`tools`, `production`, `marketing`, `regions`) via single-line segmented buttons.
+  - *Search-Intent FAQ Accordion State (`openFaqIndex`)*: Expands/collapses high-intent questions comparing DIY AI video generation tools vs. AdVibe's 5-day agency delivery and 15-video monthly retainers.
+  - *Conversion Action Handler (`onSelectTopic`)*: Clicking any capability or keyword topic opens the unified Strategy Session modal pre-populated with the user's selected service intent.

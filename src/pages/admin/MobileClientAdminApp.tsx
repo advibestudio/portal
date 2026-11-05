@@ -293,7 +293,7 @@ export default function MobileClientAdminApp() {
   };
 
   const handleToggleAffiliateStatus = async (partner: AffiliatePartner) => {
-    const nextStatus = partner.status === 'active' ? 'deactivated' : 'active';
+    const nextStatus: 'active' | 'deactivated' = partner.status === 'active' ? 'deactivated' : 'active';
     const nextList = (content.affiliates || []).map((a) =>
       a.id === partner.id ? { ...a, status: nextStatus, approved: nextStatus === 'active' } : a
     );

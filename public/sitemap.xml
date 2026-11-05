@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Main AI Video Production & Marketing Agency Landing Page -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Monthly AI Video Content Retainer (15 Videos/Month) -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/monthly-content</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- AI Promotional Mini-Series & Branded Entertainment Retainer -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/promotional-mini-series</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Screening Room & Commercial Portfolio Showcase -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/our-work</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- AI Video Directing Training Academy -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/training</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Business Owners AI Video Training Track -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/training/business</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Creators & Agency AI Video Training Track -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/training/creator</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Dedicated AI Video Ads Landing Funnel -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/ai-video-ads</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Affiliate Partner Portal -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/affiliate-portal</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- Client Project Portal -->
+  <url>
+    <loc>https://advibestudio.github.io/portal/#/client-portal</loc>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
+</urlset>

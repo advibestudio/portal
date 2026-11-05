@@ -41,17 +41,18 @@ import type { BusinessAssessment, Lead, TrainingStudent } from '@/content/types'
 import { triggerAdminBrowserNotification } from '@/lib/pwa';
 
 interface Props {
-  onNavigatePipeline: () => void;
-  onNavigateQuiz: () => void;
-  onNavigateAffiliates: () => void;
-  onNavigateStudents: () => void;
+  onNavigatePipeline?: () => void;
+  onNavigateQuiz?: () => void;
+  onNavigateAffiliates?: () => void;
+  onNavigateStudents?: () => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export function RealtimeFirestoreSummaryWidget({
-  onNavigatePipeline,
-  onNavigateQuiz,
-  onNavigateAffiliates,
-  onNavigateStudents,
+  onNavigatePipeline = () => {},
+  onNavigateQuiz = () => {},
+  onNavigateAffiliates = () => {},
+  onNavigateStudents = () => {},
 }: Props) {
   const { leads: storeLeads, students: storeStudents, content, refresh } = useStore();
 

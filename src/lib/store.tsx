@@ -269,6 +269,15 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
   if (!merged.settings.email || merged.settings.email === 'hello@advibe.studio') {
     merged.settings.email = defaultContent.settings.email;
   }
+  const cleanWa = (merged.settings.whatsappNumber || '').replace(/[^\d]/g, '');
+  if (
+    !cleanWa ||
+    cleanWa === '2348012345678' ||
+    cleanWa === '08012345678' ||
+    cleanWa === '8012345678'
+  ) {
+    merged.settings.whatsappNumber = defaultContent.settings.whatsappNumber;
+  }
 
   if (
     merged.hero.primaryCta === 'Get my video ad' ||
@@ -622,9 +631,18 @@ function withDefaults(c: Partial<SiteContent> | null | undefined): SiteContent {
 
 export function withCohortDefaults(c?: Partial<TrainingCohort> | null): TrainingCohort {
   if (!c) return defaultCohort;
+  const cleanCohortWa = (c.whatsappContact || '').replace(/[^\d]/g, '');
+  const whatsappContact =
+    !cleanCohortWa ||
+    cleanCohortWa === '2348012345678' ||
+    cleanCohortWa === '08012345678' ||
+    cleanCohortWa === '8012345678'
+      ? defaultCohort.whatsappContact
+      : c.whatsappContact!;
   return {
     ...defaultCohort,
     ...c,
+    whatsappContact,
     sessions: Array.isArray(c.sessions) && c.sessions.length > 0 ? c.sessions : defaultCohort.sessions,
     pillars: Array.isArray(c.pillars) && c.pillars.length > 0 ? c.pillars : defaultCohort.pillars,
     bonuses: Array.isArray(c.bonuses) && c.bonuses.length > 0 ? c.bonuses : defaultCohort.bonuses,
@@ -1954,10 +1972,6 @@ export function useStore() {
 
 export const fmtNaira = (n: number) => '₦' + n.toLocaleString('en-NG');
 
-export function waLink(number: string, message: string) {
-  return `https://wa.me/${number.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
-}
-
 export function ytThumb(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
@@ -1967,4 +1981,4 @@ export function extractYouTubeId(url: string): string {
   return m ? m[1] : url.trim();
 }
 
-export { fmtMoney } from '@/lib/money';
+export { fmtMoney, waLink } from '@/lib/money';

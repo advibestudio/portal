@@ -6,7 +6,7 @@ import type {
   SiteContent,
   BusinessAssessment,
 } from '@/content/types';
-import { fmtMoney, priceFor, waNumberFor } from '@/lib/money';
+import { fmtMoney, priceFor, waLink, waNumberFor } from '@/lib/money';
 import { defaultCommercialOffers } from '@/content/commercialOffers';
 
 /* ==========================================================================
@@ -1123,7 +1123,7 @@ export function buildAssessmentWhatsAppUrl(
   content: SiteContent,
   country: Country
 ): string {
-  const number = waNumberFor(content.settings.whatsappNumber, country).replace(/[^\d]/g, '');
+  const rawNumber = waNumberFor(content.settings.whatsappNumber, country);
   const message = buildAssessmentWhatsAppMessage(assessment, content, country);
-  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+  return waLink(rawNumber, message);
 }

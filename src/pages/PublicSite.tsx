@@ -7,6 +7,7 @@ import { Problem, Services, Events, Pricing, WhyUs, Process, Testimonials, Faq, 
 import { CostCompare } from '@/sections/CostCompare';
 import { SalesHome } from '@/sections/SalesHome';
 import { Lightbox } from '@/components/shared';
+import { SeoDiscoveryHub } from '@/components/SeoDiscoveryHub';
 
 // The order form and the "just started" pop-ups are separate small downloads, fetched quietly
 // AFTER the page is up, so they never slow down the first load.
@@ -111,6 +112,7 @@ function Page() {
         {sec.testimonials && <Testimonials onStrategy={() => openStrategy()} />}
         {sec.faq && <Faq />}
         {sec.finalCta && <FinalCta onStrategy={() => openStrategy()} />}
+        <SeoDiscoveryHub onSelectTopic={(topic) => openStrategy(undefined, topic)} />
       </main>
       <Footer />
       <StickyBar onStrategy={() => openStrategy()} />

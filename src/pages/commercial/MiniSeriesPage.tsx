@@ -27,6 +27,7 @@ import { StoryConceptBadge } from '@/components/animations/StoryConceptIcons';
 import { RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 import { HeroMosaicVideoBackdrop } from '@/components/HeroMosaicVideoBackdrop';
+import { SeoDiscoveryHub } from '@/components/SeoDiscoveryHub';
 
 export default function MiniSeriesPage() {
   const { content } = useStore();
@@ -997,6 +998,8 @@ export default function MiniSeriesPage() {
             </button>
           </div>
         </section>
+
+        <SeoDiscoveryHub onSelectTopic={() => setStrategyOpen(true)} />
       </main>
 
       {/* =====================================================================

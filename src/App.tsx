@@ -26,6 +26,7 @@ import { TapRipple } from '@/components/animations/TapRipple';
 import { usePageHeatmapTracker } from '@/lib/heatmapAnalytics';
 import { OfflineBanner, getPreferredPWALaunchRoute, setPreferredPWALaunchRoute } from '@/lib/pwa';
 import { ThemeProvider } from '@/lib/theme';
+import { useRouteSeo } from '@/lib/seo';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -130,6 +131,9 @@ function useAppRoute() {
 
 export default function App() {
   const route = useAppRoute();
+
+  // Synchronize route-specific SEO titles, meta descriptions, keywords, and canonical URLs
+  useRouteSeo(route);
 
   // Track page views and section dwell-time heatmaps across routes
   usePageHeatmapTracker(route);

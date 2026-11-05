@@ -1033,7 +1033,7 @@ export function QuizFunnelAdmin() {
             </h3>
             <div>
               <label className="block font-mono text-[10px] uppercase text-white/60 mb-1">
-                Official Advibe WhatsApp Number (International digits, e.g. 2348012345678)
+                Official Advibe WhatsApp Number (e.g. 08061465233 or 2348061465233)
               </label>
               <input
                 type="text"

@@ -26,6 +26,7 @@ import { AnimatedStoryGraphic } from '@/components/animations/AnimatedStoryGraph
 import { TactileRipple, RippleButton, RippleAnchor } from '@/components/ui/TactileRipple';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
 import { HeroMosaicVideoBackdrop } from '@/components/HeroMosaicVideoBackdrop';
+import { SeoDiscoveryHub } from '@/components/SeoDiscoveryHub';
 
 export default function MonthlyRetainerPage() {
   const { content } = useStore();
@@ -1102,6 +1103,8 @@ export default function MonthlyRetainerPage() {
             {offerData.finalCta.note}
           </p>
         </section>
+
+        <SeoDiscoveryHub onSelectTopic={() => setStrategyOpen(true)} />
       </main>
 
       {/* STICKY BOTTOM BAR FOR MOBILE WITH TACTILE RIPPLE */}

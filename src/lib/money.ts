@@ -30,13 +30,42 @@ export function getParam(name: string): string | undefined {
   return (q >= 0 ? new URLSearchParams(h.slice(q + 1)).get(name) : null) ?? undefined;
 }
 
+const LEGACY_WA_NUMBERS = new Set(['2348012345678', '08012345678', '8012345678']);
+export const OFFICIAL_WHATSAPP_LINE = '08061465233';
+
+/** Converts local Nigerian numbers (e.g. 08061465233) or international numbers to E.164 digits (2348061465233) for wa.me links. */
+export function formatWaDigits(raw: string): string {
+  const digits = (raw || '').replace(/[^\d]/g, '');
+  if (!digits || LEGACY_WA_NUMBERS.has(digits)) {
+    return '2348061465233';
+  }
+  if (digits.length === 11 && digits.startsWith('0')) {
+    return `234${digits.slice(1)}`;
+  }
+  if (digits.length === 10 && /^[789]/.test(digits)) {
+    return `234${digits}`;
+  }
+  return digits;
+}
+
 /** The WhatsApp number to use for a country (its own, or the main one from Settings). */
-export const waNumberFor = (mainNumber: string, c: Pick<Country, 'whatsappNumber'>) => (c.whatsappNumber || mainNumber).trim();
+export const waNumberFor = (mainNumber: string, c: Pick<Country, 'whatsappNumber'>) => {
+  const countryNum = (c.whatsappNumber || '').trim();
+  const cleanCountryDigits = countryNum.replace(/[^\d]/g, '');
+  if (countryNum && !LEGACY_WA_NUMBERS.has(cleanCountryDigits)) {
+    return countryNum;
+  }
+  const cleanMainDigits = (mainNumber || '').trim().replace(/[^\d]/g, '');
+  if (mainNumber && !LEGACY_WA_NUMBERS.has(cleanMainDigits)) {
+    return mainNumber.trim();
+  }
+  return OFFICIAL_WHATSAPP_LINE;
+};
 /** Payment instructions for a country (its own, or the main text from Settings). */
 export const payTextFor = (mainText: string, c: Pick<Country, 'paymentInstructions'>) => (c.paymentInstructions || mainText).trim();
 
 export function waLink(number: string, message: string) {
-  return `https://wa.me/${number.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${formatWaDigits(number)}?text=${encodeURIComponent(message)}`;
 }
 
 /** A picture/file path from Admin: full web addresses are used as-is; site paths like "clients/logo.webp" get the site's base path. */

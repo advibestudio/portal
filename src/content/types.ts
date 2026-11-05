@@ -330,6 +330,7 @@ export interface AffiliatePartner {
   status: 'active' | 'deactivated';
   approved: boolean;
   commissionPercent: number; // default: 10
+  commissionRatePercent?: number;
   createdAt: string;
   totalReferrals?: number;
   totalRevenue?: number;
@@ -464,6 +465,11 @@ export interface Lead {
   /** Google Sheets hand-in-hand sync tracking */
   sheetsSynced?: boolean;
   sheetsSyncedAt?: string;
+  leadType?: string;
+  finalPrice?: number;
+  bookingStatus?: string;
+  challengeOrGoal?: string;
+  discountApplied?: boolean;
 }
 
 export type ProjectStatus =
@@ -609,6 +615,8 @@ export interface TrainingStudent {
   notes?: string;
   sheetsSynced?: boolean;
   sheetsSyncedAt?: string;
+  fullName?: string;
+  referralCode?: string;
 }
 
 /* ---------- INTERACTIVE SERVICE DISCOVERY QUIZ & FUNNEL TYPES ---------- */
@@ -756,6 +764,11 @@ export interface BusinessAssessment {
   syncStatus: 'synced' | 'pending' | 'failed';
   lastSyncAttemptAt?: string;
   syncErrorMessage?: string;
+  recommendedServiceTitle?: string;
+  biggestChallenge?: string;
+  additionalNotes?: string;
+  referralCode?: string;
+  isReferred?: boolean;
 }
 
 export interface QuizFunnelAnalyticsEvent {

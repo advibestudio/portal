@@ -22,7 +22,7 @@ export const defaultCohort: TrainingCohort = {
     UK: { founding: 39, regular: 59 },
   },
   paymentUrl: 'https://selfany.com/pay/advibe-founding-cohort',
-  whatsappContact: '2348012345678',
+  whatsappContact: '08061465233',
   sessions: [
     {
       day: 1,

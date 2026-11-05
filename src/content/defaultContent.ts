@@ -25,7 +25,7 @@ export const defaultContent: SiteContent = {
     tagline: 'AI video ads that turn attention into orders.',
   },
   settings: {
-    whatsappNumber: '2348012345678',
+    whatsappNumber: '08061465233',
     whatsappDisplay: 'AdVibe Studio',
     whatsappMessage:
       "Hi AdVibe Studio, I'm {name} from {business}. I just ordered {offer}. My reference is {ref}.",
