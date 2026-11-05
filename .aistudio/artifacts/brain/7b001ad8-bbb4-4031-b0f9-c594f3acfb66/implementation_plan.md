@@ -1,55 +1,59 @@
-# Instant Brand Search Indexing & Simple Traffic Sources View
+# Wave-1 Googlebot Static HTML Indexing & Search Console Submission Plan
 
-Ensure that searching **"advibe"**, **"advibe studios"**, or **"advibe studios global"** on Google surfaces your GitHub Pages domain (`https://advibestudio.github.io/portal/`) with strong brand authority, while providing a clean, zero-clutter **Traffic Sources & Search Discovery** card inside both the **Admin Dashboard (Analytics Tab)** and the **Mobile Client Admin App**.
+Solve the exact technical reasons why `https://advibestudio.github.io/portal/` is not yet appearing on Google Search, and equip you with a 3-minute guided Google Search Console indexing workflow.
+
+---
+
+## Why Your Site Was Not Showing Up Yet (Root Cause Diagnosis)
+
+> [!IMPORTANT]
+> There are **three specific reasons** why typing your brand or keywords into Google has not surfaced `https://advibestudio.github.io/portal/` yet:
+
+1. **Google Search Console Has Not Been Pinged Yet**: Google does not automatically discover new `github.io` project subdirectories unless you add `https://advibestudio.github.io/portal/` as a **URL Prefix Property** in Google Search Console and click **Request Indexing**.
+2. **Googlebot Wave-1 Ignores `<noscript>`**: Because `Googlebot` crawls with JavaScript enabled, it completely ignores content inside `<noscript>` tags during its first pass (Wave 1). Previously, the initial static HTML body only contained two lines of text (`"AdVibe Studio — Ads that turn attention into orders."`) before React loaded.
+3. **Google Sitemaps Reject `#` Hash URLs**: Standard XML sitemaps ignore URLs containing `#` fragments (like `#/monthly-content`). For Google to index your Monthly Retainer, Mini-Series, Screening Room, and Training Academy as separate search results, each route needs a real static HTML entry point (`/monthly-content/index.html`, `/promotional-mini-series/index.html`, etc.) with clean, hash-free URLs in `sitemap.xml`.
 
 ---
 
 ## User Review & Critical Decisions
 
-> [!IMPORTANT]
-> This plan reflects all three choices you confirmed in Phase 1:
-
-- **Confirmed Decision 1 — Placement in Desktop Admin (Analytics Tab) & Mobile Admin App**: The simple visitor and traffic source counter will appear directly at the top of the **Analytics** tab in the Desktop Admin Dashboard (`#/admin`) and in the **Pulse / Overview** tab of the Mobile Admin App (`#/client-admin`).
-- **Confirmed Decision 2 — Ultra-Clean 4-Bucket Traffic Breakdown**: Displays total visitors broken down into four plain-English buckets—**Google & Search**, **Social & WhatsApp**, **Paid Ads & Referrals**, and **Direct Visits**—without complex charts or overwhelming telemetry.
-- **Confirmed Decision 3 — 1-Click Google Search Console Verification & Indexing Helper**: Includes a simple input box in the same card where you can paste a Google Search Console verification code (automatically injecting the `<meta name="google-site-verification">` tag) alongside 1-click copy buttons for your GitHub Pages URL (`https://advibestudio.github.io/portal/`) and Sitemap URL (`https://advibestudio.github.io/portal/sitemap.xml`) to trigger instant Google indexing.
+- **Confirmed Decision 1 — Target Live URL**: All canonical tags, OpenGraph URLs, Schema.org `@id` pointers, and sitemap entries target **`https://advibestudio.github.io/portal/`**.
+- **Confirmed Decision 2 — Wave-1 Static HTML Body Content**: Embed full semantic HTML copy (covering **AdVibe**, **AdVibe Studio**, **AdVibe Studios**, **AdVibe Studios Global**, all 6 video categories, country pricing, and target keywords) directly inside the `#boot` container in `index.html` (outside `<noscript>`) so Wave-1 `Googlebot` indexes 100% of your keywords on the very first HTTP fetch—before React mounts and replaces `#root`.
+- **Confirmed Decision 3 — Guided Google Search Console Verification & Indexing Wizard**: Upgrade the Search Console drawer in your Admin Traffic card into a step-by-step wizard with a **1-Click Static Verification File Generator (`google....html`)**, a **Live Google Index Checker (`site:advibestudio.github.io/portal`)**, and exact instructions to trigger **Request Indexing**.
 
 ---
 
 ## 1. Overview & Core Concept
 
 - **What It Does**:
-  1. **Exact Brand-Name Authority for `advibe`, `advibe studios`, and `advibe studios global`**:
-     - Upgrades the `WebSite` and `Organization` Schema.org JSON-LD graph, `<title>`, `<meta name="application-name">`, OpenGraph site name, and semantic footer/header brand lockups to explicitly bind all three exact brand queries (**"AdVibe"**, **"AdVibe Studios"**, and **"AdVibe Studios Global"**) to your canonical GitHub Pages URL (`https://advibestudio.github.io/portal/`).
-  2. **Automatic Visitor Source Attribution**:
-     - Detects how each visitor arrived on the site on their first page load by inspecting `document.referrer`, UTM parameters (`utm_source`, `utm_medium`, `gclid`, `fbclid`, `ttclid`), and affiliate referral parameters (`?ref=`), classifying the visit into one of four clean buckets:
-       - **Google & Search**: `google.*`, `bing.com`, `duckduckgo.com`, `yahoo.com`, or `utm_medium=organic`
-       - **Social & WhatsApp**: `instagram.com`, `facebook.com`, `t.co`, `tiktok.com`, `youtube.com`, `linkedin.com`, `wa.me`, `whatsapp.com`, or social UTM parameters
-       - **Paid Ads & Referrals**: `gclid` (Google Ads), `fbclid` (Meta Ads), `ttclid` (TikTok Ads), `utm_medium=cpc|paid`, or affiliate referral codes (`?ref=`)
-       - **Direct Visits**: Typing or clicking the GitHub Pages link directly with no external referrer
-  3. **Simple Traffic & Search Console Widget**:
-     - Shows a clean 4-column scorecard with visitor counts and percentage share using tabular numerals (`tabular-nums`), plus a collapsible **Google Search Console Instant Indexing Helper** where you can save your verification token and copy your sitemap URL in one click.
+  1. **Wave-1 Crawlable Static HTML in Root & Sub-Routes**:
+     - Moves the rich semantic SEO copy out of `<noscript>` and directly into a visually subtle, crawler-visible `<article>` inside `#boot` in `index.html`. When a human visits, React mounts in milliseconds and replaces `#boot` with the interactive app; when `Googlebot` fetches the raw HTML, it immediately reads all headings, brand names, packages, FAQs, and internal links.
+  2. **Hash-Free Static Route Pages for Google Sitemap Compliance**:
+     - Creates dedicated static HTML entry points for `/monthly-content/`, `/promotional-mini-series/`, `/our-work/`, `/training/`, and `/ai-video-ads/` (plus `/404.html` SPA routing support) that contain route-specific `<title>`, `<meta name="description">`, Schema.org JSON-LD, and Wave-1 static body copy, and seamlessly boot into the matching view in the React app.
+     - Updates `sitemap.xml` to use clean, hash-free URLs (`https://advibestudio.github.io/portal/monthly-content/`, etc.) so Google Search Console accepts every URL with zero warnings.
+  3. **Interactive 4-Step Google Search Console Wizard**:
+     - Built directly into the Admin Traffic Sources widget so you can verify ownership (via downloadable `google*.html` file or static `<meta name="google-site-verification">` tag), submit `sitemap.xml`, click **Request Indexing**, and test live Google indexing status with one click.
 
 ---
 
 ## 2. User Experience & Visual Design
 
 - **Key User Flows**:
-  1. **Checking Traffic at a Glance**: Open `#/admin` (Analytics tab) or `#/client-admin` (Pulse tab) to immediately see Total Visits and the 4 clean source counters (*Google & Search*, *Social & WhatsApp*, *Paid Ads & Referrals*, *Direct Visits*).
-  2. **Verifying & Indexing Your GitHub Domain on Google**: Click *"Google Search Console Setup"* inside the card, copy `https://advibestudio.github.io/portal/sitemap.xml` with one click, paste your Google verification code if needed, and click **Save Verification Code**.
+  1. **Zero-Flash Human Load + 100% Wave-1 Bot Visibility**: The static `#boot` shell keeps its fast brand header at the top while rendering semantic SEO sections cleanly below the fold during the fraction of a second before React mounts.
+  2. **Admin Search Console Indexing Checklist**: Inside `#/admin` (Analytics tab) and `#/client-admin` (Pulse tab), open the **Google Search Console & Instant Brand Indexing Setup** panel to follow the 4 numbered steps, download your static Google verification file if needed, and click **"Check If Google Has Indexed Us Yet"** (`site:advibestudio.github.io/portal`).
 - **Visual Identity & Theme**:
-  - *Aesthetic Direction*: Follows the **SaaS & Dashboard Design Guidelines**—flat single-elevation surface (`border border-white/10 bg-[#121518]`), crisp `Bricolage Grotesque` headers, `Figtree` labels, and `JetBrains Mono` / `tabular-nums` counters so numbers align cleanly.
-  - *Anti-Slop & Restraint*: Zero nested card sandwiches, zero fake latency tickers, and zero complicated multi-axis graphs—just the 4 clear numbers and a clean horizontal proportion bar.
+  - Clean numbered checklist (`01.`, `02.`, `03.`, `04.`) inside the dark slate Admin card (`#121518`) with `tabular-nums` metrics and single-line action buttons (`whitespace-nowrap shrink-0`).
 
 ---
 
 ## 3. Key Product Decisions & Trade-Offs
 
-- **Decision 1 — Cross-Device Cloud Sync Using Existing Firestore Schema**:
-  - *Chosen Approach*: Persist the 4 traffic source counters both in `localStorage` and in the existing Firestore `section_heatmap` collection (using dedicated `page: "TrafficSources"` records that conform 100% to `isValidSectionHeatmap` in `firestore.rules`).
-  - *Why*: Visitors arriving on mobile phones or laptops increment the shared Firestore counters automatically without requiring any changes to security rules or extra database collections.
-- **Decision 2 — Dynamic + Static Google Verification Meta Injection**:
-  - *Chosen Approach*: Store the optional `googleSiteVerification` token in `SiteContent.settings` (synced to Firestore `site_content/main`) and inject `<meta name="google-site-verification">` at boot and runtime.
-  - *Why*: Allows you to paste or update your Google Search Console verification token directly from the Admin screen without editing code.
+- **Decision 1 — Real Static Sub-Directory HTML Files Instead of Hash-Only Sitemap URLs**:
+  - *Chosen Approach*: Provide static `index.html` files for each major commercial route alongside path-aware routing in `useAppRoute()`.
+  - *Why*: Google Search Console strips everything after `#` in `sitemap.xml`. Having real path URLs (`/portal/monthly-content/`, `/portal/promotional-mini-series/`, `/portal/our-work/`, `/portal/training/`) allows Google to index 6 distinct pages instead of 1, multiplying your search footprint and giving you clean sitelinks under your main brand result.
+- **Decision 2 — Support Both HTML Verification File Download & Static Meta Tag**:
+  - *Chosen Approach*: Let the admin paste either a Google verification filename (`google1234567890abcdef.html`) to download the exact static verification file for `/public/`, or paste the `<meta name="google-site-verification" ...>` code.
+  - *Why*: Google Search Console's verification bot checks raw static responses without running client-side `localStorage` scripts.
 
 ---
 
@@ -59,35 +63,36 @@ Ensure that searching **"advibe"**, **"advibe studios"**, or **"advibe studios g
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                Brand Entity & Search Engine Discovery Layer                 │
-│  • Schema.org WebSite + Organization:                                       │
-│    ["AdVibe", "AdVibe Studio", "AdVibe Studios", "AdVibe Studios Global"]   │
-│  • Canonical URL: https://advibestudio.github.io/portal/                    │
-│  • Dynamic <meta name="google-site-verification" /> injection               │
+│               Wave-1 Googlebot Static HTML & Sitemap Layer                  │
+│  ┌──────────────────────────────┐  ┌─────────────────────────────────────┐  │
+│  │ Root index.html              │  │ Static Sub-Route HTML Entry Points  │  │
+│  │ • Visible Wave-1 SEO Article │  │ • /monthly-content/index.html       │  │
+│  │   inside #boot (outside      │  │ • /promotional-mini-series/index... │  │
+│  │   <noscript>)                │  │ • /our-work/index.html              │  │
+│  │ • Full JSON-LD Graph         │  │ • /training/index.html              │  │
+│  └──────────────┬───────────────┘  └──────────────────┬──────────────────┘  │
+└─────────────────┼─────────────────────────────────────┼─────────────────────┘
+                  │                                     │
+                  ▼                                     ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│               Clean Hash-Free XML Sitemap (sitemap.xml)                     │
+│  • Lists https://advibestudio.github.io/portal/ + all 5 static sub-routes   │
+│  • 100% compliant with Google Search Console XML Sitemap Validator          │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                   Visitor Source Classifier (On Arrival)                    │
-│  • Inspects document.referrer + URL params (gclid, fbclid, utm_*, ref)      │
-│  • Categorizes session into 1 of 4 buckets:                                 │
-│    1. Google & Search   2. Social & WhatsApp   3. Paid Ads & Referrals      │
-│    4. Direct Visits                                                         │
-│  • Increments counter in localStorage + Firestore (section_heatmap)         │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│              Simple Traffic Sources & Search Console Widget                 │
-│  • Mounted in Desktop Admin (Analytics Tab) & Mobile Admin (Pulse Tab)      │
-│  • 4-Card Tabular Counter Grid + Proportion Bar                             │
-│  • 1-Click Copy for GitHub Domain & Sitemap URL + Verification Token Input  │
+│         Admin Google Search Console Indexing Wizard & Live Checker          │
+│  • Step 01: Open Google Search Console & Add URL Prefix Property            │
+│  • Step 02: Generate Static google*.html File or Meta Tag & Push to GitHub  │
+│  • Step 03: Submit sitemap.xml & Click "Request Indexing"                   │
+│  • Step 04: 1-Click Live Google Index Test (site:advibestudio.github.io)    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Interactive Component & State Mapping
 
-- **Arrival Attribution Tracker**: Runs once per browser session on public routes, classifying the traffic source and syncing the incremented total to Firestore.
-- **Simple Traffic & Search Console Widget**:
-  - *Traffic Counters State*: Loads live counts from Firestore (`section_heatmap` where `page === "TrafficSources"`) merged with local state, with a manual **Refresh** button and **Reset Counters** confirmation action.
-  - *Search Console Helper State*: Toggles a clean drawer allowing the admin to copy the exact GitHub Pages domain and `sitemap.xml` URL or save a Google Search Console verification string into `content.settings.googleSiteVerification`.
+- **Path + Hash Router (`useAppRoute`)**: Recognizes both clean sub-paths (`/portal/monthly-content/`, `/portal/promotional-mini-series/`, `/portal/our-work/`, `/portal/training/`, `/portal/ai-video-ads/`) and hash routes (`#/monthly-content`, etc.) so visitors and Googlebot landing on clean URLs render the exact target page without 404s.
+- **Search Console Wizard in `SimpleTrafficSourcesWidget`**:
+  - *Static Verification File Downloader*: Takes a Google verification token or filename (`googleXXXX.html`) and downloads the exact `google-site-verification: googleXXXX.html` file ready to drop into the repo's `public/` folder, plus provides the exact `<meta name="google-site-verification" content="...">` line.
+  - *Live Google Index Check Button*: Opens a targeted Google Search query (`https://www.google.com/search?q=site:advibestudio.github.io/portal`) and brand search query (`https://www.google.com/search?q=%22AdVibe+Studio%22+OR+%22AdVibe+Studios+Global%22`) so the founder can verify indexing status in real time.

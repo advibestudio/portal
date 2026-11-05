@@ -83,49 +83,49 @@ const ROUTE_SEO_MAP: Record<string, RouteSeoMeta> = {
     description:
       'Replace expensive agency shoots and complex AI video generation tools. Get 15 custom AI marketing & product videos every month from AdVibe Studio (AdVibe Studios Global).',
     keywords: `monthly video production retainer, social media video marketing agency, 15 videos a month package, on-demand AI video studio, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/monthly-content',
+    canonicalHash: 'monthly-content/',
   },
   '/promotional-mini-series': {
     title: 'AI Promotional Mini-Series & Branded Entertainment — AdVibe Studios Global',
     description:
       'Turn viewers into brand fans with 15 episodic AI story videos every month by AdVibe Studio (AdVibe Studios Global). Original characters, cinematic storytelling, and full ownership.',
     keywords: `AI mini series production, branded entertainment agency, episodic video marketing, AI storytelling studio, AI filmmaking agency, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/promotional-mini-series',
+    canonicalHash: 'promotional-mini-series/',
   },
   '/our-work': {
     title: 'Our Work & Commercial AI Video Portfolio — AdVibe Studios Global',
     description:
       'Watch real AI video commercials, fintech campaigns, product ads, UGC spots, and episodic brand stories produced by AdVibe Studio (AdVibe Studios Global) in 5 working days.',
     keywords: `AI video portfolio, AI commercial examples, CirclesFundMe video ads, product ad examples, UGC AI video samples, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/our-work',
+    canonicalHash: 'our-work/',
   },
   '/training': {
     title: 'AI Video Directing & Generation Training Academy — AdVibe Studios Global',
     description:
       'Master top AI video generation tools, commercial scripting, character continuity, and voice synthesis with AdVibe Studio (AdVibe Studios Global).',
     keywords: `learn AI video generation tools, AI video production course, AI filmmaking training Nigeria, how to make AI video ads, text to video AI course, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/training',
+    canonicalHash: 'training/',
   },
   '/training/business': {
     title: 'AI Video Generation Training for Business Owners — AdVibe Studios Global',
     description:
       'Learn how to use AI video generation tools to produce high-converting product and service ads in-house without hiring expensive camera crews.',
     keywords: `AI video training for business owners, in-house AI ad creation course, DIY AI video generator training, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/training/business',
+    canonicalHash: 'training/',
   },
   '/training/creator': {
     title: 'AI Video Production Course for Creators & Agencies — AdVibe Studios Global',
     description:
       'Master commercial AI video generation tools and launch your own high-income AI video production agency. Practical live cohort by AdVibe Studios Global.',
     keywords: `start an AI video agency course, AI video creator training, commercial AI video directing bootcamp, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/training/creator',
+    canonicalHash: 'training/',
   },
   '/ai-video-ads': {
     title: 'High-Converting AI Video Ads in 5 Working Days — AdVibe Studios Global',
     description:
       'Custom AI video ads for Facebook, Instagram, TikTok, YouTube & WhatsApp Status by AdVibe Studio. Scriptwriting, photorealistic AI visuals, voiceover, and paid media rights.',
     keywords: `fast AI video ads, 5 day video production agency, Facebook Instagram TikTok AI ads, WhatsApp video ads Nigeria, ${MASTER_SEO_KEYWORDS}`,
-    canonicalHash: '#/ai-video-ads',
+    canonicalHash: 'ai-video-ads/',
   },
   '/affiliate-portal': {
     title: 'Affiliate Partner Program (10% Commission) — AdVibe Studios Global',

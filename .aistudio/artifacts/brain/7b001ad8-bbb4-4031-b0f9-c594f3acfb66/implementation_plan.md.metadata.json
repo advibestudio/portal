@@ -1,6 +1,6 @@
 {
-  "summary": "Plan for instant brand-name discovery ('advibe', 'advibe studios', 'advibe studios global') on the GitHub Pages domain, a clean 4-bucket Traffic Sources counter in the Desktop & Mobile Admin apps, and a 1-click Google Search Console verification & indexing helper.",
-  "updatedAt": "2026-11-05T11:41:18.116584325Z",
+  "summary": "Fix Wave-1 Googlebot static HTML indexing, replace hash-fragment sitemap URLs with real crawlable static HTML sub-route entry points (/monthly-content/, /promotional-mini-series/, /our-work/, /training/, /ai-video-ads/), and add an interactive Step-by-Step Google Search Console Indexing Wizard.",
+  "updatedAt": "2026-11-05T13:03:41.380039399Z",
   "requestFeedback": true,
   "userFacing": true
 }

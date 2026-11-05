@@ -231,6 +231,10 @@
       @keyframes bootpulse { 0%, 100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
       #boot-slow { display: none; margin: 28px auto 0; max-width: 320px; text-align: center; font-size: 15px; color: #586159; line-height: 1.5; }
       #boot-slow a { display: inline-block; margin-top: 10px; padding: 12px 22px; border-radius: 999px; background: #111412; color: #fff; text-decoration: none; font-weight: 600; }
+      #boot-seo { max-width: 960px; margin: 120px auto 0; padding: 28px 20px; border-top: 1px solid rgba(17,20,18,.1); color: #2a302b; font-size: 14px; line-height: 1.65; text-align: left; }
+      #boot-seo h2, #boot-seo h3 { color: #111412; font-weight: 800; letter-spacing: -.02em; margin-top: 20px; margin-bottom: 8px; }
+      #boot-seo ul { padding-left: 20px; margin: 10px 0; }
+      #boot-seo a { color: #a06200; text-decoration: underline; font-weight: 600; }
     </style>
   </head>
   <body>
@@ -240,21 +244,55 @@
         <h1 id="boot-h">Ads that turn attention into orders.</h1>
         <div class="dots" aria-hidden="true"><b></b><b></b><b></b></div>
         <div id="boot-slow">Your connection looks slow, so this is taking longer than usual.<br /><a href="" onclick="window.__advibeResetAndReload && window.__advibeResetAndReload(); return false">Tap to refresh cleanly</a></div>
-        <noscript>
-          <section style="max-width:780px;margin:32px auto;padding:20px;text-align:left;line-height:1.6">
-            <h2>AdVibe Studio — AI Video Generation, Commercial Video Production &amp; Performance Marketing Agency</h2>
-            <p>AdVibe Studio produces high-converting AI video ads, product commercials, UGC-style ads, explainer videos, and episodic brand mini-series for Facebook, Instagram, TikTok, YouTube, and WhatsApp Status in 5 working days. Serving Nigeria (Lagos, Abuja), Ghana (Accra), Kenya (Nairobi), the United Kingdom, the United States, and global markets.</p>
-            <ul>
-              <li>Single AI Video Ad (Up to 2m 30s, 5 working days): ₦35,000 | GH₵350 | KSh 4,900 | $119 | £89</li>
-              <li>5 Creative Test Pack (Up to 1m 30s each, 7 working days): ₦95,000 | GH₵950 | KSh 13,500 | $349 | £269</li>
-              <li>10 Creative Test Pack (Up to 1m 30s each, 10 working days): ₦185,000 | GH₵1,850 | KSh 26,000 | $649 | £499</li>
-              <li>Monthly AI Video Content Retainer (15 Videos/Month): ₦250,000/mo | GH₵3,000/mo | KSh 42,000/mo | $899/mo | £699/mo</li>
-              <li>AI Promotional Mini-Series Retainer (15 Episodes/Month): ₦300,000/mo | GH₵3,500/mo | KSh 50,000/mo | $1,099/mo | £849/mo</li>
-              <li>AI Video Directing Training Academy: ₦20,000 Founding Cohort | GH₵320 | KSh 3,200 | $49 | £39</li>
-            </ul>
-            <p>Contact WhatsApp: <a href="https://wa.me/2348061465233">+234 806 146 5233 (08061465233)</a> | Email: advibestudios.global@gmail.com</p>
-          </section>
-        </noscript>
+
+        <!-- WAVE-1 GOOGLEBOT CRAWLABLE SEMANTIC CONTENT (Outside <noscript> so Googlebot reads 100% on initial HTTP fetch before JS executes; React replaces #root on mount) -->
+        <article id="boot-seo" itemscope itemtype="https://schema.org/ProfessionalService">
+          <h2 itemprop="name">AdVibe Studio (AdVibe Studios Global) — AI Video Production, Generation &amp; Performance Marketing Agency</h2>
+          <p itemprop="description">
+            Welcome to the official website of <strong>AdVibe</strong>, <strong>AdVibe Studio</strong>, <strong>AdVibe Studios</strong>, and <strong>AdVibe Studios Global</strong> (<a href="https://advibestudio.github.io/portal/" itemprop="url">https://advibestudio.github.io/portal/</a>). We are a done-for-you AI video generation studio, commercial video production company, and direct-response social media video marketing agency delivering scroll-stopping video ads for Facebook, Instagram, TikTok, YouTube, and WhatsApp Status in 5 working days.
+          </p>
+
+          <h3>Why Brands Choose AdVibe Studios Over DIY AI Video Generation Tools</h3>
+          <p>
+            Businesses searching for <em>AI video generators</em>, <em>text-to-video AI tools</em>, <em>image-to-video AI software</em>, <em>AI UGC video makers</em>, or <em>AI commercial generators</em> partner with AdVibe Studio to get broadcast-grade commercial production without prompt engineering headaches, studio rentals, or camera crews—saving up to 90% compared to traditional video production agencies across Nigeria (Lagos, Abuja, Port Harcourt), Ghana (Accra), Kenya (Nairobi), the United Kingdom (London), and the United States (New York).
+          </p>
+
+          <h3>Core AI Video Production &amp; Marketing Services</h3>
+          <ul>
+            <li><strong>Product Video Ads:</strong> High-impact commercial product showcases for e-commerce and retail brands.</li>
+            <li><strong>Service &amp; Explainer Videos:</strong> Clear, narrative-driven video commercials for fintech (including verified repeat client CirclesFundMe), real estate, healthcare, logistics, and SaaS.</li>
+            <li><strong>AI UGC-Style Ads:</strong> Relatable, native social video ads engineered for TikTok, Instagram Reels, and Facebook feeds.</li>
+            <li><strong>Seasonal &amp; Event Campaign Ads:</strong> Fast-turnaround promotional videos for Black Friday, Detty December, Valentine's, Ramadan/Eid, Easter, and product launches.</li>
+            <li><strong><a href="https://advibestudio.github.io/portal/monthly-content/">Monthly AI Video Content Retainer (15 Videos/Month)</a>:</strong> Your brand's on-demand creative studio delivering 15 custom videos every month (₦250,000/mo | GH₵3,000/mo | KSh 42,000/mo | $899/mo | £699/mo).</li>
+            <li><strong><a href="https://advibestudio.github.io/portal/promotional-mini-series/">AI Promotional Mini-Series (15 Episodes/Month)</a>:</strong> Original episodic branded entertainment and story worlds with recurring characters (₦300,000/mo | GH₵3,500/mo | KSh 50,000/mo | $1,099/mo | £849/mo).</li>
+            <li><strong><a href="https://advibestudio.github.io/portal/training/">AdVibe AI Video Directing Training Academy</a>:</strong> Live hands-on cohort teaching business owners, marketers, and creators how to master AI video generation tools (₦20,000 Founding Cohort | GH₵320 | KSh 3,200 | $49 | £39).</li>
+          </ul>
+
+          <h3>On-Demand Video Ad Packages &amp; Multi-Country Pricing</h3>
+          <ul>
+            <li><strong>Single Video Ad (Up to 2 mins 30 secs · 5 Working Days):</strong> ₦35,000 (Nigeria) · GH₵350 (Ghana) · KSh 4,900 (Kenya) · $119 (USA) · £89 (UK)</li>
+            <li><strong>5 Creative Test Pack (5 Ads · Up to 1 min 30 secs each · 7 Working Days):</strong> ₦95,000 (Nigeria) · GH₵950 (Ghana) · KSh 13,500 (Kenya) · $349 (USA) · £269 (UK)</li>
+            <li><strong>10 Creative Test Pack (10 Ads · Up to 1 min 30 secs each · 10 Working Days):</strong> ₦185,000 (Nigeria) · GH₵1,850 (Ghana) · KSh 26,000 (Kenya) · $649 (USA) · £499 (UK)</li>
+          </ul>
+
+          <nav aria-label="Site Directory">
+            <p>
+              <strong>Explore Pages:</strong>
+              <a href="https://advibestudio.github.io/portal/">Home — AdVibe Studio</a> ·
+              <a href="https://advibestudio.github.io/portal/monthly-content/">Monthly AI Video Content Retainer</a> ·
+              <a href="https://advibestudio.github.io/portal/promotional-mini-series/">AI Promotional Mini-Series</a> ·
+              <a href="https://advibestudio.github.io/portal/our-work/">Our Work &amp; Video Portfolio</a> ·
+              <a href="https://advibestudio.github.io/portal/training/">AI Video Training Academy</a> ·
+              <a href="https://advibestudio.github.io/portal/ai-video-ads/">AI Video Ads Funnel</a>
+            </p>
+          </nav>
+
+          <p>
+            <strong>Official Contact — AdVibe Studios Global:</strong>
+            WhatsApp: <a href="https://wa.me/2348061465233" itemprop="telephone">+234 806 146 5233 (08061465233)</a> ·
+            Email: <a href="mailto:advibestudios.global@gmail.com" itemprop="email">advibestudios.global@gmail.com</a>
+          </p>
+        </article>
       </div>
     </div>
     <script>

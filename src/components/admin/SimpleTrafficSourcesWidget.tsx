@@ -3,6 +3,7 @@ import {
   Check,
   ChevronDown,
   Copy,
+  Download,
   ExternalLink,
   Globe,
   RefreshCw,
@@ -31,7 +32,7 @@ export function SimpleTrafficSourcesWidget() {
   );
   const [syncing, setSyncing] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
-  const [searchConsoleOpen, setSearchConsoleOpen] = useState(false);
+  const [searchConsoleOpen, setSearchConsoleOpen] = useState(true);
 
   const [verificationCode, setVerificationCode] = useState(() => {
     const fromSettings = content.settings.googleSiteVerification || '';
@@ -41,6 +42,7 @@ export function SimpleTrafficSourcesWidget() {
     }
     return '';
   });
+  const [googleHtmlFilename, setGoogleHtmlFilename] = useState('');
   const [savedNotice, setSavedNotice] = useState('');
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
@@ -73,10 +75,14 @@ export function SimpleTrafficSourcesWidget() {
     }
   };
 
-  const handleSaveVerification = async () => {
-    const cleaned = verificationCode
+  const cleanVerificationToken = (raw: string) =>
+    raw
       .trim()
-      .replace(/^.*content=["']([^"']+)["'].*$/i, '$1');
+      .replace(/^.*content=["']([^"']+)["'].*$/i, '$1')
+      .replace(/^google-site-verification=/i, '');
+
+  const handleSaveVerification = async () => {
+    const cleaned = cleanVerificationToken(verificationCode);
     setVerificationCode(cleaned);
     try {
       localStorage.setItem(GOOGLE_VERIFICATION_STORAGE_KEY, cleaned);
@@ -96,8 +102,28 @@ export function SimpleTrafficSourcesWidget() {
       session?.name || 'Admin',
       'Updated Google Search Console verification tag',
     );
-    setSavedNotice('Verification code saved & active in <head>');
-    window.setTimeout(() => setSavedNotice(''), 3500);
+    setSavedNotice('Verification token saved & active in <head>');
+    window.setTimeout(() => setSavedNotice(''), 4000);
+  };
+
+  const handleDownloadVerificationFile = () => {
+    const raw = googleHtmlFilename.trim();
+    if (!raw) return;
+    const normalizedFile = raw.endsWith('.html')
+      ? raw
+      : raw.startsWith('google')
+        ? `${raw}.html`
+        : `google${raw}.html`;
+    const fileContent = `google-site-verification: ${normalizedFile}`;
+    const blob = new Blob([fileContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = normalizedFile;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const barColorFor = (id: TrafficSourceCounter['id']) => {
@@ -113,6 +139,11 @@ export function SimpleTrafficSourcesWidget() {
         return 'bg-white/40';
     }
   };
+
+  const cleanedMetaToken = cleanVerificationToken(verificationCode);
+  const staticMetaSnippet = cleanedMetaToken
+    ? `<meta name="google-site-verification" content="${cleanedMetaToken}" />`
+    : '';
 
   return (
     <section
@@ -224,18 +255,18 @@ export function SimpleTrafficSourcesWidget() {
         </p>
       )}
 
-      {/* Collapsible 1-Click Google Search Console & GitHub Domain Indexing Helper */}
+      {/* 4-Step Google Search Console & GitHub Domain Indexing Wizard */}
       <div className="border-t border-white/10 pt-4">
         <button
           type="button"
           aria-expanded={searchConsoleOpen}
           onClick={() => setSearchConsoleOpen(!searchConsoleOpen)}
-          className="flex w-full items-center justify-between gap-2 text-left text-xs font-semibold text-white/80 hover:text-white transition cursor-pointer"
+          className="flex w-full items-center justify-between gap-2 text-left text-xs font-semibold text-white/90 hover:text-white transition cursor-pointer"
         >
           <span className="flex items-center gap-2">
             <Globe className="h-3.5 w-3.5 text-[#f5a524]" />
             <span>
-              Google Search Console &amp; Instant Brand Indexing Setup (AdVibe · AdVibe Studios · AdVibe Studios Global)
+              4-Step Google Search Console Indexing Wizard (Make Your Site Appear on Google Search)
             </span>
           </span>
           <ChevronDown
@@ -246,16 +277,18 @@ export function SimpleTrafficSourcesWidget() {
         </button>
 
         {searchConsoleOpen && (
-          <div className="mt-4 space-y-4 rounded-xl border border-white/10 bg-black/30 p-4 text-xs text-white/75">
-            <p className="leading-relaxed">
-              Your site is configured with Schema.org <code className="text-[#f5a524]">WebSite</code> and <code className="text-[#f5a524]">Organization</code> structured data for <strong>AdVibe</strong>, <strong>AdVibe Studio</strong>, <strong>AdVibe Studios</strong>, and <strong>AdVibe Studios Global</strong> pointing to your GitHub domain. Complete the 2 quick steps below in Google Search Console so Google indexes your GitHub domain immediately:
+          <div className="mt-4 space-y-4 rounded-xl border border-white/10 bg-black/30 p-4 sm:p-5 text-xs text-white/80">
+            <p className="leading-relaxed text-white/70">
+              Your site now has <strong>Wave-1 Googlebot static HTML</strong> and <strong>hash-free sitemap pages</strong> (<code className="text-[#f5a524]">/monthly-content/</code>, <code className="text-[#f5a524]">/promotional-mini-series/</code>, <code className="text-[#f5a524]">/our-work/</code>, <code className="text-[#f5a524]">/training/</code>). Because Google never crawls a new GitHub Pages domain until you tell it to, complete these 4 steps once after pushing your latest code to GitHub:
             </p>
 
-            {/* Step 1: Copy URLs for Google Search Console */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3 space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-white">01. Official GitHub Domain URL</span>
+            {/* STEP 01 */}
+            <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3.5 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-bold text-white">
+                  01. Add Your GitHub URL in Google Search Console
+                </span>
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => handleCopy('domain', GITHUB_DOMAIN_URL)}
@@ -264,81 +297,168 @@ export function SimpleTrafficSourcesWidget() {
                     {copiedKey === 'domain' ? (
                       <>
                         <Check className="h-3 w-3 text-emerald-400" />
-                        <span>Copied</span>
+                        <span>Copied URL</span>
                       </>
                     ) : (
                       <>
                         <Copy className="h-3 w-3" />
-                        <span>Copy URL</span>
+                        <span>Copy Domain URL</span>
                       </>
                     )}
                   </button>
-                </div>
-                <p className="font-mono text-[11px] text-[#f5a524] break-all">
-                  {GITHUB_DOMAIN_URL}
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3 space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-semibold text-white">02. Sitemap URL (Paste in Search Console)</span>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy('sitemap', GITHUB_SITEMAP_URL)}
-                    className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-white/10 transition cursor-pointer whitespace-nowrap shrink-0"
+                  <a
+                    href="https://search.google.com/search-console/welcome"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-md bg-[#f5a524] px-2.5 py-1 text-[11px] font-bold text-black hover:brightness-110 transition whitespace-nowrap shrink-0"
                   >
-                    {copiedKey === 'sitemap' ? (
-                      <>
-                        <Check className="h-3 w-3 text-emerald-400" />
-                        <span>Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-3 w-3" />
-                        <span>Copy Sitemap</span>
-                      </>
-                    )}
-                  </button>
+                    <span>Open Search Console</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
                 </div>
-                <p className="font-mono text-[11px] text-[#f5a524] break-all">
-                  {GITHUB_SITEMAP_URL}
-                </p>
+              </div>
+              <p className="text-[11px] text-white/60 leading-relaxed">
+                Open Google Search Console, select the right-hand box <strong>URL prefix</strong>, and paste: <code className="text-[#f5a524] font-mono">{GITHUB_DOMAIN_URL}</code>
+              </p>
+            </div>
+
+            {/* STEP 02 */}
+            <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3.5 space-y-3">
+              <span className="font-bold text-white block">
+                02. Verify Ownership (HTML File Download or HTML Meta Tag)
+              </span>
+              <p className="text-[11px] text-white/60 leading-relaxed">
+                Google Search Console will give you either an <strong>HTML file name</strong> (like <code className="text-white/85">google1234567890abcdef.html</code>) or an <strong>HTML tag</strong>. You can generate the static verification file right here to place in your <code className="text-white/85">public/</code> folder on GitHub, or save your verification token below:
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                {/* Option A: HTML Verification File Generator */}
+                <div className="rounded-lg border border-white/10 bg-black/40 p-3 space-y-2">
+                  <span className="text-[11px] font-semibold text-white block">
+                    Option A — Generate Static <code className="text-[#f5a524]">google*.html</code> File
+                  </span>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={googleHtmlFilename}
+                      onChange={(e) => setGoogleHtmlFilename(e.target.value)}
+                      placeholder="e.g. google1234567890abcdef.html"
+                      className="flex-1 rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-[11px] text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleDownloadVerificationFile}
+                      disabled={!googleHtmlFilename.trim()}
+                      className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/10 px-2.5 py-1.5 text-[11px] font-semibold text-white hover:bg-white/15 disabled:opacity-40 transition cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                      <Download className="h-3 w-3 text-[#f5a524]" />
+                      <span>Download File</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Option B: HTML Meta Tag Token */}
+                <div className="rounded-lg border border-white/10 bg-black/40 p-3 space-y-2">
+                  <span className="text-[11px] font-semibold text-white block">
+                    Option B — Save Verification Token
+                  </span>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value)}
+                      placeholder='Paste token or <meta name="google-site-verification" ... />'
+                      className="flex-1 rounded-md border border-white/15 bg-white/5 px-2.5 py-1.5 text-[11px] text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveVerification}
+                      className="rounded-md bg-[#f5a524] px-3 py-1.5 text-[11px] font-bold text-black hover:brightness-110 transition cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                      Save Token
+                    </button>
+                  </div>
+                  {staticMetaSnippet && (
+                    <div className="flex items-center justify-between gap-2 pt-1">
+                      <code className="text-[10px] text-white/60 truncate">{staticMetaSnippet}</code>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy('meta', staticMetaSnippet)}
+                        className="text-[10px] font-semibold text-[#f5a524] hover:underline whitespace-nowrap shrink-0 cursor-pointer"
+                      >
+                        {copiedKey === 'meta' ? 'Copied!' : 'Copy <meta>'}
+                      </button>
+                    </div>
+                  )}
+                  {savedNotice && (
+                    <p className="text-[11px] font-medium text-emerald-400">
+                      ✓ {savedNotice}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
-            {/* Step 2: Paste Google Search Console HTML Tag Verification Code */}
-            <div className="space-y-2 pt-1">
-              <label
-                htmlFor="gsc-verification-input"
-                className="block font-semibold text-white"
-              >
-                03. Google Search Console HTML Verification Code (Optional)
-              </label>
-              <p className="text-[11px] text-white/55">
-                In <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-[#f5a524] underline inline-flex items-center gap-1">Google Search Console <ExternalLink className="h-2.5 w-2.5" /></a>, choose <strong>URL Prefix</strong> (<code className="text-white/80">{GITHUB_DOMAIN_URL}</code>) → <strong>HTML tag</strong>, and paste either the full meta tag or the verification code below:
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  id="gsc-verification-input"
-                  type="text"
-                  value={verificationCode}
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                  placeholder='Paste verification code or <meta name="google-site-verification" content="..." />'
-                  className="flex-1 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs text-white placeholder:text-white/35 focus:border-[#f5a524] focus:outline-none font-mono"
-                />
+            {/* STEP 03 */}
+            <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3.5 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-bold text-white">
+                  03. Submit Your Clean Sitemap &amp; Click &ldquo;Request Indexing&rdquo;
+                </span>
                 <button
                   type="button"
-                  onClick={handleSaveVerification}
-                  className="rounded-lg bg-[#f5a524] px-4 py-2 text-xs font-bold text-black hover:brightness-110 transition cursor-pointer whitespace-nowrap shrink-0"
+                  onClick={() => handleCopy('sitemap', GITHUB_SITEMAP_URL)}
+                  className="inline-flex items-center gap-1 rounded-md border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white hover:bg-white/10 transition cursor-pointer whitespace-nowrap shrink-0"
                 >
-                  Save Verification Code
+                  {copiedKey === 'sitemap' ? (
+                    <>
+                      <Check className="h-3 w-3 text-emerald-400" />
+                      <span>Copied Sitemap URL</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      <span>Copy Sitemap URL</span>
+                    </>
+                  )}
                 </button>
               </div>
-              {savedNotice && (
-                <p className="text-[11px] font-medium text-emerald-400">
-                  ✓ {savedNotice}
+              <p className="text-[11px] text-white/60 leading-relaxed">
+                1. In Google Search Console, click <strong>Sitemaps</strong> in the left menu, type <code className="text-[#f5a524] font-mono">sitemap.xml</code>, and click <strong>Submit</strong>.<br />
+                2. In the top search bar of Search Console (<em>&ldquo;Inspect any URL&rdquo;</em>), paste <code className="text-[#f5a524] font-mono">{GITHUB_DOMAIN_URL}</code> and click <strong>Request Indexing</strong>. This puts your site in Google&apos;s priority crawl queue.
+              </p>
+            </div>
+
+            {/* STEP 04 */}
+            <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <span className="font-bold text-white block">
+                  04. Test Live Google Search Indexing Status
+                </span>
+                <p className="text-[11px] text-white/55">
+                  Check which pages of <code className="text-white/80">advibestudio.github.io/portal</code> are currently live on Google Search:
                 </p>
-              )}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="https://www.google.com/search?q=site%3Aadvibestudio.github.io%2Fportal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-white/10 transition whitespace-nowrap shrink-0"
+                >
+                  <span>Check Indexed Pages (site:)</span>
+                  <ExternalLink className="h-3 w-3 text-[#f5a524]" />
+                </a>
+                <a
+                  href="https://www.google.com/search?q=%22AdVibe+Studio%22+OR+%22AdVibe+Studios+Global%22"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-[#f5a524]/40 bg-[#f5a524]/15 px-3 py-1.5 text-[11px] font-semibold text-[#f5a524] hover:bg-[#f5a524]/25 transition whitespace-nowrap shrink-0"
+                >
+                  <span>Test Brand Search</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
             </div>
           </div>
         )}
