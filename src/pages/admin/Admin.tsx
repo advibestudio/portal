@@ -20,6 +20,7 @@ import { QuizFunnelAdmin } from './QuizFunnelAdmin';
 import { TeamAndSyncAdmin } from './TeamAndSyncAdmin';
 import { RealtimeFirestoreSummaryWidget } from '@/components/admin/RealtimeFirestoreSummaryWidget';
 import { SectionHeatmapWidget } from '@/components/admin/SectionHeatmapWidget';
+import { SimpleTrafficSourcesWidget } from '@/components/admin/SimpleTrafficSourcesWidget';
 import { ClientProjectsAdminView } from '@/components/admin/ClientProjectsAdminView';
 import { PWAInstallButton, AdminNotificationToggle } from '@/lib/pwa';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
@@ -289,6 +290,9 @@ function AnalyticsView({
           </span>
         </div>
       </div>
+
+      {/* SIMPLE TRAFFIC SOURCES & GOOGLE SEARCH CONSOLE WIDGET */}
+      <SimpleTrafficSourcesWidget />
 
       {/* REAL-TIME FIRESTORE SUMMARY WIDGET */}
       <RealtimeFirestoreSummaryWidget

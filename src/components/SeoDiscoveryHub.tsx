@@ -303,7 +303,7 @@ export function SeoDiscoveryHub({ onSelectTopic }: SeoDiscoveryHubProps) {
         {/* Section Header */}
         <div className="max-w-3xl space-y-3 text-left">
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-[#586159]">
-            <span>Search & Capability Index</span>
+            <span className="font-semibold text-[#111412]">AdVibe · AdVibe Studios · AdVibe Studios Global</span>
             <span aria-hidden="true">·</span>
             <span>AI Video Generation</span>
             <span aria-hidden="true">·</span>

@@ -22,6 +22,7 @@ import { useStore, waLink } from '@/lib/store';
 import { fmtMoney } from '@/lib/money';
 import { ClientProjectsAdminView } from '@/components/admin/ClientProjectsAdminView';
 import { RealtimeFirestoreSummaryWidget } from '@/components/admin/RealtimeFirestoreSummaryWidget';
+import { SimpleTrafficSourcesWidget } from '@/components/admin/SimpleTrafficSourcesWidget';
 import { PWAInstallButton, AdminNotificationToggle, OfflineBanner } from '@/lib/pwa';
 import { provisionCustomerFromBooking } from '@/lib/customerPortalStore';
 import { ThemeToggleButton, AppQuickSwitcher } from '@/components/UnifiedAppNav';
@@ -666,6 +667,7 @@ export default function MobileClientAdminApp() {
         {/* TAB 4: PULSE STATS, NOTIFICATIONS & APP DOWNLOAD LINKS */}
         {tab === 'pulse' && (
           <div className="space-y-5">
+            <SimpleTrafficSourcesWidget />
             <RealtimeFirestoreSummaryWidget
               onNavigateTab={(t) => {
                 if (t === 'portal') setTab('clients');

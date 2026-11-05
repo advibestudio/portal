@@ -245,6 +245,7 @@ export interface SiteContent {
     paymentInstructions: string;
     deliveryDays: number;
     bookingUrl?: string;
+    googleSiteVerification?: string;
   };
   countries: Country[];
   defaultCountry: string;    // country code shown when a visitor arrives on the plain link

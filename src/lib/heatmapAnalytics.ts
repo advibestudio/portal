@@ -174,6 +174,284 @@ export function recordSectionEngagement(
   }
 }
 
+export type TrafficSourceBucketId = 'search' | 'social' | 'ads_referrals' | 'direct';
+
+export interface TrafficSourceCounter {
+  id: TrafficSourceBucketId;
+  label: string;
+  subtitle: string;
+  visits: number;
+  uniqueSessions: number;
+  updatedAt: string;
+}
+
+const TRAFFIC_SOURCES_STORAGE_KEY = 'advibe.traffic.sources.v1';
+const TRAFFIC_SESSION_RECORDED_KEY = 'advibe.traffic.session.recorded.v1';
+
+const DEFAULT_TRAFFIC_SOURCES: TrafficSourceCounter[] = [
+  {
+    id: 'search',
+    label: 'Google & Search',
+    subtitle: 'Google, Bing, DuckDuckGo & organic search queries',
+    visits: 0,
+    uniqueSessions: 0,
+    updatedAt: '',
+  },
+  {
+    id: 'social',
+    label: 'Social & WhatsApp',
+    subtitle: 'Instagram, Facebook, TikTok, YouTube, LinkedIn & WhatsApp',
+    visits: 0,
+    uniqueSessions: 0,
+    updatedAt: '',
+  },
+  {
+    id: 'ads_referrals',
+    label: 'Paid Ads & Referrals',
+    subtitle: 'Google Ads, Meta/TikTok Ads & Affiliate referral links',
+    visits: 0,
+    uniqueSessions: 0,
+    updatedAt: '',
+  },
+  {
+    id: 'direct',
+    label: 'Direct Visits',
+    subtitle: 'Typed URL, bookmarks & direct GitHub domain visits',
+    visits: 0,
+    uniqueSessions: 0,
+    updatedAt: '',
+  },
+];
+
+export function loadTrafficSourceSummary(): TrafficSourceCounter[] {
+  try {
+    const raw = localStorage.getItem(TRAFFIC_SOURCES_STORAGE_KEY);
+    if (!raw) return DEFAULT_TRAFFIC_SOURCES.map((d) => ({ ...d }));
+    const parsed = JSON.parse(raw) as TrafficSourceCounter[];
+    if (!Array.isArray(parsed)) return DEFAULT_TRAFFIC_SOURCES.map((d) => ({ ...d }));
+    return DEFAULT_TRAFFIC_SOURCES.map((def) => {
+      const found = parsed.find((p) => p && p.id === def.id);
+      return found
+        ? {
+            ...def,
+            visits: Math.max(0, Number(found.visits) || 0),
+            uniqueSessions: Math.max(0, Number(found.uniqueSessions) || 0),
+            updatedAt: found.updatedAt || '',
+          }
+        : { ...def };
+    });
+  } catch {
+    return DEFAULT_TRAFFIC_SOURCES.map((d) => ({ ...d }));
+  }
+}
+
+export function classifyCurrentTrafficSource(): TrafficSourceBucketId {
+  if (typeof window === 'undefined') return 'direct';
+  try {
+    const searchParams = new URLSearchParams(window.location.search || '');
+    const hashQueryIdx = (window.location.hash || '').indexOf('?');
+    const hashParams =
+      hashQueryIdx >= 0
+        ? new URLSearchParams(window.location.hash.slice(hashQueryIdx + 1))
+        : new URLSearchParams();
+
+    const getParam = (k: string) =>
+      (searchParams.get(k) || hashParams.get(k) || '').toLowerCase().trim();
+
+    const gclid = getParam('gclid');
+    const fbclid = getParam('fbclid');
+    const ttclid = getParam('ttclid');
+    const msclkid = getParam('msclkid');
+    const refCode = getParam('ref') || getParam('affiliate') || getParam('partner');
+    const utmSource = getParam('utm_source');
+    const utmMedium = getParam('utm_medium');
+
+    // 1. Check Paid Ads or Affiliate Referral first
+    if (
+      gclid ||
+      fbclid ||
+      ttclid ||
+      msclkid ||
+      refCode ||
+      ['cpc', 'ppc', 'paid', 'ads', 'ad', 'display', 'retargeting', 'affiliate', 'referral'].includes(
+        utmMedium,
+      )
+    ) {
+      return 'ads_referrals';
+    }
+
+    // 2. Check explicit UTM Source if present
+    if (
+      ['google', 'bing', 'duckduckgo', 'yahoo', 'baidu', 'yandex', 'search', 'organic'].some(
+        (s) => utmSource.includes(s) || utmMedium.includes(s),
+      )
+    ) {
+      return 'search';
+    }
+
+    if (
+      [
+        'instagram',
+        'ig',
+        'facebook',
+        'fb',
+        'tiktok',
+        'whatsapp',
+        'wa',
+        'youtube',
+        'yt',
+        'twitter',
+        'x.com',
+        'linkedin',
+        'social',
+      ].some((s) => utmSource.includes(s) || utmMedium.includes(s))
+    ) {
+      return 'social';
+    }
+
+    // 3. Inspect document.referrer
+    const ref = (document.referrer || '').toLowerCase();
+    if (!ref) return 'direct';
+
+    try {
+      const refUrl = new URL(ref);
+      if (refUrl.hostname === window.location.hostname) {
+        return 'direct';
+      }
+      const host = refUrl.hostname;
+      if (
+        host.includes('google.') ||
+        host.includes('bing.com') ||
+        host.includes('duckduckgo.com') ||
+        host.includes('search.yahoo.') ||
+        host.includes('yandex.') ||
+        host.includes('baidu.com')
+      ) {
+        return 'search';
+      }
+      if (
+        host.includes('instagram.com') ||
+        host.includes('facebook.com') ||
+        host.includes('fb.com') ||
+        host.includes('t.co') ||
+        host.includes('twitter.com') ||
+        host.includes('x.com') ||
+        host.includes('tiktok.com') ||
+        host.includes('youtube.com') ||
+        host.includes('youtu.be') ||
+        host.includes('linkedin.com') ||
+        host.includes('wa.me') ||
+        host.includes('whatsapp.com')
+      ) {
+        return 'social';
+      }
+      // External website referral
+      return 'ads_referrals';
+    } catch {
+      return 'direct';
+    }
+  } catch {
+    return 'direct';
+  }
+}
+
+export function recordArrivalTrafficSource() {
+  if (typeof window === 'undefined') return;
+  try {
+    const alreadyRecordedSession = sessionStorage.getItem(TRAFFIC_SESSION_RECORDED_KEY);
+    const bucketId = (alreadyRecordedSession as TrafficSourceBucketId) || classifyCurrentTrafficSource();
+    const isNewSession = !alreadyRecordedSession;
+
+    if (isNewSession) {
+      sessionStorage.setItem(TRAFFIC_SESSION_RECORDED_KEY, bucketId);
+    } else {
+      // Only count 1 arrival per browser session so internal route changes don't inflate source counts
+      return;
+    }
+
+    const list = loadTrafficSourceSummary();
+    const idx = list.findIndex((item) => item.id === bucketId);
+    if (idx < 0) return;
+
+    const updatedItem: TrafficSourceCounter = {
+      ...list[idx],
+      visits: list[idx].visits + 1,
+      uniqueSessions: list[idx].uniqueSessions + 1,
+      updatedAt: new Date().toISOString(),
+    };
+    list[idx] = updatedItem;
+    localStorage.setItem(TRAFFIC_SOURCES_STORAGE_KEY, JSON.stringify(list));
+
+    // Sync to Firestore section_heatmap using a compliant SectionHeatmapRecord shape
+    if (canUseFirestoreQuota('writes', 1)) {
+      recordFirestoreQuotaOp('writes', 1);
+      const docId = `traffic_source_${bucketId}`;
+      const record: SectionHeatmapRecord = {
+        id: docId,
+        page: 'TrafficSources',
+        sectionId: bucketId,
+        label: updatedItem.label,
+        views: updatedItem.visits,
+        totalDwellSeconds: updatedItem.uniqueSessions,
+        clicks: 0,
+        updatedAt: updatedItem.updatedAt,
+      };
+      void setDoc(doc(db, 'section_heatmap', docId), record, { merge: true }).catch(() => {});
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export async function fetchFirestoreTrafficSources(): Promise<TrafficSourceCounter[]> {
+  const local = loadTrafficSourceSummary();
+  if (!canUseFirestoreQuota('reads', 1)) return local;
+  try {
+    recordFirestoreQuotaOp('reads', 1);
+    const snap = await getDocs(collection(db, 'section_heatmap'));
+    if (snap.empty) return local;
+
+    const merged = local.map((item) => ({ ...item }));
+    snap.docs.forEach((d) => {
+      const data = d.data() as SectionHeatmapRecord;
+      if (data && data.page === 'TrafficSources' && data.sectionId) {
+        const target = merged.find((m) => m.id === data.sectionId);
+        if (target && data.views >= target.visits) {
+          target.visits = data.views;
+          target.uniqueSessions = Math.max(target.uniqueSessions, data.totalDwellSeconds || data.views);
+          target.updatedAt = data.updatedAt || target.updatedAt;
+        }
+      }
+    });
+
+    localStorage.setItem(TRAFFIC_SOURCES_STORAGE_KEY, JSON.stringify(merged));
+    return merged;
+  } catch {
+    return local;
+  }
+}
+
+export async function resetAllTrafficSources(): Promise<TrafficSourceCounter[]> {
+  const fresh = DEFAULT_TRAFFIC_SOURCES.map((d) => ({ ...d, updatedAt: new Date().toISOString() }));
+  try {
+    localStorage.setItem(TRAFFIC_SOURCES_STORAGE_KEY, JSON.stringify(fresh));
+    sessionStorage.removeItem(TRAFFIC_SESSION_RECORDED_KEY);
+  } catch {
+    // ignore
+  }
+  try {
+    const { deleteDoc } = await import('firebase/firestore');
+    await Promise.all(
+      DEFAULT_TRAFFIC_SOURCES.map((item) =>
+        deleteDoc(doc(db, 'section_heatmap', `traffic_source_${item.id}`)).catch(() => {}),
+      ),
+    );
+  } catch {
+    // ignore
+  }
+  return fresh;
+}
+
 export async function fetchFirestoreHeatmapRecords(): Promise<SectionHeatmapRecord[]> {
   const local = loadHeatmapRecords();
   if (!canUseFirestoreQuota('reads', 1)) return local;
@@ -185,7 +463,7 @@ export async function fetchFirestoreHeatmapRecords(): Promise<SectionHeatmapReco
     local.forEach((item) => map.set(item.id, item));
     snap.docs.forEach((d) => {
       const data = d.data() as SectionHeatmapRecord;
-      if (data && data.id) {
+      if (data && data.id && data.page !== 'TrafficSources') {
         const existing = map.get(data.id);
         if (!existing || data.totalDwellSeconds >= existing.totalDwellSeconds) {
           map.set(data.id, data);
@@ -201,12 +479,15 @@ export async function fetchFirestoreHeatmapRecords(): Promise<SectionHeatmapReco
 }
 
 /**
- * React hook that automatically tracks page views and section dwell-time heatmaps
+ * React hook that automatically tracks visitor arrival source, page views, and section dwell-time heatmaps
  * across public pages using IntersectionObserver.
  */
 export function usePageHeatmapTracker(route: string) {
   useEffect(() => {
-    if (route.startsWith('/admin')) return;
+    if (route.startsWith('/admin') || route.startsWith('/client-admin')) return;
+
+    // Record visitor arrival source once per session (Google/Search, Social/WhatsApp, Paid Ads/Referrals, Direct)
+    recordArrivalTrafficSource();
 
     const pageInfo =
       route.startsWith('/promotional-mini-series')
